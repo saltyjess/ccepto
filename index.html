@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
 <style>
   /* ---------- DESIGN TOKENS ---------- */
-  /* Namespaced tokens match Figma variables, ready for dark mode via [data-theme="dark"] */
+  /* Namespaced tokens match Figma variables. Dark mode applies automatically via prefers-color-scheme. */
   :root {
     /* Brand colors */
     --cce-dark-blue: #0b1e4f;
@@ -22,9 +22,15 @@
     --cce-white: #ffffff;
     --cce-off-white: #fbfbfc;
 
+    /* Non-inverting tokens — these keep the SAME value in both light and dark mode.
+       Use them when a color is anchored to a brand surface that doesn't change,
+       e.g. text on the yellow button (always navy) or text on the cyan banner (always white). */
+    --cce-dark-blue-inverted: #0b1e4f;  /* text that's always navy (e.g. on yellow buttons) */
+    --cce-white-inverted: #ffffff;      /* text that's always white (e.g. on cyan banners) */
+
     /* Neutral grays */
     --cce-bg-light-gray: #f8f8f8;
-    --border-subtle: #e9e9ea;
+    --cce-border: #e9e9ea;
     --cce-border-soft: #e8eaef;
     --cce-med-gray: #737985;
     --cce-deep-gray: #606773;
@@ -60,7 +66,7 @@
     --white: var(--cce-white);
     --off-white: var(--cce-off-white);
     --gray-50: var(--cce-bg-light-gray);
-    --gray-100: var(--border-subtle);
+    --gray-100: var(--cce-border);
     --gray-200: var(--cce-border-soft);
     --gray-500: var(--cce-med-gray);
     --gray-600: var(--cce-deep-gray);
@@ -78,58 +84,74 @@
   }
 
   /* ---------- DARK MODE ----------
+     Triggered automatically by the user's OS preference (prefers-color-scheme).
+     No manual toggle — the theme follows system settings.
+
      The model: tokens INVERT their meaning so cards/components built with them
      "just work" without per-element overrides. The Figma file uses the same approach.
 
        --cce-dark-blue  → primary text + navy surfaces (Volunteer card, Quick links cards)
-                          Light mode: #0b1e4f navy. Dark mode: #ffffff white.
-                          → A "navy card" in light mode becomes a "white island card" in dark mode.
+                          Light: #0b1e4f navy. Dark: #ffffff white.
+                          → A "navy card" in light becomes a "white island card" in dark.
 
        --cce-white      → page surfaces (body, hero, nav, sections) + light text on dark cards
-                          Light mode: #ffffff. Dark mode: #0b1e4f navy.
+                          Light: #ffffff. Dark: #0b1e4f navy.
 
        --cce-bg-light-gray → nav bar, stat cards, lighter sections, footer (lighter navy in dark)
-       --cce-med-white-text → subtext on dark-blue cards (alpha-white in light, alpha-navy in dark)
+       --cce-med-white-text → subtext on dark-blue cards (alpha-white light → alpha-navy dark)
 
-     Brand surfaces that stay CONSTANT in dark mode: cyan banners (literal #00a0d0),
-     gold buttons (literal #fac73f). Those use --cce-bright-blue / --cce-yellow which
-     don't appear in the override block below. */
-  [data-theme="dark"] {
-    --cce-dark-blue: #ffffff;       /* text + "navy" card surface → flips to white */
-    --cce-white: #0b1e4f;           /* page surface + light text → flips to navy */
-    --cce-off-white: #182a57;
-    --cce-bg-light-gray: #182a57;   /* nav + stat cards + lighter sections */
-    --border-subtle: #1f2532;
-    --cce-border-soft: rgba(255, 255, 255, 0.10);
+     NON-INVERTING tokens (defined once in :root, never overridden by the dark @media block):
+       --cce-dark-blue-inverted (#0b1e4f) → text on yellow buttons (always navy, since the
+                                            yellow button surface stays yellow in both modes).
+       --cce-white-inverted     (#ffffff) → text on cyan banners (always white, since cyan
+                                            stays cyan in both modes).
+       Use these whenever text sits on a brand surface (yellow, cyan) that itself doesn't
+       invert — otherwise the inverted text token would flip and become unreadable.
 
-    /* Secondary grays shift to alpha-white */
-    --cce-med-gray: rgba(255, 255, 255, 0.8);
-    --cce-deep-gray: rgba(255, 255, 255, 0.7);
-    --cce-soft-gray: rgba(255, 255, 255, 0.5);
-
-    /* Subtext on dark-blue cards: alpha-white in light → alpha-navy in dark (since the card is now white) */
-    --cce-med-white-text: rgba(11, 30, 79, 0.8);
-
-    /* Shadows softer on dark */
-    --shadow-card: 0px 2px 8px 0px rgba(0, 0, 0, 0.4);
-    --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.4);
-  }
-
-  /* Respect OS preference when no manual override is set */
+     Brand surfaces that stay CONSTANT: cyan banners (#00a0d0), gold buttons (#fac73f).
+     Those use --cce-bright-blue / --cce-yellow which don't appear in the override block. */
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) {
-      --cce-dark-blue: #ffffff;
-      --cce-white: #0b1e4f;
+    :root {
+      --cce-dark-blue: #ffffff;       /* text + "navy" card surface → flips to white */
+      --cce-white: #0b1e4f;           /* page surface + light text → flips to navy */
       --cce-off-white: #182a57;
-      --cce-bg-light-gray: #182a57;
-      --border-subtle: #1f2532;
+      --cce-bg-light-gray: #182a57;   /* nav + stat cards + lighter sections */
+      --cce-border: #1f2532;
       --cce-border-soft: rgba(255, 255, 255, 0.10);
+
+      /* Secondary grays shift to alpha-white */
       --cce-med-gray: rgba(255, 255, 255, 0.8);
       --cce-deep-gray: rgba(255, 255, 255, 0.7);
       --cce-soft-gray: rgba(255, 255, 255, 0.5);
+
+      /* Subtext on dark-blue cards: alpha-white light → alpha-navy dark (card is now white) */
       --cce-med-white-text: rgba(11, 30, 79, 0.8);
+
+      /* Shadows softer on dark */
       --shadow-card: 0px 2px 8px 0px rgba(0, 0, 0, 0.4);
       --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.4);
+    }
+  }
+
+  /* ---------- DARK MODE: CHROME OVERRIDES ----------
+     Nav and footer normally inherit page-level tokens (--cce-bg-light-gray for nav,
+     --cce-white for footer), which in dark mode flip to #182a57 and #0b1e4f respectively.
+     Both end up nearly identical to the page bg, so the header/footer edges disappear.
+     This block bumps them to a deeper navy in dark mode only — light mode untouched. */
+  [data-theme="dark"] .nav,
+  [data-theme="dark"] .footer {
+    background: #0D1C44;
+  }
+  [data-theme="dark"] .footer {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .nav,
+    :root:not([data-theme]) .footer {
+      background: #0D1C44;
+    }
+    :root:not([data-theme]) .footer {
+      border-top-color: rgba(255, 255, 255, 0.08);
     }
   }
 
@@ -253,30 +275,6 @@
   .social-icon:hover { opacity: 0.7; }
   .social-icon i { font-size: 22px; line-height: 1; }
 
-  /* Theme toggle (sun/moon) */
-  .theme-toggle {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: var(--navy);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    transition: background 0.15s ease;
-  }
-  .theme-toggle:hover { background: var(--gray-50); }
-  .theme-toggle i { font-size: 20px; line-height: 1; }
-  /* Tri-state icon visibility — driven by data-theme-state on the button itself,
-     not the applied theme. "system" shows desktop icon, "light" shows sun, "dark" shows moon. */
-  .theme-toggle [data-theme-icon] { display: none; }
-  .theme-toggle[data-theme-state="system"] [data-theme-icon="system"] { display: inline-block; }
-  .theme-toggle[data-theme-state="light"] [data-theme-icon="light"] { display: inline-block; }
-  .theme-toggle[data-theme-state="dark"] [data-theme-icon="dark"] { display: inline-block; }
-
   /* ---------- BUTTONS ---------- */
   .btn {
     display: inline-flex;
@@ -295,8 +293,9 @@
   .btn:hover { filter: brightness(1.05); }
   .btn:active { transform: translateY(1px); }
   .btn-gold {
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--cce-yellow);
+    /* Non-inverting: yellow stays yellow in both modes, so text must stay navy in both modes */
+    color: var(--cce-dark-blue-inverted);
   }
   .btn-navy {
     background: var(--navy);
@@ -313,14 +312,16 @@
   }
   .btn-ghost:hover { background: rgba(251, 251, 252, 0.3); filter: none; }
   /* Translucent light button — works on cyan/navy backgrounds.
-     Text color inherits from the surrounding context. */
+     Default (no modifier): on cyan banners — text stays NAVY in both modes
+     since cyan stays cyan. Uses --cce-dark-blue-inverted (non-inverting). */
   .btn-translucent {
     background: var(--cce-light-button);
-    color: var(--cce-dark-blue);
+    color: var(--cce-dark-blue-inverted);
   }
   .btn-translucent:hover { background: rgba(255, 255, 255, 0.6); filter: none; }
-  /* When used on a navy/dark surface, use white text instead */
-  .btn-translucent--on-dark { color: var(--cce-white); }
+  /* On a dark card (Volunteer card, PTO Board card) the surface inverts:
+     navy in light → white in dark. Text follows along via the inverting token. */
+  .btn-translucent--on-dark { color: var(--cce-dark-blue); }
   .btn .arrow { font-size: 18px; line-height: 1; }
   .btn i { font-size: 18px; line-height: 1; }
 
@@ -419,7 +420,8 @@
     gap: 16px;
   }
   .action-block-head {
-    color: var(--cce-white);
+    /* Non-inverting: cyan banner stays cyan in both modes, so text must stay white in both modes */
+    color: var(--cce-white-inverted);
   }
   .action-block-eyebrow {
     color: var(--cce-yellow);
@@ -433,13 +435,14 @@
     font-size: clamp(20px, 2.5vw, 26px);
     font-weight: 700;
     margin: 0;
-    color: var(--cce-white);
+    color: var(--cce-white-inverted);
     line-height: 1.2;
   }
 
   .priority-item {
-    background: rgba(251, 251, 252, 0.4);
-    border: 1px solid var(--cyan);
+    /* Per Figma: 40% white token over cyan banner. Constant in both modes. */
+    background: var(--cce-light-button);
+    border: 1px solid var(--cce-bright-blue);
     border-radius: var(--radius-md);
     padding: 16px 24px;
     display: flex;
@@ -453,7 +456,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--cce-white);
+    color: var(--cce-yellow);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -471,14 +474,16 @@
   .priority-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--cce-dark-blue);
+    /* Non-inverting: cyan banner stays cyan, text must stay white in both modes */
+    color: var(--cce-white-inverted);
     margin: 0 0 4px;
     line-height: 1.2;
   }
   .priority-meta {
     font-size: 14px;
     font-weight: 500;
-    color: rgba(11, 30, 79, 0.8);
+    /* Same: stays white-ish over the cyan banner regardless of theme */
+    color: rgba(255, 255, 255, 0.8);
     margin: 0;
   }
 
@@ -532,8 +537,8 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--cce-yellow);
+    color: var(--cce-dark-blue-inverted);
     font-size: 13px;
     font-weight: 700;
     display: flex;
@@ -633,24 +638,6 @@
     flex-shrink: 0;
   }
 
-  .social-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
-    margin-top: 24px;
-  }
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--navy);
-    font-size: 22px;
-    font-weight: 700;
-    transition: opacity 0.15s ease;
-  }
-  .social-link:hover { opacity: 0.7; }
-  .social-link i { font-size: 28px; line-height: 1; }
-
   /* ---------- IMPACT (How PTO Supports CCE) ---------- */
   .impact {
     background: var(--white);
@@ -690,8 +677,8 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--cyan);
-    color: var(--white);
+    background: var(--cce-bright-blue);
+    color: var(--cce-white-inverted);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -938,8 +925,8 @@
     margin-top: 6px;
     width: 100%;
     padding: 14px;
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--cce-yellow);
+    color: var(--cce-dark-blue-inverted);
     border: none;
     border-radius: var(--radius-sm);
     font-size: 15px;
@@ -974,8 +961,8 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--cce-yellow);
+    color: var(--cce-dark-blue-inverted);
     margin: 8px auto 20px;
     display: flex;
     align-items: center;
@@ -1049,20 +1036,6 @@
 </head>
 <body>
 
-<!-- Apply saved theme before render to avoid flash of wrong theme -->
-<script>
-  (function () {
-    try {
-      var saved = localStorage.getItem('cce-theme');
-      // Saved values: "light", "dark", "system" (or null = first visit, defaults to system).
-      // For "system" or null, leave data-theme unset so the prefers-color-scheme media query handles it.
-      if (saved === 'dark' || saved === 'light') {
-        document.documentElement.setAttribute('data-theme', saved);
-      }
-    } catch (e) { /* localStorage blocked — fine, OS preference still works */ }
-  })();
-</script>
-
 <main class="page" id="top">
 
   <!-- Nav -->
@@ -1082,11 +1055,6 @@
     </div>
 
     <div class="nav-cta-group">
-      <button type="button" class="theme-toggle" aria-label="Theme: follow system" id="theme-toggle" data-theme-state="system" title="Theme: System (click to switch)">
-        <i class="ph ph-desktop" aria-hidden="true" data-theme-icon="system"></i>
-        <i class="ph ph-sun" aria-hidden="true" data-theme-icon="light"></i>
-        <i class="ph ph-moon" aria-hidden="true" data-theme-icon="dark"></i>
-      </button>
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph-fill ph-facebook-logo" aria-hidden="true"></i>
       </a>
@@ -1207,7 +1175,7 @@
           </div>
         </div>
         <div class="card-actions">
-          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-translucent">
+          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-translucent btn-translucent--on-dark">
             Email the PTO <span class="arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -1312,19 +1280,12 @@
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
     </div>
-
-    <div class="social-row">
-      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-link" aria-label="Find us on Facebook">
-        <i class="ph-fill ph-facebook-logo" aria-hidden="true"></i>
-        Facebook
-      </a>
-    </div>
   </section>
 
   <!-- Impact / How PTO Supports CCE -->
   <section class="impact" id="impact" aria-labelledby="impact-title">
-    <p class="impact-eyebrow">Impact</p>
-    <h2 class="impact-title" id="impact-title">How PTO supports CCE</h2>
+    <p class="impact-eyebrow">What we do</p>
+    <h2 class="impact-title" id="impact-title">PTO Impact</h2>
     <p class="impact-lead">Four areas where your support shows up for our Eagles every day.</p>
 
     <div class="pillars">
@@ -1751,62 +1712,6 @@
     triggerAttr: 'data-volunteer-trigger',
     submittingText: 'Signing you up…'
   });
-
-  // Theme toggle — cycles through System → Light → Dark → System
-  // "System" mode follows the OS preference live (no data-theme attr set).
-  // "Light" / "Dark" force the theme regardless of OS (data-theme attr set).
-  (function () {
-    const toggle = document.getElementById('theme-toggle');
-    if (!toggle) return;
-    const root = document.documentElement;
-    const mql = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const LABELS = {
-      system: 'Theme: System (click to switch to Light)',
-      light:  'Theme: Light (click to switch to Dark)',
-      dark:   'Theme: Dark (click to switch to System)'
-    };
-    const NEXT = { system: 'light', light: 'dark', dark: 'system' };
-
-    function readSaved() {
-      try {
-        const v = localStorage.getItem('cce-theme');
-        if (v === 'light' || v === 'dark' || v === 'system') return v;
-      } catch (e) {}
-      return 'system';
-    }
-    function applyState(state) {
-      if (state === 'system') {
-        root.removeAttribute('data-theme');
-      } else {
-        root.setAttribute('data-theme', state);
-      }
-      toggle.setAttribute('data-theme-state', state);
-      toggle.setAttribute('aria-label', LABELS[state]);
-      toggle.setAttribute('title', LABELS[state]);
-      try { localStorage.setItem('cce-theme', state); } catch (e) {}
-    }
-
-    // Initialize from saved value (default: system)
-    applyState(readSaved());
-
-    // Cycle on click
-    toggle.addEventListener('click', function () {
-      const current = toggle.getAttribute('data-theme-state') || 'system';
-      applyState(NEXT[current]);
-    });
-
-    // When in System mode, re-render is automatic via the prefers-color-scheme
-    // media query — but listen anyway so any future logic that needs to react
-    // to OS changes has a hook. (No-op for now; media query handles paint.)
-    function onOsChange() {
-      if (toggle.getAttribute('data-theme-state') === 'system') {
-        // Nothing to do — CSS media query already responds. Hook left for future use.
-      }
-    }
-    if (mql.addEventListener) mql.addEventListener('change', onOsChange);
-    else if (mql.addListener) mql.addListener(onOsChange);  // Safari < 14 fallback
-  })();
 </script>
 
 </body>
