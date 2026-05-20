@@ -12,27 +12,59 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
 <style>
   /* ---------- DESIGN TOKENS ---------- */
+  /* Namespaced tokens match Figma variables, ready for dark mode via [data-theme="dark"] */
   :root {
-    --navy: #0b1e4f;
-    --navy-80: rgba(11, 30, 79, 0.8);
-    --navy-90: rgba(11, 30, 79, 0.9);
-    --navy-soft: #afb4c0;
-    --gold: #fac73f;
-    --gold-soft: #cdd4e2;
-    --cyan: #00a0d0;
-    --cyan-deep: #0d7ca1;
-    --white: #ffffff;
-    --off-white: #fbfbfc;
-    --gray-50: #f8f8f8;
-    --gray-100: #e9e9ea;
-    --gray-200: #e8eaef;
-    --gray-500: #737985;
-    --gray-600: #606773;
-    --gray-700: #afb4c0;
+    /* Brand colors */
+    --cce-dark-blue: #0b1e4f;
+    --cce-yellow: #fac73f;
+    --cce-bright-blue: #00a0d0;
+    --cce-bright-blue-deep: #0d7ca1;
+    --cce-white: #ffffff;
+    --cce-off-white: #fbfbfc;
 
+    /* Neutral grays */
+    --cce-bg-light-gray: #f8f8f8;
+    --border-subtle: #e9e9ea;
+    --cce-border-soft: #e8eaef;
+    --cce-med-gray: #737985;
+    --cce-deep-gray: #606773;
+    --cce-soft-gray: #afb4c0;
+
+    /* Alpha colors */
+    --cce-med-white-text: rgba(255, 255, 255, 0.8);
+    --cce-light-button: rgba(255, 255, 255, 0.4);
+    --cce-dark-blue-80: rgba(11, 30, 79, 0.8);
+    --cce-dark-blue-90: rgba(11, 30, 79, 0.9);
+
+    /* Spacing tokens (match Figma) */
+    --sm: 8px;
+    --m: 12px;
+    --lg: 16px;
+    --xl: 24px;
+    --2xl: 16px; /* note: Figma names this radius token "2xl" but it's 16px */
+
+    /* Radii */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
+
+    /* Legacy aliases — kept so existing rules keep working during the migration */
+    --navy: var(--cce-dark-blue);
+    --navy-80: var(--cce-dark-blue-80);
+    --navy-90: var(--cce-dark-blue-90);
+    --navy-soft: var(--cce-soft-gray);
+    --gold: var(--cce-yellow);
+    --gold-soft: #cdd4e2;
+    --cyan: var(--cce-bright-blue);
+    --cyan-deep: var(--cce-bright-blue-deep);
+    --white: var(--cce-white);
+    --off-white: var(--cce-off-white);
+    --gray-50: var(--cce-bg-light-gray);
+    --gray-100: var(--border-subtle);
+    --gray-200: var(--cce-border-soft);
+    --gray-500: var(--cce-med-gray);
+    --gray-600: var(--cce-deep-gray);
+    --gray-700: var(--cce-soft-gray);
 
     --page-max: 1320px;
     --content-max: 1192px;
@@ -45,6 +77,62 @@
     --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.25);
   }
 
+  /* ---------- DARK MODE ----------
+     The model: tokens INVERT their meaning so cards/components built with them
+     "just work" without per-element overrides. The Figma file uses the same approach.
+
+       --cce-dark-blue  → primary text + navy surfaces (Volunteer card, Quick links cards)
+                          Light mode: #0b1e4f navy. Dark mode: #ffffff white.
+                          → A "navy card" in light mode becomes a "white island card" in dark mode.
+
+       --cce-white      → page surfaces (body, hero, nav, sections) + light text on dark cards
+                          Light mode: #ffffff. Dark mode: #0b1e4f navy.
+
+       --cce-bg-light-gray → nav bar, stat cards, lighter sections, footer (lighter navy in dark)
+       --cce-med-white-text → subtext on dark-blue cards (alpha-white in light, alpha-navy in dark)
+
+     Brand surfaces that stay CONSTANT in dark mode: cyan banners (literal #00a0d0),
+     gold buttons (literal #fac73f). Those use --cce-bright-blue / --cce-yellow which
+     don't appear in the override block below. */
+  [data-theme="dark"] {
+    --cce-dark-blue: #ffffff;       /* text + "navy" card surface → flips to white */
+    --cce-white: #0b1e4f;           /* page surface + light text → flips to navy */
+    --cce-off-white: #182a57;
+    --cce-bg-light-gray: #182a57;   /* nav + stat cards + lighter sections */
+    --border-subtle: #1f2532;
+    --cce-border-soft: rgba(255, 255, 255, 0.10);
+
+    /* Secondary grays shift to alpha-white */
+    --cce-med-gray: rgba(255, 255, 255, 0.8);
+    --cce-deep-gray: rgba(255, 255, 255, 0.7);
+    --cce-soft-gray: rgba(255, 255, 255, 0.5);
+
+    /* Subtext on dark-blue cards: alpha-white in light → alpha-navy in dark (since the card is now white) */
+    --cce-med-white-text: rgba(11, 30, 79, 0.8);
+
+    /* Shadows softer on dark */
+    --shadow-card: 0px 2px 8px 0px rgba(0, 0, 0, 0.4);
+    --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.4);
+  }
+
+  /* Respect OS preference when no manual override is set */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --cce-dark-blue: #ffffff;
+      --cce-white: #0b1e4f;
+      --cce-off-white: #182a57;
+      --cce-bg-light-gray: #182a57;
+      --border-subtle: #1f2532;
+      --cce-border-soft: rgba(255, 255, 255, 0.10);
+      --cce-med-gray: rgba(255, 255, 255, 0.8);
+      --cce-deep-gray: rgba(255, 255, 255, 0.7);
+      --cce-soft-gray: rgba(255, 255, 255, 0.5);
+      --cce-med-white-text: rgba(11, 30, 79, 0.8);
+      --shadow-card: 0px 2px 8px 0px rgba(0, 0, 0, 0.4);
+      --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.4);
+    }
+  }
+
   /* ---------- RESET ---------- */
   *, *::before, *::after { box-sizing: border-box; }
   html {
@@ -54,12 +142,17 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
   }
-  /* Give in-page anchor targets breathing room from the top */
+  /* Give in-page anchor targets breathing room from the top.
+     The sticky nav is ~96px on desktop but wraps to ~150px on mobile when
+     nav links overflow to a second row, so we use a CSS variable that
+     adjusts at the mobile breakpoint. */
+  :root { --nav-offset: 110px; }
   :target,
   #events,
   #get-involved,
-  #quick-links {
-    scroll-margin-top: 100px;
+  #quick-links,
+  #impact {
+    scroll-margin-top: var(--nav-offset);
   }
   body {
     margin: 0;
@@ -160,6 +253,30 @@
   .social-icon:hover { opacity: 0.7; }
   .social-icon i { font-size: 22px; line-height: 1; }
 
+  /* Theme toggle (sun/moon) */
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--navy);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s ease;
+  }
+  .theme-toggle:hover { background: var(--gray-50); }
+  .theme-toggle i { font-size: 20px; line-height: 1; }
+  /* Tri-state icon visibility — driven by data-theme-state on the button itself,
+     not the applied theme. "system" shows desktop icon, "light" shows sun, "dark" shows moon. */
+  .theme-toggle [data-theme-icon] { display: none; }
+  .theme-toggle[data-theme-state="system"] [data-theme-icon="system"] { display: inline-block; }
+  .theme-toggle[data-theme-state="light"] [data-theme-icon="light"] { display: inline-block; }
+  .theme-toggle[data-theme-state="dark"] [data-theme-icon="dark"] { display: inline-block; }
+
   /* ---------- BUTTONS ---------- */
   .btn {
     display: inline-flex;
@@ -195,6 +312,15 @@
     color: var(--white);
   }
   .btn-ghost:hover { background: rgba(251, 251, 252, 0.3); filter: none; }
+  /* Translucent light button — works on cyan/navy backgrounds.
+     Text color inherits from the surrounding context. */
+  .btn-translucent {
+    background: var(--cce-light-button);
+    color: var(--cce-dark-blue);
+  }
+  .btn-translucent:hover { background: rgba(255, 255, 255, 0.6); filter: none; }
+  /* When used on a navy/dark surface, use white text instead */
+  .btn-translucent--on-dark { color: var(--cce-white); }
   .btn .arrow { font-size: 18px; line-height: 1; }
   .btn i { font-size: 18px; line-height: 1; }
 
@@ -232,18 +358,31 @@
     max-width: 640px;
   }
   .hero-lead:last-child { margin-bottom: 0; }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
 
   .stat-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
     gap: 16px;
   }
   .stat {
     background: var(--gray-50);
     border: 1px solid var(--gray-200);
     border-radius: var(--radius-md);
-    padding: 20px;
+    padding: 24px 20px;
     min-width: 0;
+    /* Center content vertically and lock card to equal height across the grid */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 120px;
   }
   .stat-value {
     font-size: clamp(28px, 3vw, 40px);
@@ -280,10 +419,10 @@
     gap: 16px;
   }
   .action-block-head {
-    color: var(--white);
+    color: var(--cce-white);
   }
   .action-block-eyebrow {
-    color: var(--gold);
+    color: var(--cce-yellow);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 1.5px;
@@ -294,7 +433,7 @@
     font-size: clamp(20px, 2.5vw, 26px);
     font-weight: 700;
     margin: 0;
-    color: var(--white);
+    color: var(--cce-white);
     line-height: 1.2;
   }
 
@@ -314,7 +453,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--white);
+    color: var(--cce-white);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -326,27 +465,27 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--gold);
+    background: var(--cce-yellow);
     display: inline-block;
   }
   .priority-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--navy);
+    color: var(--cce-dark-blue);
     margin: 0 0 4px;
     line-height: 1.2;
   }
   .priority-meta {
     font-size: 14px;
     font-weight: 500;
-    color: var(--navy-80);
+    color: rgba(11, 30, 79, 0.8);
     margin: 0;
   }
 
   /* ---------- KNOW US + GET INVOLVED ROW ---------- */
   .duo {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 456px);
+    grid-template-columns: minmax(0, 456px) minmax(0, 1fr);
     gap: 24px;
     align-items: stretch;
   }
@@ -424,15 +563,18 @@
   .card-actions .btn { height: 48px; padding: 0 20px; }
 
   .get-involved {
-    background: var(--navy);
-    color: var(--white);
+    background: var(--cce-dark-blue);
+    color: var(--cce-white);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 24px;
   }
+  .get-involved .card-title { color: var(--cce-white); }
+  .get-involved .card-eyebrow { color: var(--cce-yellow); }
   .get-involved-body {
-    color: #e6e6e6;
+    /* Token inverts: rgba(255,255,255,0.8) in light, rgba(11,30,79,0.8) in dark */
+    color: var(--cce-med-white-text);
     font-size: 14px;
     line-height: 1.5;
     margin: 0;
@@ -446,14 +588,14 @@
     margin-top: 24px;
   }
   .quick-card {
-    background: var(--navy);
+    background: var(--cce-dark-blue);
     border-radius: var(--radius-md);
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 16px;
     min-height: 140px;
-    color: var(--white);
+    color: var(--cce-white);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     cursor: pointer;
   }
@@ -463,7 +605,7 @@
   }
   .quick-card-body { flex: 1; min-width: 0; }
   .quick-card-icon {
-    color: var(--white);
+    color: var(--cce-white);
     margin-bottom: 8px;
     font-size: 0; /* prevent inline gap */
   }
@@ -471,14 +613,15 @@
   .quick-card-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--white);
+    color: var(--cce-white);
     line-height: 1.2;
     margin: 0 0 8px;
   }
   .quick-card-sub {
     font-size: 11px;
     font-weight: 500;
-    color: var(--gray-700);
+    /* Token inverts: white-alpha on navy card (light mode) → navy-alpha on white card (dark mode) */
+    color: var(--cce-med-white-text);
     letter-spacing: 0.5px;
     text-transform: uppercase;
     margin: 0;
@@ -532,7 +675,8 @@
   .impact-lead {
     font-size: 14px;
     font-weight: 500;
-    color: var(--navy-80);
+    color: var(--cce-dark-blue);
+    opacity: 0.8;
     margin: 0 0 24px;
   }
   .pillars {
@@ -563,7 +707,8 @@
   .pillar-body {
     font-size: 14px;
     line-height: 1.6;
-    color: var(--navy-90);
+    color: var(--cce-dark-blue);
+    opacity: 0.9;
     margin: 0;
   }
 
@@ -604,6 +749,7 @@
   .modal-backdrop {
     position: fixed;
     inset: 0;
+    /* Navy-alpha scrim works in both modes: dims white page in light, deepens navy page in dark */
     background: rgba(11, 30, 79, 0.55);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -625,7 +771,7 @@
     border-radius: var(--radius-lg);
     width: 100%;
     max-width: 480px;
-    box-shadow: 0 20px 60px rgba(11, 30, 79, 0.3);
+    box-shadow: 0 20px 60px rgba(11, 30, 79, 0.25), 0 0 0 1px rgba(11, 30, 79, 0.08);
     transform: translateY(20px) scale(0.97);
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     max-height: calc(100vh - 40px);
@@ -698,7 +844,8 @@
     font-size: 15px;
     font-family: inherit;
     color: var(--navy);
-    background: var(--white);
+    /* --off-white inverts to #182a57 (lighter navy) so inputs stay distinct from the navy modal bg in dark mode */
+    background: var(--off-white);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
     width: 100%;
   }
@@ -712,6 +859,70 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 420px) {
     .form-row { grid-template-columns: 1fr; gap: 14px; }
+  }
+
+  /* Checkbox grids — grades, interests */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+  }
+  .checkbox-grid--stacked {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    user-select: none;
+  }
+  .checkbox-option:hover { border-color: var(--cyan); }
+  .checkbox-option input[type="checkbox"] {
+    accent-color: var(--cyan);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checkbox-option:has(input:checked) {
+    border-color: var(--cyan);
+    background: rgba(0, 160, 208, 0.08);
+  }
+
+  /* Textarea */
+  .form-field textarea {
+    padding: 12px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--navy);
+    background: var(--off-white);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+  }
+  .form-field textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0, 160, 208, 0.15);
+  }
+  .form-field textarea::placeholder { color: var(--gray-500); opacity: 0.7; }
+
+  /* Larger modal variant for forms with more fields */
+  .modal--lg {
+    max-width: 560px;
+    max-height: calc(100vh - 32px);
   }
 
   /* Honeypot — hidden from real users, bots fill it */
@@ -786,6 +997,7 @@
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 960px) {
+    :root { --nav-offset: 220px; }
     .hero {
       grid-template-columns: 1fr;
       padding: 48px var(--pad-inline);
@@ -796,8 +1008,8 @@
     }
     .section--gray, .section--white { padding-top: 48px; padding-bottom: 48px; }
     .impact { padding: 48px var(--pad-inline); }
-  }
-  @media (max-width: 720px) {
+
+    /* Nav: wrap links to their own row below the brand/CTA */
     .nav {
       flex-wrap: wrap;
       gap: 12px;
@@ -807,12 +1019,19 @@
       width: 100%;
       gap: 20px;
       overflow-x: auto;
-      margin: 0;
-      padding-bottom: 4px;
+      /* Pull links flush to the nav's bottom edge so the gold underline meets the border */
+      margin: 0 0 -16px 0;
+      padding-bottom: 0;
       -webkit-overflow-scrolling: touch;
     }
-    .nav-links a { padding: 4px 2px; }
+    .nav-links a {
+      padding: 8px 2px;
+      /* Extend the link's hit/border area down to the bottom of the nav */
+      padding-bottom: 16px;
+    }
     .nav-cta-group .btn-gold span:not(.arrow) { display: inline; }
+  }
+  @media (max-width: 720px) {
     .footer {
       flex-direction: column;
       align-items: flex-start;
@@ -830,6 +1049,20 @@
 </head>
 <body>
 
+<!-- Apply saved theme before render to avoid flash of wrong theme -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('cce-theme');
+      // Saved values: "light", "dark", "system" (or null = first visit, defaults to system).
+      // For "system" or null, leave data-theme unset so the prefers-color-scheme media query handles it.
+      if (saved === 'dark' || saved === 'light') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) { /* localStorage blocked — fine, OS preference still works */ }
+  })();
+</script>
+
 <main class="page" id="top">
 
   <!-- Nav -->
@@ -844,14 +1077,21 @@
       <a href="#events">Events &amp; news</a>
       <a href="#get-involved">Volunteer</a>
       <a href="#quick-links">Quick links</a>
+      <a href="#impact">Impact</a>
+      <a href="#">Teacher hub</a>
     </div>
 
     <div class="nav-cta-group">
+      <button type="button" class="theme-toggle" aria-label="Theme: follow system" id="theme-toggle" data-theme-state="system" title="Theme: System (click to switch)">
+        <i class="ph ph-desktop" aria-hidden="true" data-theme-icon="system"></i>
+        <i class="ph ph-sun" aria-hidden="true" data-theme-icon="light"></i>
+        <i class="ph ph-moon" aria-hidden="true" data-theme-icon="dark"></i>
+      </button>
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph-fill ph-facebook-logo" aria-hidden="true"></i>
       </a>
-      <a href="#" class="btn btn-gold" data-newsletter-trigger>
-        Join the newsletter <span class="arrow" aria-hidden="true">→</span>
+      <a href="#" class="btn btn-navy" data-volunteer-trigger>
+        Get involved <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </nav>
@@ -863,23 +1103,27 @@
       <h1 class="hero-title" id="hero-title">Everything PTO,<br>in one place.</h1>
       <p class="hero-lead">This is your one-stop spot for everything PTO — events, volunteer sign-ups, calendars, news, and how to find us. We're so glad you're here.</p>
       <p class="hero-lead">Our PTO's mission is to work as partners with the parents, administrators, faculty and staff, to ensure Crowders Creek Elementary continues to be a safe and educational place for our children to learn.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-gold" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#" class="btn btn-navy" data-volunteer-trigger>Get involved <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
     </div>
     <div class="stat-grid" aria-label="PTO at a glance">
       <div class="stat">
-        <p class="stat-value">$60.2K</p>
-        <p class="stat-label">Raised last year</p>
+        <p class="stat-value">$118K</p>
+        <p class="stat-label">Raised for the 2025-26 school year</p>
       </div>
       <div class="stat">
-        <p class="stat-value">$50.2K</p>
-        <p class="stat-label">Goal for this 2026 year</p>
+        <p class="stat-value">$23.4K</p>
+        <p class="stat-label">Field trips &amp; shirts for students</p>
       </div>
       <div class="stat">
-        <p class="stat-value">27</p>
-        <p class="stat-label">Events this year</p>
+        <p class="stat-value">$5.5K</p>
+        <p class="stat-label">Teacher appreciation</p>
       </div>
       <div class="stat">
-        <p class="stat-value">16</p>
-        <p class="stat-label">PTO members &amp; volunteers</p>
+        <p class="stat-value">$2K</p>
+        <p class="stat-label">Grants for teachers</p>
       </div>
     </div>
   </section>
@@ -898,7 +1142,7 @@
           <p class="priority-title">School Supply Box Orders — Order for next year</p>
           <p class="priority-meta">Closes June 16th, 2026</p>
         </div>
-        <a href="https://1stdayschoolsupplies.com/gs/94316" target="_blank" rel="noopener" class="btn btn-navy">Order now <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://1stdayschoolsupplies.com/gs/94316" target="_blank" rel="noopener" class="btn btn-translucent">Order now <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
       <div class="priority-item">
@@ -907,7 +1151,7 @@
           <p class="priority-title">Sign up for the PTO newsletter</p>
           <p class="priority-meta">Events, volunteer opportunities, and CCE news in your inbox</p>
         </div>
-        <a href="#" class="btn btn-navy" data-newsletter-trigger>Sign up <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#" class="btn btn-translucent" data-newsletter-trigger>Sign up <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -915,6 +1159,18 @@
   <!-- Board + Get involved -->
   <section class="section section--white" id="get-involved">
     <div class="duo">
+      <div class="card-base get-involved">
+        <div class="card-head">
+          <p class="card-eyebrow">Get involved</p>
+          <h2 class="card-title card-title--light">Volunteer</h2>
+        </div>
+        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
+        <div class="card-actions">
+          <a href="#" class="btn btn-gold" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="#" class="btn btn-translucent btn-translucent--on-dark" data-volunteer-trigger>Get involved <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
       <div class="card-base know-us">
         <div class="card-head">
           <p class="card-eyebrow">Get to know us</p>
@@ -951,23 +1207,9 @@
           </div>
         </div>
         <div class="card-actions">
-          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-navy">
-            <i class="ph ph-envelope" aria-hidden="true"></i>
+          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-translucent">
             Email the PTO <span class="arrow" aria-hidden="true">→</span>
           </a>
-          <a href="#" class="btn btn-outline" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-        </div>
-      </div>
-
-      <div class="card-base get-involved">
-        <div class="card-head">
-          <p class="card-eyebrow">Volunteer</p>
-          <h2 class="card-title card-title--light">Get involved</h2>
-        </div>
-        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
-        <div class="card-actions">
-          <a href="#" class="btn btn-gold" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="btn btn-ghost">Facebook <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>
@@ -979,13 +1221,13 @@
     <h2 class="card-title" id="ql-title">Quick links</h2>
 
     <div class="quick-grid">
-      <a href="#" class="quick-card">
+      <a href="https://www.signupgenius.com/go/10C0E4DA4A722A6F4C43-20232024#/" target="_blank" rel="noopener" class="quick-card">
         <div class="quick-card-body">
           <div class="quick-card-icon" aria-hidden="true">
             <i class="ph ph-fork-knife"></i>
           </div>
           <p class="quick-card-title">Lunch signup</p>
-          <p class="quick-card-sub">Sign up to go to lunch with your kiddo</p>
+          <p class="quick-card-sub">Join your kiddo for lunch</p>
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
@@ -1059,6 +1301,16 @@
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
+      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph-fill ph-facebook-logo"></i>
+          </div>
+          <p class="quick-card-title">Facebook</p>
+          <p class="quick-card-sub">Join the Facebook group</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
     </div>
 
     <div class="social-row">
@@ -1070,7 +1322,7 @@
   </section>
 
   <!-- Impact / How PTO Supports CCE -->
-  <section class="impact" aria-labelledby="impact-title">
+  <section class="impact" id="impact" aria-labelledby="impact-title">
     <p class="impact-eyebrow">Impact</p>
     <h2 class="impact-title" id="impact-title">How PTO supports CCE</h2>
     <p class="impact-lead">Four areas where your support shows up for our Eagles every day.</p>
@@ -1172,6 +1424,124 @@
 
 <!-- Hidden iframe — receives the Mailchimp POST response so the page doesn't navigate -->
 <iframe name="mc-iframe" title="Newsletter submission" aria-hidden="true" tabindex="-1" style="position:absolute; width:0; height:0; border:0; left:-9999px;"></iframe>
+
+<!-- Get involved (volunteer) signup modal -->
+<div class="modal-backdrop" id="volunteer-modal" role="dialog" aria-modal="true" aria-labelledby="vol-modal-title" hidden>
+  <div class="modal modal--lg">
+    <div class="modal-header">
+      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+      <p class="modal-eyebrow">Volunteer</p>
+      <h2 class="modal-title" id="vol-modal-title">Get involved</h2>
+      <p class="modal-subtitle">Tell us a little about you and how you'd like to help. Every hour counts.</p>
+    </div>
+
+    <!--
+      TODO: SWAP THIS ACTION URL
+      Replace the action URL below with your new "Volunteers" Mailchimp audience action URL.
+      Get it from Mailchimp: Audience (new volunteer audience) → Signup forms → Embedded forms → Classic tab →
+      copy the <form action="..."> URL.
+      Also update the honeypot input's `name` attribute to match the new audience's b_*_* value.
+    -->
+    <form
+      class="modal-form"
+      action="https://gmail.us20.list-manage.com/subscribe/post?u=PLACEHOLDER&amp;id=PLACEHOLDER"
+      method="post"
+      target="vol-iframe"
+      novalidate
+    >
+      <div class="form-row">
+        <div class="form-field">
+          <label for="vol-fname">First name</label>
+          <input type="text" id="vol-fname" name="FNAME" autocomplete="given-name" placeholder="Jane">
+        </div>
+        <div class="form-field">
+          <label for="vol-lname">Last name</label>
+          <input type="text" id="vol-lname" name="LNAME" autocomplete="family-name" placeholder="Doe">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="vol-email">Email <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="vol-email" name="EMAIL" autocomplete="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-field">
+        <label>Child's grade(s)</label>
+        <div class="checkbox-grid" role="group" aria-label="Child's grades">
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="K"> K
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="1"> 1st
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="2"> 2nd
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="3"> 3rd
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="4"> 4th
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="5"> 5th
+          </label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Interests</label>
+        <div class="checkbox-grid" role="group" aria-label="Volunteer interests">
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Classroom helper"> Classroom helper
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Event volunteer"> Event volunteer
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Fundraising"> Fundraising
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Teacher appreciation"> Teacher appreciation
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Spirit Rock"> Spirit Rock
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Behind the scenes"> Behind the scenes
+          </label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="vol-notes">Notes</label>
+        <textarea id="vol-notes" name="NOTES" placeholder="Anything else you'd like us to know? Skills, availability, kids' names, etc."></textarea>
+      </div>
+
+      <!-- Mailchimp honeypot — TODO: update name attribute to match new audience -->
+      <div class="hp-field" aria-hidden="true">
+        <input type="text" name="b_PLACEHOLDER_PLACEHOLDER" tabindex="-1" value="" autocomplete="off">
+      </div>
+
+      <button type="submit" class="modal-submit">Sign me up</button>
+      <p class="modal-fineprint">We'll only reach out about volunteer opportunities. You can unsubscribe any time.</p>
+    </form>
+
+    <!-- Success state -->
+    <div class="modal-success" hidden>
+      <div class="success-icon" aria-hidden="true">
+        <i class="ph ph-check"></i>
+      </div>
+      <h3 class="success-title">Thanks for stepping up!</h3>
+      <p class="success-body">Check your inbox to confirm. We'll be in touch soon about ways to get involved.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden iframe for volunteer form -->
+<iframe name="vol-iframe" title="Volunteer submission" aria-hidden="true" tabindex="-1" style="position:absolute; width:0; height:0; border:0; left:-9999px;"></iframe>
 
 <script>
   // Auto-fill the year so the footer doesn't go stale
@@ -1280,16 +1650,17 @@
     checkTop();
   })();
 
-  // Newsletter modal
-  (function () {
-    const modal = document.getElementById('newsletter-modal');
+  // Modal setup — generic helper used by both newsletter and volunteer modals
+  function setupModal(opts) {
+    const modal = document.getElementById(opts.modalId);
     if (!modal) return;
     const form = modal.querySelector('.modal-form');
     const success = modal.querySelector('.modal-success');
     const submitBtn = modal.querySelector('.modal-submit');
-    const iframe = document.querySelector('iframe[name="mc-iframe"]');
-    const firstField = modal.querySelector('input[name="FNAME"]');
+    const iframe = document.querySelector(`iframe[name="${opts.iframeName}"]`);
+    const firstField = modal.querySelector('input:not([type="hidden"]):not([type="checkbox"])');
     const emailField = modal.querySelector('input[name="EMAIL"]');
+    const originalSubmitText = submitBtn ? submitBtn.textContent : '';
     let lastFocused = null;
     let submitting = false;
 
@@ -1300,7 +1671,7 @@
       form.hidden = false;
       success.hidden = true;
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Subscribe';
+      submitBtn.textContent = originalSubmitText;
       submitting = false;
       modal.hidden = false;
       void modal.offsetWidth; // reflow so the transition runs
@@ -1315,7 +1686,6 @@
       setTimeout(() => {
         modal.hidden = true;
         if (lastFocused) lastFocused.focus();
-        // Reset form for next time
         form.reset();
       }, 200);
     }
@@ -1323,13 +1693,10 @@
     function showSuccess() {
       form.hidden = true;
       success.hidden = false;
-      // Auto-close after a few seconds so they can read the confirmation
       setTimeout(closeModal, 3500);
     }
 
-    // Handle form submission
     form.addEventListener('submit', function (e) {
-      // Basic email validity check — let the browser handle the messaging
       if (!emailField.value || !emailField.checkValidity()) {
         emailField.reportValidity();
         e.preventDefault();
@@ -1341,10 +1708,8 @@
       }
       submitting = true;
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Subscribing…';
+      submitBtn.textContent = opts.submittingText || 'Submitting…';
 
-      // The form posts to the hidden iframe (target="mc-iframe").
-      // When the iframe's load event fires, Mailchimp has responded.
       let done = false;
       const finish = function () {
         if (done) return;
@@ -1353,17 +1718,13 @@
         showSuccess();
       };
       iframe.addEventListener('load', finish);
-      // Safety net: if the iframe never fires load (network blocked, etc.),
-      // still show success after 2.5s — the POST has gone through regardless.
       setTimeout(finish, 2500);
     });
 
-    // Wire up triggers
-    document.querySelectorAll('[data-newsletter-trigger]').forEach(btn => {
+    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
       btn.addEventListener('click', openModal);
     });
 
-    // Close on X click, backdrop click, or Escape
     modal.querySelectorAll('[data-modal-close]').forEach(btn => {
       btn.addEventListener('click', closeModal);
     });
@@ -1373,6 +1734,78 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
     });
+  }
+
+  // Newsletter modal
+  setupModal({
+    modalId: 'newsletter-modal',
+    iframeName: 'mc-iframe',
+    triggerAttr: 'data-newsletter-trigger',
+    submittingText: 'Subscribing…'
+  });
+
+  // Volunteer / Get involved modal
+  setupModal({
+    modalId: 'volunteer-modal',
+    iframeName: 'vol-iframe',
+    triggerAttr: 'data-volunteer-trigger',
+    submittingText: 'Signing you up…'
+  });
+
+  // Theme toggle — cycles through System → Light → Dark → System
+  // "System" mode follows the OS preference live (no data-theme attr set).
+  // "Light" / "Dark" force the theme regardless of OS (data-theme attr set).
+  (function () {
+    const toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+    const root = document.documentElement;
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const LABELS = {
+      system: 'Theme: System (click to switch to Light)',
+      light:  'Theme: Light (click to switch to Dark)',
+      dark:   'Theme: Dark (click to switch to System)'
+    };
+    const NEXT = { system: 'light', light: 'dark', dark: 'system' };
+
+    function readSaved() {
+      try {
+        const v = localStorage.getItem('cce-theme');
+        if (v === 'light' || v === 'dark' || v === 'system') return v;
+      } catch (e) {}
+      return 'system';
+    }
+    function applyState(state) {
+      if (state === 'system') {
+        root.removeAttribute('data-theme');
+      } else {
+        root.setAttribute('data-theme', state);
+      }
+      toggle.setAttribute('data-theme-state', state);
+      toggle.setAttribute('aria-label', LABELS[state]);
+      toggle.setAttribute('title', LABELS[state]);
+      try { localStorage.setItem('cce-theme', state); } catch (e) {}
+    }
+
+    // Initialize from saved value (default: system)
+    applyState(readSaved());
+
+    // Cycle on click
+    toggle.addEventListener('click', function () {
+      const current = toggle.getAttribute('data-theme-state') || 'system';
+      applyState(NEXT[current]);
+    });
+
+    // When in System mode, re-render is automatic via the prefers-color-scheme
+    // media query — but listen anyway so any future logic that needs to react
+    // to OS changes has a hook. (No-op for now; media query handles paint.)
+    function onOsChange() {
+      if (toggle.getAttribute('data-theme-state') === 'system') {
+        // Nothing to do — CSS media query already responds. Hook left for future use.
+      }
+    }
+    if (mql.addEventListener) mql.addEventListener('change', onOsChange);
+    else if (mql.addListener) mql.addListener(onOsChange);  // Safari < 14 fallback
   })();
 </script>
 
