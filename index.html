@@ -844,6 +844,60 @@
   .form-field input::placeholder { color: var(--gray-500); opacity: 0.7; }
 
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* Hamburger button — only visible at narrow mobile widths */
+  .nav-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-hamburger:hover { background: var(--gray-50); }
+  .nav-hamburger:focus-visible {
+    outline: 2px solid var(--cce-bright-blue);
+    outline-offset: 2px;
+  }
+  .nav-hamburger i { font-size: 24px; line-height: 1; }
+
+  /* Mobile menu panel — slides down under the nav when hamburger is tapped.
+     `hidden` attribute on the element keeps it out of the layout when closed. */
+  .mobile-menu {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+    padding: 12px var(--pad-inline) 20px;
+    position: sticky;
+    top: 80px;
+    z-index: 49;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mobile-menu[hidden] { display: none; }
+  .mobile-menu-link {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gray-500);
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .mobile-menu-link:last-of-type { border-bottom: none; }
+  .mobile-menu-link.is-active {
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .mobile-menu-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
   @media (max-width: 420px) {
     .form-row { grid-template-columns: 1fr; gap: 14px; }
   }
@@ -983,7 +1037,7 @@
   }
 
   /* ---------- RESPONSIVE ---------- */
-  @media (max-width: 960px) {
+  @media (max-width: 1100px) {
     :root { --nav-offset: 220px; }
     .hero {
       grid-template-columns: 1fr;
@@ -1027,9 +1081,15 @@
     .stat-value { font-size: 28px; }
     .priority-item { padding: 16px; }
   }
-  @media (max-width: 480px) {
-    .nav-cta-group .btn-gold { padding: 10px 14px; font-size: 13px; }
-    .nav-cta-group .social-icon { display: none; }
+  @media (max-width: 600px) {
+    /* Collapse to logo + hamburger only.
+       The nav-links row and CTA group both move into the mobile menu drawer.
+       Bumped from 480 → 600 because nav-link labels ("Events & news", "Quick links")
+       start wrapping to two lines below ~590px. */
+    .nav { flex-wrap: nowrap; }
+    .nav-links { display: none; }
+    .nav-cta-group { display: none; }
+    .nav-hamburger { display: inline-flex; }
     .stat-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -1062,7 +1122,30 @@
         Get involved <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
+
+    <!-- Mobile hamburger: hidden above 480px, shown below -->
+    <button type="button" class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <i class="ph ph-list" aria-hidden="true"></i>
+    </button>
   </nav>
+
+  <!-- Mobile menu panel: slides down under the nav when hamburger is tapped -->
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#top" class="mobile-menu-link is-active" aria-current="page">Home</a>
+    <a href="#events" class="mobile-menu-link">Events &amp; news</a>
+    <a href="#get-involved" class="mobile-menu-link">Volunteer</a>
+    <a href="#quick-links" class="mobile-menu-link">Quick links</a>
+    <a href="#impact" class="mobile-menu-link">Impact</a>
+    <a href="#" class="mobile-menu-link">Teacher hub</a>
+    <div class="mobile-menu-cta">
+      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
+        <i class="ph-fill ph-facebook-logo" aria-hidden="true"></i>
+      </a>
+      <a href="#" class="btn btn-navy" data-volunteer-trigger>
+        Get involved <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
 
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
@@ -1505,6 +1588,51 @@
 <iframe name="vol-iframe" title="Volunteer submission" aria-hidden="true" tabindex="-1" style="position:absolute; width:0; height:0; border:0; left:-9999px;"></iframe>
 
 <script>
+  // Mobile menu toggle — hamburger opens/closes the slide-down link panel
+  (function () {
+    const btn = document.getElementById('nav-hamburger');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+
+    function setOpen(open) {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      // Swap icon: list <-> x
+      const icon = btn.querySelector('i');
+      if (icon) icon.className = open ? 'ph ph-x' : 'ph ph-list';
+      if (open) menu.removeAttribute('hidden');
+      else menu.setAttribute('hidden', '');
+    }
+
+    btn.addEventListener('click', function () {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      setOpen(!isOpen);
+    });
+
+    // Tapping any link inside the menu closes it (so users land on the anchor cleanly)
+    menu.addEventListener('click', function (e) {
+      const link = e.target.closest('a');
+      if (link) setOpen(false);
+    });
+
+    // If the viewport grows past the mobile breakpoint, close the menu —
+    // otherwise it stays "open" and would briefly reappear if the user resizes back down.
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', function () {
+      const w = window.innerWidth;
+      if (w > 600 && lastWidth <= 600) setOpen(false);
+      lastWidth = w;
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+  })();
+
   // Auto-fill the year so the footer doesn't go stale
   document.getElementById('footer-year').textContent = new Date().getFullYear();
 
