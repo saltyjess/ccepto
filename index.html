@@ -78,6 +78,10 @@
     /* Effective side padding = gutter OR (viewport - page-max)/2, whichever is larger.
        Keeps content centered at <=1320px on wide screens, falls back to gutter on narrow. */
     --pad-inline: max(var(--gutter), calc((100% - var(--page-max)) / 2));
+    /* Shared top padding for section--gray/section--white/.impact — also used
+       to compensate the scroll-margin-top offset (see --nav-offset below) so
+       every section lands the same visible distance under the sticky nav. */
+    --section-pad-top: 80px;
 
     --shadow-card: 0px 2px 8px 0px rgba(17, 23, 35, 0.08);
     --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.25);
@@ -165,16 +169,25 @@
     html { scroll-behavior: auto; }
   }
   /* Give in-page anchor targets breathing room from the top.
-     The sticky nav is ~96px on desktop but wraps to ~150px on mobile when
-     nav links overflow to a second row, so we use a CSS variable that
-     adjusts at the mobile breakpoint. */
-  :root { --nav-offset: 110px; }
+     Fallback value below is close to the nav's real height; a small script
+     further down keeps --nav-offset synced to the nav's actual rendered
+     height (desktop two-row nav vs. the shorter collapsed mobile nav). */
+  :root { --nav-offset: 160px; }
   :target,
-  #events,
+  #events {
+    scroll-margin-top: var(--nav-offset);
+  }
+  /* #get-involved, #quick-links, and #impact each already have 80px of their
+     own top padding before their heading (#events doesn't). Without this,
+     scrolling to those three left a much bigger, inconsistent-looking gap
+     under the nav than scrolling to #events did. Subtracting that padding
+     here lets the section's own blank top padding sit behind the sticky nav
+     (nothing visible is lost) so the heading lands at the same distance
+     below the nav either way. */
   #get-involved,
   #quick-links,
   #impact {
-    scroll-margin-top: var(--nav-offset);
+    scroll-margin-top: calc(var(--nav-offset) - var(--section-pad-top));
   }
   body {
     margin: 0;
@@ -194,6 +207,9 @@
   /* ---------- PAGE FRAME ---------- */
   .page {
     width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background: var(--white);
   }
 
@@ -204,7 +220,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     padding: 16px var(--pad-inline);
     min-height: 80px;
     /* Stick to top while scrolling so the active-section indicator stays visible */
@@ -233,11 +249,16 @@
 
   .nav-links {
     display: flex;
-    gap: 32px;
+    order: 3;
+    width: 100%;
+    gap: 20px;
     align-items: stretch;
     align-self: stretch;
-    /* Cancel the nav's vertical padding so links span full nav height */
-    margin: -16px 0;
+    overflow-x: auto;
+    /* Pull links flush to the nav's bottom edge so the gold underline meets the border */
+    margin: 0 0 -16px 0;
+    padding-bottom: 0;
+    -webkit-overflow-scrolling: touch;
   }
   .nav-links a {
     font-size: 14px;
@@ -248,7 +269,9 @@
     /* Gold underline sits at the very bottom of the link */
     border-bottom: 3px solid transparent;
     transition: color 0.15s ease, border-color 0.2s ease;
-    padding: 0 2px;
+    padding: 8px 2px;
+    /* Extend the link's hit/border area down to the bottom of the nav */
+    padding-bottom: 16px;
   }
   .nav-links a:hover { color: var(--navy); }
   .nav-links a.is-active {
@@ -262,6 +285,7 @@
     align-items: center;
     gap: 16px;
   }
+  .nav-cta-group .btn-gold span:not(.arrow) { display: inline; }
   .social-icon {
     width: 32px;
     height: 32px;
@@ -319,9 +343,17 @@
     color: var(--cce-dark-blue-inverted);
   }
   .btn-translucent:hover { background: rgba(255, 255, 255, 0.6); filter: none; }
-  /* On a dark card (Volunteer card, PTO Board card) the surface inverts:
+  /* On a dark card (Volunteer/"Get involved" card) the surface inverts:
      navy in light → white in dark. Text follows along via the inverting token. */
   .btn-translucent--on-dark { color: var(--cce-dark-blue); }
+  /* Note: --on-dark above is also applied to the "Email the PTO" button on the
+     PTO Board card, which is actually a light gray surface (not dark), so its
+     navy text is correct there and should NOT change.
+     This variant is for buttons that sit on the truly dark navy "Get involved"
+     card specifically — text needs the OPPOSITE inverting token so it stays
+     readable: white in light mode (card is dark navy), navy in dark mode
+     (card flips to white). */
+  .btn-translucent--on-navy { color: var(--cce-white); }
   .btn .arrow { font-size: 18px; line-height: 1; }
   .btn i { font-size: 18px; line-height: 1; }
 
@@ -406,8 +438,8 @@
     padding: 0 var(--pad-inline) 0;
     background: var(--white);
   }
-  .section--gray { background: var(--gray-50); padding-top: 80px; padding-bottom: 80px; }
-  .section--white { background: var(--white); padding-top: 80px; padding-bottom: 80px; }
+  .section--gray { background: var(--gray-50); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
+  .section--white { background: var(--white); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
 
   /* ---------- ACTION BANNER (cyan) ---------- */
   .action-block {
@@ -641,7 +673,10 @@
   /* ---------- IMPACT (How PTO Supports CCE) ---------- */
   .impact {
     background: var(--white);
-    padding: 80px var(--pad-inline);
+    padding-top: var(--section-pad-top);
+    padding-bottom: var(--section-pad-top);
+    padding-left: var(--pad-inline);
+    padding-right: var(--pad-inline);
     border-top: 1px solid var(--gray-100);
   }
   .impact-eyebrow {
@@ -699,6 +734,27 @@
     margin: 0;
   }
 
+  /* ---------- SLIDESHOW EMBED ---------- */
+  .slideshow-embed {
+    position: relative;
+    width: 100%;
+    margin: 24px auto 0;
+    /* Matches the embed's native 1440x839 proportions so it scales cleanly
+       at any width instead of being stretched or cropped. */
+    aspect-ratio: 1440 / 839;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--gray-100);
+  }
+  .slideshow-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
   /* ---------- FOOTER ---------- */
   .footer {
     border-top: 1px solid var(--gray-100);
@@ -711,6 +767,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 32px var(--pad-inline);
+    /* Sticks to the bottom of the viewport when page content is shorter than
+       the screen; behaves like a normal footer once content overflows. */
+    margin-top: auto;
   }
   .footer .accent { color: var(--cyan); }
 
@@ -1000,6 +1059,19 @@
     line-height: 1.5;
   }
 
+  /* Mailchimp GDPR consent copy — left-aligned fine print inside the form,
+     unlike .modal-fineprint which is centered and sits below the submit button. */
+  .consent-text {
+    font-size: 12px;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin: 4px 0 0;
+  }
+  .consent-text a {
+    color: var(--cyan);
+    text-decoration: underline;
+  }
+
   /* Body lock while modal is open */
   body.modal-open { overflow: hidden; }
 
@@ -1037,8 +1109,7 @@
   }
 
   /* ---------- RESPONSIVE ---------- */
-  @media (max-width: 1100px) {
-    :root { --nav-offset: 220px; }
+  @media (max-width: 1280px) {
     .hero {
       grid-template-columns: 1fr;
       padding: 48px var(--pad-inline);
@@ -1047,30 +1118,9 @@
     .duo {
       grid-template-columns: 1fr;
     }
-    .section--gray, .section--white { padding-top: 48px; padding-bottom: 48px; }
-    .impact { padding: 48px var(--pad-inline); }
-
-    /* Nav: wrap links to their own row below the brand/CTA */
-    .nav {
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .nav-links {
-      order: 3;
-      width: 100%;
-      gap: 20px;
-      overflow-x: auto;
-      /* Pull links flush to the nav's bottom edge so the gold underline meets the border */
-      margin: 0 0 -16px 0;
-      padding-bottom: 0;
-      -webkit-overflow-scrolling: touch;
-    }
-    .nav-links a {
-      padding: 8px 2px;
-      /* Extend the link's hit/border area down to the bottom of the nav */
-      padding-bottom: 16px;
-    }
-    .nav-cta-group .btn-gold span:not(.arrow) { display: inline; }
+    /* Updates section--gray/section--white/.impact padding-top together,
+       and keeps the scroll-margin-top compensation above in sync with it. */
+    :root { --section-pad-top: 48px; }
   }
   @media (max-width: 720px) {
     .footer {
@@ -1118,8 +1168,8 @@
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph-fill ph-facebook-logo" aria-hidden="true"></i>
       </a>
-      <a href="#" class="btn btn-navy" data-volunteer-trigger>
-        Get involved <span class="arrow" aria-hidden="true">→</span>
+      <a href="#" class="btn btn-gold" data-newsletter-trigger>
+        Join the newsletter <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
 
@@ -1141,8 +1191,8 @@
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph-fill ph-facebook-logo" aria-hidden="true"></i>
       </a>
-      <a href="#" class="btn btn-navy" data-volunteer-trigger>
-        Get involved <span class="arrow" aria-hidden="true">→</span>
+      <a href="#" class="btn btn-gold" data-newsletter-trigger>
+        Join the newsletter <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </div>
@@ -1156,7 +1206,7 @@
       <p class="hero-lead">Our PTO's mission is to work as partners with the parents, administrators, faculty and staff, to ensure Crowders Creek Elementary continues to be a safe and educational place for our children to learn.</p>
       <div class="hero-actions">
         <a href="#" class="btn btn-gold" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-        <a href="#" class="btn btn-navy" data-volunteer-trigger>Get involved <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="stat-grid" aria-label="PTO at a glance">
@@ -1189,11 +1239,20 @@
 
       <div class="priority-item">
         <div class="priority-text">
-          <p class="priority-tag">Action needed</p>
-          <p class="priority-title">School Supply Box Orders — Order for next year</p>
-          <p class="priority-meta">Closes June 16th, 2026</p>
+          <p class="priority-tag">Buy tickets</p>
+          <p class="priority-title">Golden Ticket Parking Raffle</p>
+          <p class="priority-meta">Buy raffle tickets for a chance to win the Golden Ticket parking pass — skip the pickup line for a full semester. One winner per grade, notified by email. Closes Aug 8th at 9:00 PM.</p>
         </div>
-        <a href="https://1stdayschoolsupplies.com/gs/94316" target="_blank" rel="noopener" class="btn btn-translucent">Order now <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://www.zeffy.com/en-US/ticketing/crowders-creek-pto-golden-ticket-raffle" target="_blank" rel="noopener" class="btn btn-translucent">Buy tickets <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-text">
+          <p class="priority-tag">Share the memories</p>
+          <p class="priority-title">First Day of School Photo Album</p>
+          <p class="priority-meta">Snap a picture of your Eagle heading off to their first day and add it to our shared album — it's the best way to celebrate the new school year together as a PTO family.</p>
+        </div>
+        <a href="https://photos.app.goo.gl/WvfTCwvnt9VvsAa6A" target="_blank" rel="noopener" class="btn btn-translucent">Add your photo <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
       <div class="priority-item">
@@ -1202,7 +1261,7 @@
           <p class="priority-title">Sign up for the PTO newsletter</p>
           <p class="priority-meta">Events, volunteer opportunities, and CCE news in your inbox</p>
         </div>
-        <a href="#" class="btn btn-translucent" data-newsletter-trigger>Sign up <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#" class="btn btn-translucent" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -1218,7 +1277,7 @@
         <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
         <div class="card-actions">
           <a href="#" class="btn btn-gold" data-newsletter-trigger>Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="#" class="btn btn-translucent btn-translucent--on-dark" data-volunteer-trigger>Get involved <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-translucent btn-translucent--on-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
 
@@ -1236,16 +1295,16 @@
             </div>
           </div>
           <div class="board-person">
-            <div class="avatar" aria-hidden="true">VP</div>
+            <div class="avatar" aria-hidden="true">CH</div>
             <div>
-              <p class="board-person-name">Name here</p>
+              <p class="board-person-name">Carolyn Hammonds</p>
               <p class="board-person-role">Vice President</p>
             </div>
           </div>
           <div class="board-person">
-            <div class="avatar" aria-hidden="true">SE</div>
+            <div class="avatar" aria-hidden="true">LJ</div>
             <div>
-              <p class="board-person-name">Name here</p>
+              <p class="board-person-name">Liz Johnson</p>
               <p class="board-person-role">Secretary</p>
             </div>
           </div>
@@ -1279,16 +1338,6 @@
           </div>
           <p class="quick-card-title">Lunch signup</p>
           <p class="quick-card-sub">Join your kiddo for lunch</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://1stdayschoolsupplies.com/gs/94316" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-backpack"></i>
-          </div>
-          <p class="quick-card-title">Order school supplies</p>
-          <p class="quick-card-sub">Order supplies for 2026-27</p>
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
@@ -1362,6 +1411,16 @@
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
+      <a href="https://photos.app.goo.gl/WvfTCwvnt9VvsAa6A" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-camera"></i>
+          </div>
+          <p class="quick-card-title">First day of school photos</p>
+          <p class="quick-card-sub">Upload your Eagle's first day pic</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
 
@@ -1403,6 +1462,15 @@
     </div>
   </section>
 
+  <!-- Slideshow -->
+  <section class="section section--white" id="slideshow" aria-labelledby="slideshow-title">
+    <p class="impact-eyebrow">Take a look</p>
+    <h2 class="impact-title" id="slideshow-title">PTO Slideshow</h2>
+    <div class="slideshow-embed">
+      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTXhkWoO9yVaMWic8nAa0kYsVeLb9W41ow7sBFx40SiuS7wwN-MPI3yUQFjZcGXoCkDL3JxVJtag7d4/pubembed?start=false&amp;loop=false&amp;delayms=3000" allowfullscreen loading="lazy" title="CCE PTO slideshow"></iframe>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
@@ -1425,7 +1493,7 @@
 
     <form
       class="modal-form"
-      action="https://gmail.us20.list-manage.com/subscribe/post?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;f_id=00e060eef0"
+      action="https://gmail.us20.list-manage.com/subscribe/post?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;v_id=4688&amp;f_id=00e060eef0"
       method="post"
       target="mc-iframe"
       novalidate
@@ -1445,6 +1513,21 @@
         <label for="mc-email">Email <span class="req" aria-hidden="true">*</span></label>
         <input type="email" id="mc-email" name="EMAIL" autocomplete="email" placeholder="you@example.com" required>
       </div>
+
+      <!-- Mailchimp GDPR consent field — required by the "Newsletter" audience.
+           Field id/name (gdpr[68706]) comes straight from the audience's embedded-form
+           code and must match exactly or Mailchimp silently drops the submission. -->
+      <div class="form-field">
+        <label>Stay connected with the CCE PTO</label>
+        <p class="consent-text">By signing up, you agree to receive communications from the CCE PTO regarding school news, volunteer opportunities, upcoming fundraisers, and community events.</p>
+        <label class="checkbox-option">
+          <input type="checkbox" id="mc-gdpr-68706" name="gdpr[68706]" value="Y" required>
+          I agree to receive communications from the CCE PTO
+        </label>
+        <p class="consent-text">You can unsubscribe at any time by clicking the link in the footer of our emails.</p>
+      </div>
+
+      <p class="consent-text">We use Mailchimp as our marketing platform. By clicking below to subscribe, you acknowledge that your information will be transferred to Mailchimp for processing. <a href="https://mailchimp.com/legal/terms" target="_blank" rel="noopener">Learn more</a> about Mailchimp's privacy practices.</p>
 
       <!-- Mailchimp honeypot — real users never see this; bots fill it and get rejected -->
       <div class="hp-field" aria-hidden="true">
@@ -1660,83 +1743,173 @@
     }
   })();
 
+  // Keep --nav-offset in sync with the nav's real rendered height, so every
+  // anchor link (Home, Volunteer, Quick links, Impact...) scrolls its target
+  // just clear of the sticky nav — not a fixed guess that's sometimes way too
+  // generous (leaving the previous section still showing) and sometimes too
+  // tight. This also fixes mobile, where the collapsed hamburger nav is much
+  // shorter than the desktop two-row nav but was using the same offset.
+  (function () {
+    const navEl = document.querySelector('.nav');
+    if (!navEl) return;
+    function updateNavOffset() {
+      const h = Math.round(navEl.getBoundingClientRect().height);
+      // Small extra breathing room so headings don't sit flush against the nav
+      document.documentElement.style.setProperty('--nav-offset', (h + 24) + 'px');
+    }
+    window.addEventListener('load', updateNavOffset);
+    window.addEventListener('resize', updateNavOffset);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(updateNavOffset);
+    }
+    updateNavOffset();
+  })();
+
   // Scroll spy — keeps the gold underline on the section currently in view
   (function () {
-    const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
+    const navLinks = Array.from(document.querySelectorAll('.nav-links a, .mobile-menu-link'));
     if (!navLinks.length) return;
 
-    // Map each link to its target section. The "Home" link points at #top
-    // (the whole page), so we treat it as the default when nothing else matches.
-    const links = navLinks
-      .map(a => {
-        const href = a.getAttribute('href') || '';
-        const id = href.startsWith('#') ? href.slice(1) : '';
-        const section = id ? document.getElementById(id) : null;
-        return { a, id, section };
-      })
-      .filter(item => item.section);
+    // Group ALL anchors (desktop nav-links + mobile-menu-links) by target id,
+    // so clicking or scrolling to a section highlights both the desktop and
+    // mobile copies of that link together, not just whichever was clicked.
+    const targets = new Map(); // id -> { section, elements: [] }
+    navLinks.forEach(a => {
+      const href = a.getAttribute('href') || '';
+      const id = href.startsWith('#') ? href.slice(1) : '';
+      const section = id ? document.getElementById(id) : null;
+      if (!section) return;
+      if (!targets.has(id)) targets.set(id, { section, elements: [] });
+      targets.get(id).elements.push(a);
+    });
+    if (!targets.size) return;
 
-    const homeLink = links.find(l => l.id === 'top');
+    const homeId = targets.has('top') ? 'top' : null;
     // Sections to actually observe (skip #top — that's the whole page)
-    const observed = links.filter(l => l.id !== 'top');
-    if (!observed.length) return;
+    const observedIds = Array.from(targets.keys()).filter(id => id !== 'top');
+    if (!observedIds.length) return;
 
-    function setActive(targetLink) {
-      links.forEach(l => l.a.classList.toggle('is-active', l === targetLink));
+    function setActive(activeId) {
+      targets.forEach((target, id) => {
+        target.elements.forEach(a => a.classList.toggle('is-active', id === activeId));
+      });
     }
+
+    // Highlight the clicked link (and its desktop/mobile counterpart)
+    // immediately, rather than waiting for the scroll-driven
+    // IntersectionObserver below to catch up — with smooth scrolling, that
+    // observer can lag a beat behind the click, which is why the link only
+    // used to highlight after an extra nudge of the scroll.
+    targets.forEach((target, id) => {
+      target.elements.forEach(a => a.addEventListener('click', () => setActive(id)));
+    });
+
+    // Trigger line = how much of the viewport the sticky nav actually covers.
+    // Measured live and RE-measured (rather than a one-time guess) since the
+    // nav's real height can shift after this script first runs — e.g. once
+    // the web font finishes loading and reflows the nav, or when resizing
+    // across the mobile hamburger breakpoint. An IntersectionObserver's
+    // rootMargin can't be updated in place, so we rebuild the observer
+    // itself whenever the nav height might have changed.
+    const navEl = document.querySelector('.nav');
+    let triggerLine = 120;
 
     // Track which observed sections are currently intersecting,
     // pick the one nearest the top of the viewport.
     const visible = new Map();
+    let observer = null;
 
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          const link = observed.find(l => l.section === entry.target);
-          if (!link) return;
-          if (entry.isIntersecting) {
-            visible.set(link, entry.boundingClientRect.top);
-          } else {
-            visible.delete(link);
+    function buildObserver() {
+      if (observer) observer.disconnect();
+      visible.clear();
+      triggerLine = navEl ? Math.round(navEl.getBoundingClientRect().height) : 120;
+
+      observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            const id = observedIds.find(oid => targets.get(oid).section === entry.target);
+            if (!id) return;
+            if (entry.isIntersecting) {
+              visible.set(id, entry.boundingClientRect.top);
+            } else {
+              visible.delete(id);
+            }
+          });
+
+          if (visible.size === 0) {
+            // No tracked section in view — fall back to Home
+            if (homeId) setActive(homeId);
+            return;
           }
-        });
 
-        if (visible.size === 0) {
-          // No tracked section in view — fall back to Home
-          if (homeLink) setActive(homeLink);
-          return;
+          // Pick the section whose top is closest to (but not past) the viewport top
+          let best = null;
+          let bestDist = Infinity;
+          visible.forEach((top, id) => {
+            // Prefer sections whose top is at or above the trigger line.
+            // Distance from trigger line — smaller is better.
+            const dist = Math.abs(top - triggerLine);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = id;
+            }
+          });
+          if (best) setActive(best);
+        },
+        {
+          // Trigger when a section's top crosses the trigger line.
+          // rootMargin top is negative so detection happens slightly into the section.
+          rootMargin: `-${triggerLine}px 0px -50% 0px`,
+          threshold: 0
         }
+      );
 
-        // Pick the section whose top is closest to (but not past) the viewport top
-        let best = null;
-        let bestDist = Infinity;
-        visible.forEach((top, link) => {
-          // Prefer sections whose top is at or above the trigger line.
-          // Distance from trigger (~120px from top) — smaller is better.
-          const dist = Math.abs(top - 120);
-          if (dist < bestDist) {
-            bestDist = dist;
-            best = link;
-          }
-        });
-        if (best) setActive(best);
-      },
-      {
-        // Trigger when a section's top is ~120px from the viewport top.
-        // rootMargin top is negative so detection happens slightly into the section.
-        rootMargin: '-120px 0px -50% 0px',
-        threshold: 0
-      }
-    );
+      observedIds.forEach(id => observer.observe(targets.get(id).section));
+    }
 
-    observed.forEach(l => observer.observe(l.section));
+    buildObserver();
+    window.addEventListener('load', buildObserver);
+    window.addEventListener('resize', buildObserver);
+    // Web fonts can reflow the nav's height slightly after first paint
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(buildObserver);
+    }
 
     // Edge case: at the very top of the page, force Home active
     function checkTop() {
-      if (window.scrollY < 100 && homeLink) setActive(homeLink);
+      if (window.scrollY < triggerLine && homeId) setActive(homeId);
     }
     window.addEventListener('scroll', checkTop, { passive: true });
     checkTop();
+  })();
+
+  // Ensure short/late sections (like #impact, the last one before the footer)
+  // can always scroll clear of the sticky nav. Rather than guessing a fixed
+  // amount of extra space (which can look like an ugly empty gap when it's
+  // not needed), measure the exact shortfall and add only that much.
+  (function () {
+    const footer = document.querySelector('.footer');
+    const lastSection = document.getElementById('impact');
+    if (!footer || !lastSection) return;
+
+    function fix() {
+      footer.style.paddingBottom = ''; // reset before measuring
+      const navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 0;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const sectionTop = lastSection.getBoundingClientRect().top + window.scrollY;
+      const neededScroll = sectionTop - navOffset;
+      const deficit = Math.ceil(neededScroll - maxScroll);
+      if (deficit > 0) {
+        footer.style.paddingBottom = `calc(32px + ${deficit}px)`;
+      }
+    }
+
+    window.addEventListener('load', fix);
+    window.addEventListener('resize', fix);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fix);
+    }
+    fix();
   })();
 
   // Modal setup — generic helper used by both newsletter and volunteer modals
