@@ -341,7 +341,6 @@
     background: var(--white);
     border-radius: var(--radius-lg);
     width: 100%; max-width: 480px;
-    box-shadow: 0 20px 60px rgba(11, 30, 79, 0.25), 0 0 0 1px rgba(11, 30, 79, 0.08);
     transform: translateY(20px) scale(0.97);
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     max-height: calc(100vh - 40px);
@@ -363,6 +362,30 @@
   }
   .modal-close:hover { background: var(--gray-100); }
   .modal-close i { font-size: 18px; line-height: 1; }
+  .modal--lg {
+    max-width: 560px;
+    max-height: calc(100vh - 32px);
+  }
+  /* Newsletter modal — embeds Mailchimp's own hosted signup page. Mailchimp's page
+     is always white/light and can't follow our dark mode, so we lock this modal's
+     own chrome to light-mode colors too — otherwise our text/background would
+     invert while the iframe stays white, looking like two mismatched pieces. */
+  #newsletter-modal .modal { background: #ffffff; }
+  #newsletter-modal .modal-eyebrow { color: #fac73f; }
+  #newsletter-modal .modal-title { color: #0b1e4f; }
+  #newsletter-modal .modal-subtitle { color: #737985; margin-bottom: 0; }
+  #newsletter-modal .modal-close { background: #f8f8f8; color: #0b1e4f; }
+  #newsletter-modal .modal-close:hover { background: #e9e9ea; }
+  .modal-iframe-wrap {
+    padding: 0 4px 4px;
+  }
+  .modal-iframe {
+    width: 100%;
+    height: 620px;
+    max-height: calc(100vh - 220px);
+    border: 0;
+    display: block;
+  }
   .modal-form { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 14px; }
   .form-field { display: flex; flex-direction: column; gap: 6px; }
   .form-field label { font-size: 12px; font-weight: 600; color: var(--navy); letter-spacing: 0.3px; }
@@ -376,6 +399,15 @@
   .form-field input::placeholder { color: var(--gray-500); opacity: 0.7; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 420px) { .form-row { grid-template-columns: 1fr; gap: 14px; } }
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+  }
+  .checkbox-grid--stacked {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
   .checkbox-option {
     display: flex; align-items: center; gap: 8px; padding: 10px 12px;
     border: 1px solid var(--gray-200); border-radius: var(--radius-sm); cursor: pointer;
@@ -383,7 +415,48 @@
     font-size: 14px; font-weight: 500; color: var(--navy); user-select: none;
   }
   .checkbox-option:hover { border-color: var(--cyan); }
-  .checkbox-option input[type="checkbox"] { accent-color: var(--cyan); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+  /* Custom checkbox — the native checkbox (even with accent-color) renders/animates
+     its checked state inconsistently across browsers, which can look like the box
+     "grows" or pops when clicked. Drawing it ourselves keeps it a fixed size always. */
+  .checkbox-option input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    flex: 0 0 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .checkbox-option input[type="checkbox"]:checked {
+    background: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .checkbox-option input[type="checkbox"]:checked::after {
+    content: '';
+    width: 4px;
+    height: 8px;
+    border: solid var(--cce-white-inverted);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .checkbox-option input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
   .checkbox-option:has(input:checked) { border-color: var(--cyan); background: rgba(0, 160, 208, 0.08); }
   .hp-field { position: absolute; left: -5000px; width: 1px; height: 1px; overflow: hidden; }
   .modal-submit {
@@ -398,6 +471,15 @@
   .modal-fineprint { font-size: 12px; color: var(--gray-500); margin: 4px 0 0; text-align: center; line-height: 1.5; }
   .consent-text { font-size: 12px; color: var(--gray-500); line-height: 1.5; margin: 4px 0 0; }
   .consent-text a { color: var(--cyan); text-decoration: underline; }
+  .checkbox-group-error {
+    font-size: 12px;
+    font-weight: 600;
+    color: #d64545;
+    margin: 6px 0 0;
+  }
+  [data-required-group].is-invalid .checkbox-option {
+    border-color: #d64545;
+  }
   body.modal-open { overflow: hidden; }
   .modal-form[hidden], .modal-success[hidden] { display: none !important; }
   .modal-success { padding: 12px 28px 36px; text-align: center; }
@@ -478,8 +560,7 @@
           <h2 class="teacher-card-title">Class t-shirt change form</h2>
           <p class="teacher-card-body">If you have a new student, received the wrong size or anything else class t-shirt related please submit those changes here and we will get them worked out.</p>
         </div>
-        <!-- TODO: swap in the real Google Form URL for t-shirt changes -->
-        <a href="#" target="_blank" rel="noopener" class="teacher-card-btn">T-shirt change form <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeN8sDoxQAO8LW8zxWi_tWiddLmtsXr7_tJofqcnVrdeAUG7A/viewform?usp=publish-editor" target="_blank" rel="noopener" class="teacher-card-btn">T-shirt change form <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
       <div class="teacher-card">
@@ -487,8 +568,7 @@
           <h2 class="teacher-card-title">Room parent submission</h2>
           <p class="teacher-card-body">Please submit information about your volunteers no later than September 1st, 2026.</p>
         </div>
-        <!-- TODO: swap in the real Google Form URL for room parent submissions -->
-        <a href="#" target="_blank" rel="noopener" class="teacher-card-btn">Add room parent to your class <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScR0vbEtoOzcMGJQXkXUHvkFO2dobUWxjUEk68akzs9KaQIRA/viewform?usp=publish-editor" target="_blank" rel="noopener" class="teacher-card-btn">Add room parent to your class <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
       <div class="teacher-card">
@@ -496,8 +576,7 @@
           <h2 class="teacher-card-title">Favorite things survey</h2>
           <p class="teacher-card-body">Submit your favorite things survey, we will help communicate this with your classroom parents.</p>
         </div>
-        <!-- TODO: swap in the real Google Form URL for the favorite things survey -->
-        <a href="#" target="_blank" rel="noopener" class="teacher-card-btn">Start survey <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSea16lLq8mIugFmvUcMxuTMWZAr4WA7tHJHy1FhYHUIei0UZQ/viewform?usp=publish-editor" target="_blank" rel="noopener" class="teacher-card-btn">Start survey <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -510,9 +589,13 @@
 
 </main>
 
-<!-- Newsletter signup modal -->
+<!-- Newsletter signup modal — embeds Mailchimp's own hosted signup page in an iframe.
+     A native form posting in the background can't work here: Mailchimp gates this
+     account's signups behind a reCAPTCHA "confirm you're human" challenge (confirmed
+     by inspecting the real response), and a hidden iframe can never let a person
+     click that checkbox. Showing the real page lets people actually complete it. -->
 <div class="modal-backdrop" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
-  <div class="modal">
+  <div class="modal modal--lg">
     <div class="modal-header">
       <button type="button" class="modal-close" aria-label="Close" data-modal-close>
         <i class="ph ph-x" aria-hidden="true"></i>
@@ -522,60 +605,16 @@
       <p class="modal-subtitle">Get PTO events, volunteer opportunities, and CCE news delivered straight to your inbox.</p>
     </div>
 
-    <form
-      class="modal-form"
-      action="https://gmail.us20.list-manage.com/subscribe/post?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;v_id=4688&amp;f_id=00e060eef0"
-      method="post"
-      target="mc-iframe"
-      novalidate
-    >
-      <div class="form-row">
-        <div class="form-field">
-          <label for="mc-fname">First name</label>
-          <input type="text" id="mc-fname" name="FNAME" autocomplete="given-name" placeholder="Jane">
-        </div>
-        <div class="form-field">
-          <label for="mc-lname">Last name</label>
-          <input type="text" id="mc-lname" name="LNAME" autocomplete="family-name" placeholder="Doe">
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label for="mc-email">Email <span class="req" aria-hidden="true">*</span></label>
-        <input type="email" id="mc-email" name="EMAIL" autocomplete="email" placeholder="you@example.com" required>
-      </div>
-
-      <div class="form-field">
-        <label>Stay connected with the CCE PTO</label>
-        <p class="consent-text">By signing up, you agree to receive communications from the CCE PTO regarding school news, volunteer opportunities, upcoming fundraisers, and community events.</p>
-        <label class="checkbox-option">
-          <input type="checkbox" id="mc-gdpr-68706" name="gdpr[68706]" value="Y" required>
-          I agree to receive communications from the CCE PTO
-        </label>
-        <p class="consent-text">You can unsubscribe at any time by clicking the link in the footer of our emails.</p>
-      </div>
-
-      <p class="consent-text">We use Mailchimp as our marketing platform. By clicking below to subscribe, you acknowledge that your information will be transferred to Mailchimp for processing. <a href="https://mailchimp.com/legal/terms" target="_blank" rel="noopener">Learn more</a> about Mailchimp's privacy practices.</p>
-
-      <div class="hp-field" aria-hidden="true">
-        <input type="text" name="b_18edc8a2096d429a064c21bde_c7ed4d5149" tabindex="-1" value="" autocomplete="off">
-      </div>
-
-      <button type="submit" class="modal-submit">Subscribe</button>
-      <p class="modal-fineprint">We'll never share your email. Unsubscribe any time.</p>
-    </form>
-
-    <div class="modal-success" hidden>
-      <div class="success-icon" aria-hidden="true">
-        <i class="ph ph-check"></i>
-      </div>
-      <h3 class="success-title">You're on the list!</h3>
-      <p class="success-body">Check your inbox to confirm your subscription. We can't wait to share what's coming up at CCE.</p>
+    <div class="modal-iframe-wrap">
+      <iframe
+        class="modal-iframe"
+        src="https://gmail.us20.list-manage.com/subscribe?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;v_id=4688&amp;f_id=00e060eef0"
+        title="Join the CCE PTO newsletter"
+        loading="lazy"
+      ></iframe>
     </div>
   </div>
 </div>
-
-<iframe name="mc-iframe" title="Newsletter submission" aria-hidden="true" tabindex="-1" style="position:absolute; width:0; height:0; border:0; left:-9999px;"></iframe>
 
 <script>
   // Mobile menu toggle
@@ -644,33 +683,21 @@
     }
   })();
 
-  // Newsletter modal
-  (function () {
-    const modal = document.getElementById('newsletter-modal');
+  // Simple modal setup — for modals that just open/close (no local form/success
+  // state to manage), like the newsletter modal which embeds Mailchimp's own
+  // hosted signup page directly rather than handling the submission itself.
+  function setupSimpleModal(opts) {
+    const modal = document.getElementById(opts.modalId);
     if (!modal) return;
-    const form = modal.querySelector('.modal-form');
-    const success = modal.querySelector('.modal-success');
-    const submitBtn = modal.querySelector('.modal-submit');
-    const iframe = document.querySelector('iframe[name="mc-iframe"]');
-    const firstField = modal.querySelector('input:not([type="hidden"]):not([type="checkbox"])');
-    const emailField = modal.querySelector('input[name="EMAIL"]');
-    const originalSubmitText = submitBtn ? submitBtn.textContent : '';
     let lastFocused = null;
-    let submitting = false;
 
     function openModal(e) {
       if (e) e.preventDefault();
       lastFocused = document.activeElement;
-      form.hidden = false;
-      success.hidden = true;
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalSubmitText;
-      submitting = false;
       modal.hidden = false;
       void modal.offsetWidth;
       modal.classList.add('is-open');
       document.body.classList.add('modal-open');
-      setTimeout(() => firstField && firstField.focus(), 100);
     }
 
     function closeModal() {
@@ -679,42 +706,10 @@
       setTimeout(() => {
         modal.hidden = true;
         if (lastFocused) lastFocused.focus();
-        form.reset();
       }, 200);
     }
 
-    function showSuccess() {
-      form.hidden = true;
-      success.hidden = false;
-      setTimeout(closeModal, 3500);
-    }
-
-    form.addEventListener('submit', function (e) {
-      if (!emailField.value || !emailField.checkValidity()) {
-        emailField.reportValidity();
-        e.preventDefault();
-        return;
-      }
-      if (submitting) {
-        e.preventDefault();
-        return;
-      }
-      submitting = true;
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Subscribing…';
-
-      let done = false;
-      const finish = function () {
-        if (done) return;
-        done = true;
-        iframe.removeEventListener('load', finish);
-        showSuccess();
-      };
-      iframe.addEventListener('load', finish);
-      setTimeout(finish, 2500);
-    });
-
-    document.querySelectorAll('[data-newsletter-trigger]').forEach(btn => {
+    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
       btn.addEventListener('click', openModal);
     });
 
@@ -727,8 +722,19 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
     });
-  })();
+  }
+
+  // Newsletter modal
+  setupSimpleModal({
+    modalId: 'newsletter-modal',
+    triggerAttr: 'data-newsletter-trigger'
+  });
 </script>
+
+<!-- Mailchimp "Connected Site" script — lets Mailchimp manage its own popup/embedded
+     forms (including the reCAPTCHA challenge) directly on this page, rather than us
+     trying to replicate the submission ourselves. -->
+<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/18edc8a2096d429a064c21bde/8a29d7d3a4cdde3d3f7e71a6e.js");</script>
 
 </body>
 </html>
