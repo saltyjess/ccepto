@@ -1555,7 +1555,7 @@
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
-    <span class="accent" id="footer-dateline">Countdown to fall semester</span>
+    <span class="accent" id="footer-dateline">School year countdown</span>
   </footer>
 
 </main>
@@ -1754,28 +1754,42 @@
   // Auto-fill the year so the footer doesn't go stale
   document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-  // Live countdown to the first day of the fall semester.
+  // Live countdown in the footer dateline. Before the fall semester starts we
+  // count down to the first day; once it's underway the countdown rolls over to
+  // fall break, then goes quiet after classes resume.
   (function () {
-    const FALL_START = new Date(2026, 7, 3); // Aug 3, 2026 (months are 0-indexed)
+    const FALL_START = new Date(2026, 7, 3);      // Aug 3, 2026 (months are 0-indexed)
+    const BREAK_START = new Date(2026, 9, 5);     // Oct 5, 2026
+    // Break runs Oct 5-9; Oct 12 is a teacher work day, so students are back Oct 13.
+    const CLASSES_RESUME = new Date(2026, 9, 13); // Oct 13, 2026
     const today = new Date();
     // Zero out the time so we count whole days
     today.setHours(0, 0, 0, 0);
     const msPerDay = 1000 * 60 * 60 * 24;
-    const diff = Math.ceil((FALL_START - today) / msPerDay);
+    const toFallStart = Math.ceil((FALL_START - today) / msPerDay);
+    const toBreak = Math.ceil((BREAK_START - today) / msPerDay);
     const formatted = today.toLocaleDateString('en-US', {
       weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
     });
     const target = document.getElementById('footer-dateline');
     if (!target) return;
-    if (diff > 1) {
-      target.textContent = `${formatted}  ·  ${diff} days until the fall semester`;
-    } else if (diff === 1) {
-      target.textContent = `${formatted}  ·  Fall semester starts tomorrow`;
-    } else if (diff === 0) {
-      target.textContent = `${formatted}  ·  First day of the fall semester`;
+    let message;
+    if (toFallStart > 1) {
+      message = `${toFallStart} days until the fall semester`;
+    } else if (toFallStart === 1) {
+      message = 'Fall semester starts tomorrow';
+    } else if (toFallStart === 0) {
+      message = 'First day of the fall semester';
+    } else if (toBreak > 1) {
+      message = `${toBreak} days until fall break`;
+    } else if (toBreak === 1) {
+      message = 'Fall break starts tomorrow';
+    } else if (today < CLASSES_RESUME) {
+      message = 'Fall break is here';
     } else {
-      target.textContent = `${formatted}  ·  Fall semester is underway`;
+      message = 'Fall semester is underway';
     }
+    target.textContent = `${formatted}  ·  ${message}`;
   })();
 
   // Keep --nav-offset in sync with the nav's real rendered height, so every
