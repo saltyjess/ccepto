@@ -642,6 +642,16 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(11, 30, 79, 0.18);
   }
+  /* Placeholder state for a quick link whose destination isn't live yet.
+     Rendered as a plain div (not an <a>) so it isn't clickable or focusable. */
+  .quick-card--soon {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .quick-card--soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
   .quick-card-body { flex: 1; min-width: 0; }
   .quick-card-icon {
     color: var(--cce-white);
@@ -1407,27 +1417,31 @@
     <h2 class="card-title" id="ql-title">Quick links</h2>
 
     <div class="quick-grid">
-      <a href="https://www.signupgenius.com/go/10C0E4DA4A722A6F4C43-20232024#/" target="_blank" rel="noopener" class="quick-card">
+      <!-- Disabled until this year's lunch signup is ready. To restore, swap the
+           div back to an <a> with the new link, re-add the arrow span, and change
+           the sub-label back to "Join your kiddo for lunch".
+           Previous (2023-24) link: https://www.signupgenius.com/go/10C0E4DA4A722A6F4C43-20232024#/ -->
+      <div class="quick-card quick-card--soon">
         <div class="quick-card-body">
           <div class="quick-card-icon" aria-hidden="true">
             <i class="ph ph-fork-knife"></i>
           </div>
           <p class="quick-card-title">Lunch signup</p>
-          <p class="quick-card-sub">Join your kiddo for lunch</p>
+          <p class="quick-card-sub">Coming soon</p>
         </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <!-- Hidden for now until the Fall signup link is ready -->
-      <a href="#" class="quick-card" hidden>
+      </div>
+      <!-- Shown as a placeholder until the Fall signup link is ready. To restore,
+           swap the div back to an <a> with the new link, re-add the arrow span, and
+           change the sub-label back to "Decorate the spirit rock". -->
+      <div class="quick-card quick-card--soon">
         <div class="quick-card-body">
           <div class="quick-card-icon" aria-hidden="true">
             <i class="ph ph-mountains"></i>
           </div>
-          <p class="quick-card-title">Spirit rock signup<br>Fall</p>
-          <p class="quick-card-sub">Decorate the spirit rock</p>
+          <p class="quick-card-title">Fall spirit rock signup</p>
+          <p class="quick-card-sub">Coming soon</p>
         </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
+      </div>
       <a href="https://1stplacespiritwear.com/schools/SC/Clover/Crowders+Creek+Elementary+School/collection_detail.html" target="_blank" rel="noopener" class="quick-card">
         <div class="quick-card-body">
           <div class="quick-card-icon" aria-hidden="true">
@@ -1448,7 +1462,7 @@
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
-      <a href="https://calendar.google.com/calendar/u/0/embed?src=0166175523e1f45eb7b90be20eef0f8f3fb52186d72b7a7b97305bbffeb98485@group.calendar.google.com&ctz=America/New_York" target="_blank" rel="noopener" class="quick-card">
+      <a href="https://calendar.google.com/calendar/r?cid=0166175523e1f45eb7b90be20eef0f8f3fb52186d72b7a7b97305bbffeb98485%40group.calendar.google.com" target="_blank" rel="noopener" class="quick-card">
         <div class="quick-card-body">
           <div class="quick-card-icon" aria-hidden="true">
             <i class="ph ph-calendar"></i>
