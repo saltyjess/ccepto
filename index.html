@@ -235,12 +235,14 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
   }
   .nav-logo-img {
-    height: 64px;
     width: auto;
+    height: auto;
+    max-height: 52px;
+    max-width: 100%;
     display: block;
-    flex-shrink: 0;
   }
   .nav-brand-text {
     font-weight: 700;
@@ -1233,6 +1235,7 @@
     .nav-links { display: none; }
     .nav-cta-group { display: none; }
     .nav-hamburger { display: inline-flex; }
+    .nav-logo-img { max-height: 44px; max-width: calc(100vw - 96px); }
     .stat-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -1254,7 +1257,7 @@
   <!-- Nav -->
   <nav class="nav" aria-label="Primary">
     <a href="#" class="nav-brand" aria-label="Crowders Creek Elementary PTO home">
-      <img src="pto-logo.png" alt="Crowders Creek Elementary PTO logo" class="nav-logo-img" width="345" height="235">
+      <img src="pto-logo.png" alt="Crowders Creek Elementary PTO logo" class="nav-logo-img" width="1069" height="169">
     </a>
 
     <div class="nav-links">
@@ -1269,6 +1272,9 @@
     <div class="nav-cta-group">
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph ph-facebook-logo" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+        <i class="ph ph-instagram-logo" aria-hidden="true"></i>
       </a>
       <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">
         Join the newsletter <span class="arrow" aria-hidden="true">→</span>
@@ -1292,6 +1298,9 @@
     <div class="mobile-menu-cta">
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph ph-facebook-logo" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+        <i class="ph ph-instagram-logo" aria-hidden="true"></i>
       </a>
       <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">
         Join the newsletter <span class="arrow" aria-hidden="true">→</span>
@@ -1511,6 +1520,16 @@
           </div>
           <p class="quick-card-title">Facebook</p>
           <p class="quick-card-sub">Join the Facebook group</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-instagram-logo"></i>
+          </div>
+          <p class="quick-card-title">Instagram</p>
+          <p class="quick-card-sub">Follow us on Instagram</p>
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
