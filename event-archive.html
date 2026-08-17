@@ -171,6 +171,44 @@
     padding-bottom: 16px;
   }
   .nav-links a:hover { color: var(--navy); }
+  /* Teacher hub + Parent portal are destinations, not section anchors, so they
+     sit apart at the end of the row. margin-left:auto collapses harmlessly once
+     the row overflows and scrolls instead. */
+  .nav-links .nav-link-end { margin-left: auto; }
+  /* Parent portal isn't built yet: a <span>, not a dimmed <a>, so there is
+     nothing to click, nothing to tab to and no dead URL to maintain. */
+  .nav-link-soon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    opacity: 0.7;
+    cursor: default;
+    user-select: none;
+    white-space: nowrap;
+    padding: 8px 2px 16px;
+    border-bottom: 3px solid transparent;
+  }
+  .nav-soon-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: var(--gray-100);
+    border-radius: 999px;
+    padding: 2px 6px;
+    line-height: 1.5;
+  }
+  .mobile-menu-link--soon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    cursor: default;
+    user-select: none;
+  }
   .nav-links a.is-active { color: var(--navy); font-weight: 600; border-bottom-color: var(--gold); }
 
   .nav-cta-group { display: flex; align-items: center; gap: 16px; }
@@ -645,7 +683,8 @@
       <a href="index.html#get-involved">Volunteer</a>
       <a href="index.html#quick-links">Quick links</a>
       <a href="index.html#impact">Impact</a>
-      <a href="teacher-hub.html">Teacher hub</a>
+      <a href="teacher-hub.html" class="nav-link-end">Teacher hub</a>
+      <span class="nav-link-soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
     </div>
 
     <div class="nav-cta-group">
@@ -674,6 +713,7 @@
     <a href="index.html#quick-links" class="mobile-menu-link">Quick links</a>
     <a href="index.html#impact" class="mobile-menu-link">Impact</a>
     <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
+    <span class="mobile-menu-link mobile-menu-link--soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
     <div class="mobile-menu-cta">
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph ph-facebook-logo" aria-hidden="true"></i>
