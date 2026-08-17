@@ -899,40 +899,55 @@
   // Auto-fill the year
   document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-  // Live countdown in the footer dateline. Before the fall semester starts we
-  // count down to the first day; once it's underway the countdown rolls over to
-  // fall break, then goes quiet after classes resume.
-  // Keep this in sync with the matching block in index.html.
+  // Live countdown in the footer dateline: walks the remaining dates on the
+  // 2026-27 calendar and shows the next one, then goes quiet for summer.
+  // Keep this block identical across index.html, teacher-hub.html and
+  // event-archive.html.
   (function () {
-    const FALL_START = new Date(2026, 7, 3);  // Aug 3, 2026 (months are 0-indexed)
-    const BREAK_START = new Date(2026, 9, 5); // Oct 5, 2026
-    // Break runs Oct 5-9; Oct 12 is a teacher work day, so students are back Oct 13.
-    const CLASSES_RESUME = new Date(2026, 9, 13); // Oct 13, 2026
+    // start = first day off, end = last day off (inclusive). Months are
+    // 0-indexed. kind:'day' entries are single dates rather than breaks, so
+    // they get their own phrasing — "the last day of school" can't "start
+    // tomorrow". To roll this forward a year, edit only this table.
+    const SCHEDULE = [
+      // Break runs Oct 5-9; Oct 12 is a teacher work day, so students are back Oct 13.
+      { label: 'fall break',             start: new Date(2026,  9,  5), end: new Date(2026,  9, 12) },
+      { label: 'Thanksgiving break',     start: new Date(2026, 10, 25), end: new Date(2026, 10, 27) },
+      { label: 'Christmas break',        start: new Date(2026, 11, 21), end: new Date(2027,  0,  1) },
+      { label: 'winter break',           start: new Date(2027,  1, 15), end: new Date(2027,  1, 19) },
+      { label: 'spring break',           start: new Date(2027,  2, 29), end: new Date(2027,  3,  2) },
+      { label: 'the last day of school', start: new Date(2027,  4, 28), end: new Date(2027,  4, 28), kind: 'day' },
+    ];
+
+    const target = document.getElementById('footer-dateline');
+    if (!target) return;
+
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // count whole days
     const msPerDay = 1000 * 60 * 60 * 24;
-    const toFallStart = Math.ceil((FALL_START - today) / msPerDay);
-    const toBreak = Math.ceil((BREAK_START - today) / msPerDay);
     const formatted = today.toLocaleDateString('en-US', {
       weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
     });
-    const target = document.getElementById('footer-dateline');
-    if (!target) return;
+
+    // The first entry we haven't finished yet; undefined once the year is done.
+    const next = SCHEDULE.find(e => today <= e.end);
+
     let message;
-    if (toFallStart > 1) {
-      message = `${toFallStart} days until the fall semester`;
-    } else if (toFallStart === 1) {
-      message = 'Fall semester starts tomorrow';
-    } else if (toFallStart === 0) {
-      message = 'First day of the fall semester';
-    } else if (toBreak > 1) {
-      message = `${toBreak} days until fall break`;
-    } else if (toBreak === 1) {
-      message = 'Fall break starts tomorrow';
-    } else if (today < CLASSES_RESUME) {
-      message = 'Fall break is here';
+    if (!next) {
+      message = 'Summer break is here';
+    } else if (today >= next.start) {
+      message = next.kind === 'day'
+        ? "It's the last day of school!"
+        : `${next.label} is here`;
     } else {
-      message = 'Fall semester is underway';
+      // Both dates sit at midnight, so ceil only matters across a DST shift.
+      const days = Math.ceil((next.start - today) / msPerDay);
+      if (days === 1) {
+        message = next.kind === 'day'
+          ? 'Last day of school is tomorrow'
+          : `${next.label} starts tomorrow`;
+      } else {
+        message = `${days} days until ${next.label}`;
+      }
     }
     target.textContent = `${formatted}  ·  ${message}`;
   })();
