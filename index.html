@@ -522,6 +522,22 @@
     margin: 0;
   }
 
+  /* Centered link to the archive, last item in the events block.
+     align-self centers it in .action-block's flex column. */
+  .archive-link {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    /* Non-inverting: the cyan banner stays cyan, so this stays white in both modes */
+    color: var(--cce-white-inverted);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 4px;
+  }
+  .archive-link:hover { text-decoration: underline; }
+  .archive-link .arrow { font-size: 18px; line-height: 1; }
+
   /* ---------- KNOW US + GET INVOLVED ROW ---------- */
   .duo {
     display: grid;
@@ -618,6 +634,135 @@
     font-size: 14px;
     line-height: 1.5;
     margin: 0;
+  }
+
+  /* ---------- VOLUNTEER OPPORTUNITIES (yellow panel) ----------
+     Sits below the Volunteer + Board row inside #get-involved. Yellow is a
+     CONSTANT brand surface (it does not invert in dark mode), so every colour
+     in here is either a non-inverting token or a white-alpha over the yellow —
+     never --cce-dark-blue/--cce-white, which would flip and go unreadable. */
+  .vol-panel {
+    margin-top: 24px;
+    background: var(--cce-yellow);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+  }
+  .vol-panel-head { margin-bottom: 24px; }
+  .vol-eyebrow {
+    /* Cyan is also constant in both modes, so it is safe on yellow */
+    color: var(--cce-bright-blue-deep);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .vol-panel-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cce-dark-blue-inverted);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  /* Scroller: the card row overflows horizontally once there are more cards
+     than fit. tabindex on the track makes it keyboard-scrollable; the arrow is
+     a convenience for pointer users and hides itself when nothing overflows. */
+  .vol-scroller { position: relative; }
+  .vol-track {
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .vol-track::-webkit-scrollbar { display: none; }
+  .vol-track:focus-visible { outline: 2px solid var(--cce-dark-blue-inverted); outline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) {
+    .vol-track { scroll-behavior: auto; }
+  }
+
+  .vol-card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 300px;
+  }
+  .vol-card-icon { color: var(--cce-dark-blue-inverted); font-size: 0; }
+  .vol-card-icon i { font-size: 32px; line-height: 1; }
+  .vol-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cce-dark-blue-inverted);
+    line-height: 1.25;
+    margin: 0;
+  }
+  .vol-card-body {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    line-height: 1.5;
+    color: var(--cce-dark-blue-inverted);
+    margin: 0;
+  }
+  /* Push the action to the bottom so buttons line up across uneven card copy */
+  .vol-card-action { margin-top: auto; }
+  .vol-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--cce-dark-blue-inverted);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .vol-btn:hover { background: rgba(255, 255, 255, 0.75); }
+  .vol-btn:active { transform: translateY(1px); }
+  .vol-btn .arrow { font-size: 18px; line-height: 1; }
+  /* Placeholder card: nothing to click, so it is a span, not a dimmed link */
+  .vol-btn--soon { opacity: 0.6; cursor: default; user-select: none; }
+  .vol-btn--soon:hover { background: rgba(255, 255, 255, 0.55); }
+
+  .vol-next {
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    /* Always visible, whether or not the row currently overflows — the button
+       is part of the panel's look, not just an overflow affordance. Same white
+       alpha as .vol-btn so it reads as a sibling of the card buttons. */
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--cce-dark-blue-inverted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .vol-next:hover { background: rgba(255, 255, 255, 0.75); }
+  .vol-next:active { transform: translateY(-50%) scale(0.94); }
+
+  @media (max-width: 720px) {
+    .vol-panel { padding: 24px; }
+    .vol-card { flex-basis: 260px; min-height: 0; }
   }
 
   /* ---------- QUICK LINKS ---------- */
@@ -786,6 +931,9 @@
     margin-top: auto;
   }
   .footer .accent { color: var(--cyan); }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
+  .footer-links a { color: var(--cyan); font-weight: 600; }
+  .footer-links a:hover { text-decoration: underline; }
 
   /* ---------- ACCESSIBILITY ---------- */
   .visually-hidden {
@@ -1210,12 +1358,28 @@
       padding: 48px var(--pad-inline);
       gap: 32px;
     }
+    /* Keep Volunteer + Board side by side well below 1280 — narrow the
+       Volunteer column instead of stacking the pair. */
     .duo {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    }
+    /* ...and let the board hold two people per row in the narrower space it
+       now has. At the default 220px min it would drop to one tall column at
+       ~950px, leaving a short Volunteer card beside a very long board card. */
+    .board-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
     /* Updates section--gray/section--white/.impact padding-top together,
        and keeps the scroll-margin-top compensation above in sync with it. */
     :root { --section-pad-top: 48px; }
+  }
+
+  /* Below this the board grid can no longer hold two people per row next to
+     the Volunteer card, so stack the pair instead of squeezing both. */
+  @media (max-width: 900px) {
+    .duo {
+      grid-template-columns: 1fr;
+    }
   }
   @media (max-width: 720px) {
     .footer {
@@ -1348,13 +1512,15 @@
         <h2 class="action-block-title" id="events-title">Upcoming events &amp; news</h2>
       </div>
 
+      <!-- First PTO Meeting (Aug 12, 2026) moved to event-archive.html once it passed -->
+
       <div class="priority-item">
         <div class="priority-text">
-          <p class="priority-tag">RSVP</p>
-          <p class="priority-title">First PTO Meeting</p>
-          <p class="priority-meta">Join us Wednesday, August 12th at 6:00 PM. Please RSVP so we can plan. We know it's in the evening (by request), so we will be providing childcare. It is open to all and we hope to see you there!</p>
+          <p class="priority-tag">Buy tickets</p>
+          <p class="priority-title">Golden Ticket Raffle &mdash; Semester 2</p>
+          <p class="priority-meta">Get your Golden Ticket to skip the line at pick-up AND drop-off — just come to the front office instead. One pass per grade is up for grabs each quarter, the winner is drawn at random by grade, and it covers all your kiddos at Crowders Creek. Winners will be emailed on Oct 11th.</p>
         </div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdAy-d4SWNmm3Q2CTaK5wHrzWMRcC6kVewa61TG0zvspGc8BA/viewform" target="_blank" rel="noopener" class="btn btn-translucent">RSVP <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://www.zeffy.com/en-US/ticketing/crowders-creek-golden-ticket-raffle-q2" target="_blank" rel="noopener" class="btn btn-translucent">Buy tickets <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
       <div class="priority-item">
@@ -1365,15 +1531,6 @@
         </div>
         <a href="#" class="btn btn-translucent" data-winner-trigger>See the winning logo <span class="arrow" aria-hidden="true">→</span></a>
       </div>
-
-      <div class="priority-item">
-        <div class="priority-text">
-          <p class="priority-tag">Buy tickets</p>
-          <p class="priority-title">Golden Ticket Raffle</p>
-          <p class="priority-meta">Get your Golden Ticket to skip the line at pick-up AND drop-off — just come to the front office instead. One pass per grade is up for grabs each quarter, the winner is drawn at random by grade, and it covers all your kiddos at Crowders Creek. Winners will be emailed on Oct 11th.</p>
-        </div>
-        <a href="https://www.zeffy.com/en-US/ticketing/crowders-creek-golden-ticket-raffle-q2" target="_blank" rel="noopener" class="btn btn-translucent">Buy tickets <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
       <div class="priority-item">
         <div class="priority-text">
           <p class="priority-tag">Share the memories</p>
@@ -1382,6 +1539,9 @@
         </div>
         <a href="https://photos.app.goo.gl/WvfTCwvnt9VvsAa6A" target="_blank" rel="noopener" class="btn btn-translucent">Add your photo <span class="arrow" aria-hidden="true">→</span></a>
       </div>
+
+      <!-- Way through to the past events, sitting under the live list -->
+      <a href="event-archive.html" class="archive-link">View archived events <span class="arrow" aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -1440,6 +1600,52 @@
             Email the PTO <span class="arrow" aria-hidden="true">→</span>
           </a>
         </div>
+      </div>
+    </div>
+
+    <!-- Current volunteer needs. Add a <li class="vol-card"> per opportunity;
+         the row scrolls horizontally on its own once the cards overflow, and
+         the arrow button appears automatically (see the vol-scroller script). -->
+    <div class="vol-panel">
+      <div class="vol-panel-head">
+        <p class="vol-eyebrow">Get involved</p>
+        <h2 class="vol-panel-title">Volunteer opportunities</h2>
+      </div>
+
+      <div class="vol-scroller">
+        <ul class="vol-track" tabindex="0" role="group" aria-label="Volunteer opportunities">
+          <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-student"></i></div>
+            <h3 class="vol-card-title">Volunteer help at school drop off</h3>
+            <p class="vol-card-body">Help us streamline this school drop off process! Let&rsquo;s get this working for all of us!</p>
+            <div class="vol-card-action">
+              <!-- Morning car line shifts, 7:00–7:40 AM (August signup) -->
+              <a href="https://www.signupgenius.com/go/5080A4AABA62CA0FC1-65204178-august#/" target="_blank" rel="noopener" class="vol-btn">Volunteer now <span class="arrow" aria-hidden="true">→</span></a>
+            </div>
+          </li>
+
+          <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-users-three"></i></div>
+            <h3 class="vol-card-title">Contact your teacher to join as a Room Parent</h3>
+            <p class="vol-card-body">Teachers will work with parents to establish a working relationship. Once this communication is set up, the teacher will fill out this form.</p>
+            <div class="vol-card-action">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLScR0vbEtoOzcMGJQXkXUHvkFO2dobUWxjUEk68akzs9KaQIRA/viewform" target="_blank" rel="noopener" class="vol-btn">Sign up <span class="arrow" aria-hidden="true">→</span></a>
+            </div>
+          </li>
+
+          <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-hands-clapping"></i></div>
+            <h3 class="vol-card-title">More opportunities to come</h3>
+            <p class="vol-card-body">Keep checking back</p>
+            <div class="vol-card-action">
+              <span class="vol-btn vol-btn--soon" aria-disabled="true">check back</span>
+            </div>
+          </li>
+        </ul>
+
+        <button type="button" class="vol-next" aria-label="Scroll to more volunteer opportunities">
+          <span aria-hidden="true">→</span>
+        </button>
       </div>
     </div>
   </section>
@@ -1606,6 +1812,9 @@
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
+    <nav class="footer-links" aria-label="More from the PTO">
+      <a href="event-archive.html">Event archive</a>
+    </nav>
     <span class="accent" id="footer-dateline">School year countdown</span>
   </footer>
 
@@ -2193,6 +2402,25 @@
     modalId: 'winner-modal',
     triggerAttr: 'data-winner-trigger'
   });
+
+  // Volunteer opportunities scroller. The arrow is always on screen, so with a
+  // row that fits there is simply nothing to scroll to and the click is a no-op.
+  (function () {
+    const scroller = document.querySelector('.vol-scroller');
+    if (!scroller) return;
+    const track = scroller.querySelector('.vol-track');
+    const next = scroller.querySelector('.vol-next');
+    if (!track || !next) return;
+
+    next.addEventListener('click', () => {
+      const card = track.querySelector('.vol-card');
+      // Scroll by one card + gap so cards land on the snap points
+      const step = card ? card.getBoundingClientRect().width + 24 : track.clientWidth;
+      // Wrap back to the start once the end is reached
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+      track.scrollBy({ left: atEnd ? -track.scrollWidth : step });
+    });
+  })();
 
   // Volunteer / Get involved modal
   setupModal({

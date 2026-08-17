@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teacher Hub — CCE PTO</title>
-<meta name="description" content="Crowders Creek Elementary PTO Teacher Hub — submit the class t-shirt change form, room parent submission, and favorite things survey.">
+<title>Event Archive — CCE PTO</title>
+<meta name="description" content="Crowders Creek Elementary PTO event archive — a look back at past events, raffles, votes, and sign-ups from previous school years.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIwLjllbSIgZm9udC1zaXplPSI5MCI+8J+mhTwvdGV4dD48L3N2Zz4K">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,15 +222,15 @@
     .nav-logo-img { max-height: 44px; max-width: calc(100vw - 96px); }
   }
 
-  /* ---------- TEACHER HUB HERO ---------- */
-  .teacher-hero {
+  /* ---------- EVENT ARCHIVE ---------- */
+  .archive-hero {
     flex: 1;
     background: var(--gray-50);
     border-top: 1px solid var(--gray-100);
     padding: 80px var(--pad-inline);
   }
-  .teacher-hero-head { max-width: 720px; margin-bottom: 48px; }
-  .teacher-hero-eyebrow {
+  .archive-hero-head { max-width: 720px; margin-bottom: 40px; }
+  .archive-hero-eyebrow {
     color: var(--gold);
     font-size: 12px;
     font-weight: 700;
@@ -238,14 +238,14 @@
     text-transform: uppercase;
     margin: 0 0 16px;
   }
-  .teacher-hero-title {
+  .archive-hero-title {
     font-size: clamp(30px, 4vw, 44px);
     line-height: 1.15;
     font-weight: 700;
     color: var(--navy);
     margin: 0 0 16px;
   }
-  .teacher-hero-lead {
+  .archive-hero-lead {
     font-size: 18px;
     line-height: 1.5;
     color: var(--gray-500);
@@ -253,56 +253,171 @@
     max-width: 640px;
   }
 
-  .teacher-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-  }
-  .teacher-card {
-    background: var(--white);
-    border: 1.5px solid var(--cyan);
+  /* ---------- ACTION BANNER (cyan) — same block as the home page's
+     "Upcoming events & news", so the archive reads as its counterpart.
+     Kept byte-for-byte in sync with index.html. ---------- */
+  .action-block {
+    background: linear-gradient(101deg, var(--cyan-deep) 16%, var(--cyan) 94%);
     border-radius: var(--radius-lg);
-    padding: 28px;
+    padding: 24px;
+    box-shadow: var(--shadow-cyan);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 260px;
+    gap: 16px;
   }
-  .teacher-card-title {
-    font-size: 22px;
+  .action-block-head {
+    /* Non-inverting: cyan banner stays cyan in both modes, so text must stay white in both modes */
+    color: var(--cce-white-inverted);
+  }
+  .action-block-eyebrow {
+    color: var(--cce-yellow);
+    font-size: 11px;
     font-weight: 700;
-    color: var(--navy);
-    margin: 0 0 12px;
-    line-height: 1.25;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
   }
-  .teacher-card-body {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--gray-500);
+  .action-block-title {
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 700;
     margin: 0;
+    color: var(--cce-white-inverted);
+    line-height: 1.2;
   }
-  .teacher-card-btn {
-    align-self: flex-start;
+
+  .priority-item {
+    /* Per Figma: 40% white token over cyan banner. Constant in both modes. */
+    background: var(--cce-light-button);
+    border: 1px solid var(--cce-bright-blue);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .priority-text { flex: 1 1 280px; min-width: 0; }
+  .priority-tag {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: var(--gray-50);
-    color: var(--navy);
-    border: 1px solid var(--gray-200);
-    padding: 14px 20px;
+    gap: 8px;
+    color: var(--cce-yellow);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .priority-tag::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cce-yellow);
+    display: inline-block;
+  }
+  .priority-title {
+    font-size: 18px;
+    font-weight: 600;
+    /* Non-inverting: cyan banner stays cyan, text must stay white in both modes */
+    color: var(--cce-white-inverted);
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+  .priority-meta {
+    font-size: 14px;
+    font-weight: 500;
+    /* Same: stays white-ish over the cyan banner regardless of theme */
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+  /* Live button on the cyan banner — same class the home page uses */
+  .btn-translucent {
+    background: var(--cce-light-button);
+    color: var(--cce-dark-blue-inverted);
+  }
+  .btn-translucent:hover { background: rgba(255, 255, 255, 0.6); filter: none; }
+
+  /* ---------- ARCHIVE-SPECIFIC BITS ---------- */
+  .archive-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .archive-item-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+    max-width: 100%;
+  }
+  .archive-closed {
+    /* On the cyan banner in both modes, so a fixed white alpha, not a token */
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    white-space: nowrap;
+  }
+  /* CTAs stack rather than sitting side by side: keeps a long label like
+     "See the winning logo" from running past the card edge on narrow screens,
+     and stretch + centered text makes the pair read as one control group. */
+  .archive-item-btns {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    max-width: 100%;
+  }
+  /* Closed action: a <span>, not a dimmed <a> — there is no live URL behind a
+     closed form, so there is nothing to click, nothing to tab to, and nothing
+     announced as a link. Sits lower-contrast than .btn-translucent on purpose. */
+  .archive-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: var(--radius-sm);
+    padding: 11px 18px;
     font-size: 14px;
     font-weight: 600;
-    transition: background 0.15s ease, transform 0.1s ease;
+    cursor: default;
+    user-select: none;
+    white-space: nowrap;
   }
-  .teacher-card-btn:hover { background: var(--gray-100); }
-  .teacher-card-btn:active { transform: translateY(1px); }
-  .teacher-card-btn .arrow { font-size: 16px; line-height: 1; }
+
+  /* Logo contest winner modal — black-on-white artwork, so lock the chrome to
+     light-mode colors (same reasoning as the newsletter modal above). */
+  #winner-modal .modal { background: #ffffff; }
+  #winner-modal .modal-eyebrow { color: #fac73f; }
+  #winner-modal .modal-title { color: #0b1e4f; }
+  #winner-modal .modal-subtitle { color: #737985; margin-bottom: 0; }
+  #winner-modal .modal-close { background: #f8f8f8; color: #0b1e4f; }
+  #winner-modal .modal-close:hover { background: #e9e9ea; }
+  #winner-modal .winner-img-wrap { padding: 4px 4px 8px; }
+  #winner-modal .winner-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 260px);
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 12px;
+  }
 
   @media (max-width: 720px) {
-    .teacher-hero { padding: 48px var(--pad-inline); }
-    .teacher-hero-head { margin-bottom: 32px; }
+    .archive-hero { padding: 48px var(--pad-inline); }
+    .archive-hero-head { margin-bottom: 32px; }
+    .priority-item { padding: 16px; }
+    .archive-item-action { align-items: flex-start; }
   }
 
   /* ---------- FOOTER ---------- */
@@ -515,7 +630,7 @@
       <a href="index.html#get-involved">Volunteer</a>
       <a href="index.html#quick-links">Quick links</a>
       <a href="index.html#impact">Impact</a>
-      <a href="teacher-hub.html" class="is-active" aria-current="page">Teacher hub</a>
+      <a href="teacher-hub.html">Teacher hub</a>
     </div>
 
     <div class="nav-cta-group">
@@ -543,7 +658,7 @@
     <a href="index.html#get-involved" class="mobile-menu-link">Volunteer</a>
     <a href="index.html#quick-links" class="mobile-menu-link">Quick links</a>
     <a href="index.html#impact" class="mobile-menu-link">Impact</a>
-    <a href="teacher-hub.html" class="mobile-menu-link is-active" aria-current="page">Teacher hub</a>
+    <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
     <div class="mobile-menu-cta">
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph ph-facebook-logo" aria-hidden="true"></i>
@@ -557,46 +672,75 @@
     </div>
   </div>
 
-  <!-- Teacher hub -->
-  <section class="teacher-hero" aria-labelledby="teacher-hub-title">
-    <div class="teacher-hero-head">
-      <p class="teacher-hero-eyebrow">Teacher hub</p>
-      <h1 class="teacher-hero-title" id="teacher-hub-title">Forms for teachers to fill out</h1>
-      <p class="teacher-hero-lead">Fill out your favorite things survey, update a student shirt size &amp; submit your room parent form all in one spot.</p>
+  <!-- Event archive -->
+  <section class="archive-hero" aria-labelledby="archive-title">
+    <div class="archive-hero-head">
+      <p class="archive-hero-eyebrow">Looking back</p>
+      <h1 class="archive-hero-title" id="archive-title">Event archive</h1>
+      <p class="archive-hero-lead">Every PTO event we&rsquo;ve wrapped up, newest first. These are all closed &mdash; sign-ups, ticket sales, and voting links have been turned off &mdash; but they stay here so you can see what we&rsquo;ve been up to.</p>
     </div>
 
-    <div class="teacher-grid">
-      <div class="teacher-card">
-        <div>
-          <h2 class="teacher-card-title">Class t-shirt change form</h2>
-          <p class="teacher-card-body">If you have a new student, received the wrong size or anything else class t-shirt related please submit those changes here and we will get them worked out.</p>
-        </div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeN8sDoxQAO8LW8zxWi_tWiddLmtsXr7_tJofqcnVrdeAUG7A/viewform?usp=publish-editor" target="_blank" rel="noopener" class="teacher-card-btn">T-shirt change form <span class="arrow" aria-hidden="true">→</span></a>
+    <div class="action-block">
+      <div class="action-block-head">
+        <p class="action-block-eyebrow">Wrapped up</p>
+        <h2 class="action-block-title">Archived events &amp; news</h2>
       </div>
 
-      <div class="teacher-card">
-        <div>
-          <h2 class="teacher-card-title">Room parent submission</h2>
-          <p class="teacher-card-body">Please submit information about your volunteers no later than September 1st, 2026.</p>
-        </div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScR0vbEtoOzcMGJQXkXUHvkFO2dobUWxjUEk68akzs9KaQIRA/viewform?usp=publish-editor" target="_blank" rel="noopener" class="teacher-card-btn">Add room parent to your class <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
-
-      <div class="teacher-card">
-        <div>
-          <h2 class="teacher-card-title">Favorite things survey</h2>
-          <p class="teacher-card-body">Submit your favorite things survey, we will help communicate this with your classroom parents.</p>
-        </div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSea16lLq8mIugFmvUcMxuTMWZAr4WA7tHJHy1FhYHUIei0UZQ/viewform?usp=publish-editor" target="_blank" rel="noopener" class="teacher-card-btn">Start survey <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
-
-      <div class="teacher-card">
-        <div>
-          <h2 class="teacher-card-title">Reimbursement form</h2>
-          <p class="teacher-card-body">Spent your own money on something for your classroom? Fill out the reimbursement form and we'll get you paid back.</p>
-        </div>
-        <a href="https://acrobat.adobe.com/id/urn:aaid:sc:VA6C2:1db0eb90-5d01-476d-b9ae-fef05fc11bf0" target="_blank" rel="noopener" class="teacher-card-btn">Reimbursement form <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
+      <ul class="archive-list">
+        <li class="priority-item">
+          <div class="priority-text">
+            <p class="priority-tag">RSVP</p>
+            <p class="priority-title">First PTO Meeting</p>
+            <p class="priority-meta">Our first meeting of the school year, held in the evening by request with childcare provided. Thanks to everyone who came out.</p>
+          </div>
+          <div class="archive-item-action">
+            <p class="archive-closed">Held Aug 12, 2026</p>
+            <div class="archive-item-btns">
+              <span class="archive-btn" aria-disabled="true">RSVP closed</span>
+            </div>
+          </div>
+        </li>
+        <li class="priority-item">
+          <div class="priority-text">
+            <p class="priority-tag">Buy tickets</p>
+            <p class="priority-title">Golden Ticket Parking Raffle &mdash; 1st Semester</p>
+            <p class="priority-meta">The first Golden Ticket raffle — one parking pass per grade, letting the winner skip the pickup line for the semester. Winners were drawn at random by grade and notified by email.</p>
+          </div>
+          <div class="archive-item-action">
+            <p class="archive-closed">Closed Aug 8, 2026</p>
+            <div class="archive-item-btns">
+              <span class="archive-btn" aria-disabled="true">Sales closed</span>
+            </div>
+          </div>
+        </li>
+        <li class="priority-item">
+          <div class="priority-text">
+            <p class="priority-tag">Cast your vote</p>
+            <p class="priority-title">Vote on the New Student Shirt Logo</p>
+            <p class="priority-meta">Eagle families picked this year&rsquo;s student shirt design from the finalist entries. Take another look at the winning design below.</p>
+          </div>
+          <div class="archive-item-action">
+            <p class="archive-closed">Voting closed Aug 2026</p>
+            <div class="archive-item-btns">
+              <span class="archive-btn" aria-disabled="true">Voting closed</span>
+              <a href="#" class="btn btn-translucent" data-winner-trigger>See the winning logo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </li>
+        <li class="priority-item">
+          <div class="priority-text">
+            <p class="priority-tag">Action needed</p>
+            <p class="priority-title">School Supply Box Orders &mdash; Order for next year</p>
+            <p class="priority-meta">Pre-order a boxed set of every supply on your child&rsquo;s classroom list, delivered ahead of the school year.</p>
+          </div>
+          <div class="archive-item-action">
+            <p class="archive-closed">Closed Jun 16, 2026</p>
+            <div class="archive-item-btns">
+              <span class="archive-btn" aria-disabled="true">Ordering closed</span>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -604,7 +748,7 @@
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
     <nav class="footer-links" aria-label="More from the PTO">
-      <a href="event-archive.html">Event archive</a>
+      <a href="event-archive.html" aria-current="page">Event archive</a>
     </nav>
     <span class="accent" id="footer-dateline">School year countdown</span>
   </footer>
@@ -616,6 +760,24 @@
      account's signups behind a reCAPTCHA "confirm you're human" challenge (confirmed
      by inspecting the real response), and a hidden iframe can never let a person
      click that checkbox. Showing the real page lets people actually complete it. -->
+<!-- Logo contest winner modal (same markup + image as the home page) -->
+<div class="modal-backdrop" id="winner-modal" role="dialog" aria-modal="true" aria-labelledby="winner-modal-title" hidden>
+  <div class="modal modal--lg">
+    <div class="modal-header">
+      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+      <p class="modal-eyebrow">Logo contest</p>
+      <h2 class="modal-title" id="winner-modal-title">And the winner is&hellip;</h2>
+      <p class="modal-subtitle">Chosen by our Eagle families for this year&rsquo;s student shirts.</p>
+    </div>
+
+    <div class="winner-img-wrap">
+      <img class="winner-img" src="logo-contest-winner.png" alt="Winning student shirt logo — Crowders Creek Elementary: One School. One Family. One Future.">
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
   <div class="modal modal--lg">
     <div class="modal-header">
@@ -765,6 +927,12 @@
   setupSimpleModal({
     modalId: 'newsletter-modal',
     triggerAttr: 'data-newsletter-trigger'
+  });
+
+  // Logo contest winner modal
+  setupSimpleModal({
+    modalId: 'winner-modal',
+    triggerAttr: 'data-winner-trigger'
   });
 </script>
 
