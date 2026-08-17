@@ -649,10 +649,13 @@
      in here is either a non-inverting token or a white-alpha over the yellow —
      never --cce-dark-blue/--cce-white, which would flip and go unreadable. */
   .vol-panel {
+    /* One source of truth for the panel inset: the scroller cancels it with a
+       negative margin so the card row can bleed to the panel's edges. */
+    --vol-pad: 32px;
     margin-top: 24px;
     background: var(--cce-yellow);
     border-radius: var(--radius-lg);
-    padding: 32px;
+    padding: var(--vol-pad);
   }
   .vol-panel-head { margin-bottom: 24px; }
   .vol-eyebrow {
@@ -675,15 +678,26 @@
   /* Scroller: the card row overflows horizontally once there are more cards
      than fit. tabindex on the track makes it keyboard-scrollable; the arrow is
      a convenience for pointer users and hides itself when nothing overflows. */
-  .vol-scroller { position: relative; }
+  .vol-scroller {
+    position: relative;
+    /* Pull the row out to the panel's edges so a partially scrolled card is
+       clipped by the panel boundary instead of stopping short inside the
+       padding — the cut-off card is what signals "there's more this way". */
+    margin-inline: calc(var(--vol-pad) * -1);
+  }
   .vol-track {
     display: flex;
     gap: 24px;
     margin: 0;
-    padding: 0;
+    /* Put the inset back inside the scroll container, so the first card still
+       lines up with the heading while the track itself runs edge to edge. */
+    padding-inline: var(--vol-pad);
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    /* Without this, snapped cards would align to the panel edge rather than to
+       the heading, undoing the padding above. */
+    scroll-padding-inline: var(--vol-pad);
     scroll-behavior: smooth;
     scrollbar-width: none;
   }
@@ -745,7 +759,9 @@
 
   .vol-next {
     position: absolute;
-    right: -8px;
+    /* The scroller now reaches the panel edge, so inset the arrow to sit just
+       inside it rather than hanging off the old padded boundary. */
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     width: 44px;
@@ -768,7 +784,7 @@
   .vol-next:active { transform: translateY(-50%) scale(0.94); }
 
   @media (max-width: 720px) {
-    .vol-panel { padding: 24px; }
+    .vol-panel { --vol-pad: 24px; }
     .vol-card { flex-basis: 260px; min-height: 0; }
   }
 
