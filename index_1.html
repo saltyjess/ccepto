@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCE PTO — Crowders Creek Elementary</title>
+<meta name="description" content="Crowders Creek Elementary PTO — events, volunteer sign-ups, calendars, news, and how to reach us.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIwLjllbSIgZm9udC1zaXplPSI5MCI+8J+mhTwvdGV4dD48L3N2Zz4K">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+<style>
+  /* ---------- DESIGN TOKENS ---------- */
+  /* Namespaced tokens match Figma variables. Dark mode applies automatically via prefers-color-scheme. */
+  :root {
+    /* Brand colors */
+    --cce-dark-blue: #0b1e4f;
+    --cce-yellow: #fac73f;
+    --cce-bright-blue: #00a0d0;
+    --cce-bright-blue-deep: #0d7ca1;
+    --cce-white: #ffffff;
+    --cce-off-white: #fbfbfc;
+
+    /* Non-inverting tokens — these keep the SAME value in both light and dark mode.
+       Use them when a color is anchored to a brand surface that doesn't change,
+       e.g. text on the yellow button (always navy) or text on the cyan banner (always white). */
+    --cce-dark-blue-inverted: #0b1e4f;  /* text that's always navy (e.g. on yellow buttons) */
+    --cce-white-inverted: #ffffff;      /* text that's always white (e.g. on cyan banners) */
+
+    /* Neutral grays */
+    --cce-bg-light-gray: #f8f8f8;
+    --cce-border: #e9e9ea;
+    --cce-border-soft: #e8eaef;
+    --cce-med-gray: #737985;
+    --cce-deep-gray: #606773;
+    --cce-soft-gray: #afb4c0;
+
+    /* Alpha colors */
+    --cce-med-white-text: rgba(255, 255, 255, 0.8);
+    --cce-light-button: rgba(255, 255, 255, 0.4);
+    --cce-dark-blue-80: rgba(11, 30, 79, 0.8);
+    --cce-dark-blue-90: rgba(11, 30, 79, 0.9);
+
+    /* Spacing tokens (match Figma) */
+    --sm: 8px;
+    --m: 12px;
+    --lg: 16px;
+    --xl: 24px;
+    --2xl: 16px; /* note: Figma names this radius token "2xl" but it's 16px */
+
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+
+    /* Legacy aliases — kept so existing rules keep working during the migration */
+    --navy: var(--cce-dark-blue);
+    --navy-80: var(--cce-dark-blue-80);
+    --navy-90: var(--cce-dark-blue-90);
+    --navy-soft: var(--cce-soft-gray);
+    --gold: var(--cce-yellow);
+    --gold-soft: #cdd4e2;
+    --cyan: var(--cce-bright-blue);
+    --cyan-deep: var(--cce-bright-blue-deep);
+    --white: var(--cce-white);
+    --off-white: var(--cce-off-white);
+    --gray-50: var(--cce-bg-light-gray);
+    --gray-100: var(--cce-border);
+    --gray-200: var(--cce-border-soft);
+    --gray-500: var(--cce-med-gray);
+    --gray-600: var(--cce-deep-gray);
+    --gray-700: var(--cce-soft-gray);
+
+    --page-max: 1320px;
+    --content-max: 1192px;
+    --gutter: clamp(20px, 5vw, 64px);
+    /* Effective side padding = gutter OR (viewport - page-max)/2, whichever is larger.
+       Keeps content centered at <=1320px on wide screens, falls back to gutter on narrow. */
+    --pad-inline: max(var(--gutter), calc((100% - var(--page-max)) / 2));
+    /* Shared top padding for section--gray/section--white/.impact — also used
+       to compensate the scroll-margin-top offset (see --nav-offset below) so
+       every section lands the same visible distance under the sticky nav. */
+    --section-pad-top: 80px;
+
+    --shadow-card: 0px 2px 8px 0px rgba(17, 23, 35, 0.08);
+    --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.25);
+  }
+
+  /* ---------- DARK MODE ----------
+     Triggered automatically by the user's OS preference (prefers-color-scheme).
+     No manual toggle — the theme follows system settings.
+
+     The model: tokens INVERT their meaning so cards/components built with them
+     "just work" without per-element overrides. The Figma file uses the same approach.
+
+       --cce-dark-blue  → primary text + navy surfaces (Volunteer card, Quick links cards)
+                          Light: #0b1e4f navy. Dark: #ffffff white.
+                          → A "navy card" in light becomes a "white island card" in dark.
+
+       --cce-white      → page surfaces (body, hero, nav, sections) + light text on dark cards
+                          Light: #ffffff. Dark: #0b1e4f navy.
+
+       --cce-bg-light-gray → nav bar, stat cards, lighter sections, footer (lighter navy in dark)
+       --cce-med-white-text → subtext on dark-blue cards (alpha-white light → alpha-navy dark)
+
+     NON-INVERTING tokens (defined once in :root, never overridden by the dark @media block):
+       --cce-dark-blue-inverted (#0b1e4f) → text on yellow buttons (always navy, since the
+                                            yellow button surface stays yellow in both modes).
+       --cce-white-inverted     (#ffffff) → text on cyan banners (always white, since cyan
+                                            stays cyan in both modes).
+       Use these whenever text sits on a brand surface (yellow, cyan) that itself doesn't
+       invert — otherwise the inverted text token would flip and become unreadable.
+
+     Brand surfaces that stay CONSTANT: cyan banners (#00a0d0), gold buttons (#fac73f).
+     Those use --cce-bright-blue / --cce-yellow which don't appear in the override block. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --cce-dark-blue: #ffffff;       /* text + "navy" card surface → flips to white */
+      --cce-white: #0b1e4f;           /* page surface + light text → flips to navy */
+      --cce-off-white: #182a57;
+      --cce-bg-light-gray: #182a57;   /* nav + stat cards + lighter sections */
+      --cce-border: #1f2532;
+      --cce-border-soft: rgba(255, 255, 255, 0.10);
+
+      /* Secondary grays shift to alpha-white */
+      --cce-med-gray: rgba(255, 255, 255, 0.8);
+      --cce-deep-gray: rgba(255, 255, 255, 0.7);
+      --cce-soft-gray: rgba(255, 255, 255, 0.5);
+
+      /* Subtext on dark-blue cards: alpha-white light → alpha-navy dark (card is now white) */
+      --cce-med-white-text: rgba(11, 30, 79, 0.8);
+
+      /* Shadows softer on dark */
+      --shadow-card: 0px 2px 8px 0px rgba(0, 0, 0, 0.4);
+      --shadow-cyan: 0px 4px 12px rgba(0, 160, 208, 0.4);
+    }
+  }
+
+  /* ---------- DARK MODE: CHROME OVERRIDES ----------
+     Nav and footer normally inherit page-level tokens (--cce-bg-light-gray for nav,
+     --cce-white for footer), which in dark mode flip to #182a57 and #0b1e4f respectively.
+     Both end up nearly identical to the page bg, so the header/footer edges disappear.
+     This block bumps them to a deeper navy in dark mode only — light mode untouched. */
+  [data-theme="dark"] .nav,
+  [data-theme="dark"] .footer {
+    background: #0D1C44;
+  }
+  [data-theme="dark"] .footer {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .nav,
+    :root:not([data-theme]) .footer {
+      background: #0D1C44;
+    }
+    :root:not([data-theme]) .footer {
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  /* ---------- RESET ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  /* Give in-page anchor targets breathing room from the top.
+     Fallback value below is close to the nav's real height; a small script
+     further down keeps --nav-offset synced to the nav's actual rendered
+     height (desktop two-row nav vs. the shorter collapsed mobile nav). */
+  :root { --nav-offset: 160px; }
+  :target,
+  #events {
+    scroll-margin-top: var(--nav-offset);
+  }
+  /* #get-involved, #quick-links, and #impact each already have 80px of their
+     own top padding before their heading (#events doesn't). Without this,
+     scrolling to those three left a much bigger, inconsistent-looking gap
+     under the nav than scrolling to #events did. Subtracting that padding
+     here lets the section's own blank top padding sit behind the sticky nav
+     (nothing visible is lost) so the heading lands at the same distance
+     below the nav either way. */
+  #get-involved,
+  #quick-links,
+  #impact,
+  #sponsors {
+    scroll-margin-top: calc(var(--nav-offset) - var(--section-pad-top));
+  }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--navy);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; }
+  ul { list-style: none; padding: 0; margin: 0; }
+
+  /* ---------- PAGE FRAME ---------- */
+  .page {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+  }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    background: var(--white);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px var(--pad-inline);
+    min-height: 80px;
+    /* Stick to top while scrolling so the active-section indicator stays visible */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* Subtle divider under the nav, visible even when content scrolls behind */
+    box-shadow: 0 1px 0 var(--gray-100);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  /* Inline SVG wordmark. Its navy paths use currentColor, so this token flips
+     them navy -> white in dark mode while the cyan accents stay put (cyan is a
+     constant brand colour and reads fine on both backgrounds).
+     Sized by HEIGHT with width:auto — an inline SVG clamped by max-width would
+     squash rather than scale, so the mobile steps below shrink height instead. */
+  .nav-logo-img {
+    display: block;
+    height: 52px;
+    width: auto;
+    /* It is a flex child of .nav-brand: without this the flex container can
+       shrink its width independently of its height and squash the wordmark. */
+    flex-shrink: 0;
+    color: var(--cce-dark-blue);
+  }
+  .nav-brand-text {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 22px;
+  }
+
+  .nav-links {
+    display: flex;
+    order: 3;
+    width: 100%;
+    gap: 20px;
+    align-items: stretch;
+    align-self: stretch;
+    overflow-x: auto;
+    /* Pull links flush to the nav's bottom edge so the gold underline meets the border */
+    margin: 0 0 -16px 0;
+    padding-bottom: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    /* Gold underline sits at the very bottom of the link */
+    border-bottom: 3px solid transparent;
+    transition: color 0.15s ease, border-color 0.2s ease;
+    padding: 8px 2px;
+    /* Extend the link's hit/border area down to the bottom of the nav */
+    padding-bottom: 16px;
+  }
+  .nav-links a:hover { color: var(--navy); }
+  /* Teacher hub + Parent portal are destinations, not section anchors, so they
+     sit apart at the end of the row. margin-left:auto collapses harmlessly once
+     the row overflows and scrolls instead. */
+  .nav-links .nav-link-end { margin-left: auto; }
+  /* Parent portal isn't built yet: a <span>, not a dimmed <a>, so there is
+     nothing to click, nothing to tab to and no dead URL to maintain. */
+  .nav-link-soon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    opacity: 0.7;
+    cursor: default;
+    user-select: none;
+    white-space: nowrap;
+    padding: 8px 2px 16px;
+    border-bottom: 3px solid transparent;
+  }
+  .nav-soon-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: var(--gray-100);
+    border-radius: 999px;
+    padding: 2px 6px;
+    line-height: 1.5;
+  }
+  .mobile-menu-link--soon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    cursor: default;
+    user-select: none;
+  }
+  .nav-links a.is-active {
+    color: var(--navy);
+    font-weight: 600;
+    border-bottom-color: var(--gold);
+  }
+
+  .nav-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-cta-group .btn-gold span:not(.arrow) { display: inline; }
+  .social-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+    transition: opacity 0.15s ease;
+  }
+  .social-icon:hover { opacity: 0.7; }
+  .social-icon i { font-size: 22px; line-height: 1; }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.1s ease, filter 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { filter: brightness(1.05); }
+  .btn:active { transform: translateY(1px); }
+  .btn-gold {
+    background: var(--cce-yellow);
+    /* Non-inverting: yellow stays yellow in both modes, so text must stay navy in both modes */
+    color: var(--cce-dark-blue-inverted);
+  }
+  .btn-navy {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .btn-outline {
+    background: var(--off-white);
+    color: var(--navy);
+    border: 1px solid var(--gray-200);
+  }
+  .btn-ghost {
+    background: rgba(251, 251, 252, 0.2);
+    color: var(--white);
+  }
+  .btn-ghost:hover { background: rgba(251, 251, 252, 0.3); filter: none; }
+  /* Translucent light button — works on cyan/navy backgrounds.
+     Default (no modifier): on cyan banners — text stays NAVY in both modes
+     since cyan stays cyan. Uses --cce-dark-blue-inverted (non-inverting). */
+  .btn-translucent {
+    background: var(--cce-light-button);
+    color: var(--cce-dark-blue-inverted);
+  }
+  .btn-translucent:hover { background: rgba(255, 255, 255, 0.6); filter: none; }
+  /* On a dark card (Volunteer/"Get involved" card) the surface inverts:
+     navy in light → white in dark. Text follows along via the inverting token. */
+  .btn-translucent--on-dark { color: var(--cce-dark-blue); }
+  /* Note: --on-dark above is also applied to the "Email the PTO" button on the
+     PTO Board card, which is actually a light gray surface (not dark), so its
+     navy text is correct there and should NOT change.
+     This variant is for buttons that sit on the truly dark navy "Get involved"
+     card specifically — text needs the OPPOSITE inverting token so it stays
+     readable: white in light mode (card is dark navy), navy in dark mode
+     (card flips to white). */
+  .btn-translucent--on-navy { color: var(--cce-white); }
+  .btn .arrow { font-size: 18px; line-height: 1; }
+  .btn i { font-size: 18px; line-height: 1; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    padding: 80px var(--pad-inline);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 456px);
+    gap: 24px;
+    align-items: center;
+  }
+  .hero-text { max-width: 720px; }
+  .eyebrow {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  .hero-title {
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 16px;
+  }
+  .hero-lead {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--gray-500);
+    margin: 0 0 16px;
+    max-width: 640px;
+  }
+  .hero-lead:last-child { margin-bottom: 0; }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 16px;
+  }
+  .stat {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 24px 20px;
+    min-width: 0;
+    /* Center content vertically and lock card to equal height across the grid */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 120px;
+  }
+  .stat-value {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.1;
+    margin: 0 0 8px;
+  }
+  .stat-label {
+    color: var(--gray-500);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .section {
+    padding: 0 var(--pad-inline) 0;
+    background: var(--white);
+  }
+  .section--gray { background: var(--gray-50); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
+  .section--white { background: var(--white); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
+
+  /* ---------- ACTION BANNER (cyan) ---------- */
+  .action-block {
+    background: linear-gradient(101deg, var(--cyan-deep) 16%, var(--cyan) 94%);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-cyan);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .action-block-head {
+    /* Non-inverting: cyan banner stays cyan in both modes, so text must stay white in both modes */
+    color: var(--cce-white-inverted);
+  }
+  .action-block-eyebrow {
+    color: var(--cce-yellow);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .action-block-title {
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 700;
+    margin: 0;
+    color: var(--cce-white-inverted);
+    line-height: 1.2;
+  }
+
+  .priority-item {
+    /* Per Figma: 40% white token over cyan banner. Constant in both modes. */
+    background: var(--cce-light-button);
+    border: 1px solid var(--cce-bright-blue);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .priority-text { flex: 1 1 280px; min-width: 0; }
+  .priority-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cce-yellow);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .priority-tag::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cce-yellow);
+    display: inline-block;
+  }
+  .priority-title {
+    font-size: 18px;
+    font-weight: 600;
+    /* Non-inverting: cyan banner stays cyan, text must stay white in both modes */
+    color: var(--cce-white-inverted);
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+  .priority-meta {
+    font-size: 14px;
+    font-weight: 500;
+    /* Same: stays white-ish over the cyan banner regardless of theme */
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+
+  /* Centered link to the archive, last item in the events block.
+     align-self centers it in .action-block's flex column. */
+  .archive-link {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    /* Non-inverting: the cyan banner stays cyan, so this stays white in both modes */
+    color: var(--cce-white-inverted);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 4px;
+  }
+  .archive-link:hover { text-decoration: underline; }
+  .archive-link .arrow { font-size: 18px; line-height: 1; }
+
+  /* ---------- KNOW US + GET INVOLVED ROW ---------- */
+  .duo {
+    display: grid;
+    grid-template-columns: minmax(0, 456px) minmax(0, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .card-base {
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+  .know-us {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-100);
+  }
+  .card-head {
+    margin-bottom: 24px;
+  }
+  .card-eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .card-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .card-title--light { color: var(--white); }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .board-person {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--cce-yellow);
+    color: var(--cce-dark-blue-inverted);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .board-person-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .board-person-role {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-500);
+    letter-spacing: 0.5px;
+    margin: 2px 0 0;
+  }
+  .card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .card-actions .btn { height: 48px; padding: 0 20px; }
+
+  .get-involved {
+    background: var(--cce-dark-blue);
+    color: var(--cce-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .get-involved .card-title { color: var(--cce-white); }
+  .get-involved .card-eyebrow { color: var(--cce-yellow); }
+  .get-involved-body {
+    /* Token inverts: rgba(255,255,255,0.8) in light, rgba(11,30,79,0.8) in dark */
+    color: var(--cce-med-white-text);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ---------- VOLUNTEER OPPORTUNITIES (yellow panel) ----------
+     Sits below the Volunteer + Board row inside #get-involved. Yellow is a
+     CONSTANT brand surface (it does not invert in dark mode), so every colour
+     in here is either a non-inverting token or a white-alpha over the yellow —
+     never --cce-dark-blue/--cce-white, which would flip and go unreadable. */
+  .vol-panel {
+    /* One source of truth for the panel inset: the scroller cancels it with a
+       negative margin so the card row can bleed to the panel's edges. */
+    --vol-pad: 32px;
+    margin-top: 24px;
+    background: var(--cce-yellow);
+    border-radius: var(--radius-lg);
+    padding: var(--vol-pad);
+  }
+  .vol-panel-head { margin-bottom: 24px; }
+  .vol-eyebrow {
+    /* Cyan is also constant in both modes, so it is safe on yellow */
+    color: var(--cce-bright-blue-deep);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .vol-panel-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cce-dark-blue-inverted);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  /* Scroller: the card row overflows horizontally once there are more cards
+     than fit. tabindex on the track makes it keyboard-scrollable; the arrow is
+     a convenience for pointer users and hides itself when nothing overflows. */
+  .vol-scroller {
+    position: relative;
+    /* Pull the row out to the panel's edges so a partially scrolled card is
+       clipped by the panel boundary instead of stopping short inside the
+       padding — the cut-off card is what signals "there's more this way". */
+    margin-inline: calc(var(--vol-pad) * -1);
+  }
+  .vol-track {
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    /* Put the inset back inside the scroll container, so the first card still
+       lines up with the heading while the track itself runs edge to edge. */
+    padding-inline: var(--vol-pad);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Without this, snapped cards would align to the panel edge rather than to
+       the heading, undoing the padding above. */
+    scroll-padding-inline: var(--vol-pad);
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .vol-track::-webkit-scrollbar { display: none; }
+  .vol-track:focus-visible { outline: 2px solid var(--cce-dark-blue-inverted); outline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) {
+    .vol-track { scroll-behavior: auto; }
+  }
+
+  .vol-card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 300px;
+  }
+  .vol-card-icon { color: var(--cce-dark-blue-inverted); font-size: 0; }
+  .vol-card-icon i { font-size: 32px; line-height: 1; }
+  .vol-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cce-dark-blue-inverted);
+    line-height: 1.25;
+    margin: 0;
+  }
+  .vol-card-body {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    line-height: 1.5;
+    color: var(--cce-dark-blue-inverted);
+    margin: 0;
+  }
+  /* Push the action to the bottom so buttons line up across uneven card copy */
+  .vol-card-action { margin-top: auto; }
+  .vol-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--cce-dark-blue-inverted);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .vol-btn:hover { background: rgba(255, 255, 255, 0.75); }
+  .vol-btn:active { transform: translateY(1px); }
+  .vol-btn .arrow { font-size: 18px; line-height: 1; }
+  /* Placeholder card: nothing to click, so it is a span, not a dimmed link */
+  .vol-btn--soon { opacity: 0.6; cursor: default; user-select: none; }
+  .vol-btn--soon:hover { background: rgba(255, 255, 255, 0.55); }
+
+  .vol-next {
+    position: absolute;
+    /* The scroller now reaches the panel edge, so inset the arrow to sit just
+       inside it rather than hanging off the old padded boundary. */
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    /* Always visible, whether or not the row currently overflows — the button
+       is part of the panel's look, not just an overflow affordance. Same white
+       alpha as .vol-btn so it reads as a sibling of the card buttons. */
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--cce-dark-blue-inverted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .vol-next:hover { background: rgba(255, 255, 255, 0.75); }
+  .vol-next:active { transform: translateY(-50%) scale(0.94); }
+
+  @media (max-width: 720px) {
+    .vol-panel { --vol-pad: 24px; }
+    .vol-card { flex-basis: 260px; min-height: 0; }
+  }
+
+  /* ---------- QUICK LINKS ---------- */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .quick-card[hidden] { display: none; }
+  .quick-card {
+    background: var(--cce-dark-blue);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 140px;
+    color: var(--cce-white);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+  }
+  .quick-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(11, 30, 79, 0.18);
+  }
+  /* Placeholder state for a quick link whose destination isn't live yet.
+     Rendered as a plain div (not an <a>) so it isn't clickable or focusable. */
+  .quick-card--soon {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .quick-card--soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .quick-card-body { flex: 1; min-width: 0; }
+  .quick-card-icon {
+    color: var(--cce-white);
+    margin-bottom: 8px;
+    font-size: 0; /* prevent inline gap */
+  }
+  .quick-card-icon i { font-size: 24px; line-height: 1; }
+  .quick-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cce-white);
+    line-height: 1.2;
+    margin: 0 0 8px;
+  }
+  .quick-card-sub {
+    font-size: 11px;
+    font-weight: 500;
+    /* Token inverts: white-alpha on navy card (light mode) → navy-alpha on white card (dark mode) */
+    color: var(--cce-med-white-text);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .quick-card-arrow {
+    color: var(--gold);
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* ---------- IMPACT (How PTO Supports CCE) ---------- */
+  .impact {
+    background: var(--white);
+    padding-top: var(--section-pad-top);
+    padding-bottom: var(--section-pad-top);
+    padding-left: var(--pad-inline);
+    padding-right: var(--pad-inline);
+    border-top: 1px solid var(--gray-100);
+  }
+  .impact-eyebrow {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .impact-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 8px;
+    line-height: 1.3;
+  }
+  .impact-lead {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cce-dark-blue);
+    opacity: 0.8;
+    margin: 0 0 24px;
+  }
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    padding-top: 24px;
+  }
+  .pillar { display: flex; flex-direction: column; gap: 12px; }
+  .pillar-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--cce-bright-blue);
+    color: var(--cce-white-inverted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pillar-icon i { font-size: 24px; line-height: 1; }
+  .pillar-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .pillar-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--cce-dark-blue);
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  /* ---------- SPONSORS (logo marquee) ---------- */
+  .sponsors {
+    background: var(--gray-50);
+    padding-top: var(--section-pad-top);
+    /* A bit more breathing room below the logo row than above it, so the
+       section doesn't feel like it runs straight into the cyan banner below. */
+    padding-bottom: calc(var(--section-pad-top) + 40px);
+    padding-left: var(--pad-inline);
+    padding-right: var(--pad-inline);
+    border-top: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .sponsors-head { max-width: 640px; }
+  /* Fades the logo strip to transparent at each edge so logos scroll in/out
+     smoothly rather than clipping abruptly. Uses padding-box + border-box
+     mask layering so the fade doesn't eat into the row's vertical padding. */
+  .sponsor-marquee {
+    margin-top: 24px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+  }
+  .sponsor-track {
+    display: flex;
+    align-items: center;
+    gap: 56px;
+    width: max-content;
+    animation: sponsor-scroll 32s linear infinite;
+  }
+  .sponsor-marquee:hover .sponsor-track,
+  .sponsor-marquee:focus-within .sponsor-track {
+    animation-play-state: paused;
+  }
+  @keyframes sponsor-scroll {
+    from { transform: translateX(0); }
+    /* Track is duplicated once in the markup, so -50% is exactly one full
+       set of logos — the loop point is seamless. */
+    to { transform: translateX(-50%); }
+  }
+  .sponsor-item {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+  }
+  .sponsor-item img {
+    height: 100%;
+    width: auto;
+    max-width: 160px;
+    object-fit: contain;
+    /* Logos render in a uniform muted navy so mismatched sponsor-supplied
+       colors don't fight each other; full color on hover/focus rewards a
+       closer look. */
+    filter: grayscale(100%) opacity(0.55);
+    transition: filter 0.2s ease;
+  }
+  .sponsor-item:hover img,
+  .sponsor-item:focus-visible img {
+    filter: grayscale(0%) opacity(1);
+  }
+  .sponsor-item:focus-visible { outline: 2px solid var(--cce-dark-blue); outline-offset: 4px; border-radius: 4px; }
+  /* Wraps the duplicated (aria-hidden) second set of logos so they lay out as
+     direct flex children of .sponsor-track — same as .sponsor-copy > .sponsor-item.
+     display:contents lives in the stylesheet (not inline on the element) so the
+     reduced-motion override below can win the cascade and turn it off. */
+  .sponsor-copy { display: contents; }
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-track {
+      animation: none;
+      /* Without the animation the duplicated second copy is redundant and
+         just extra scroll width — hide it and let the first copy wrap
+         normally into a static grid-like row. */
+      flex-wrap: wrap;
+      row-gap: 24px;
+    }
+    .sponsor-copy { display: none; }
+  }
+
+  /* ---------- SLIDESHOW EMBED ---------- */
+  .slideshow-embed {
+    position: relative;
+    width: 100%;
+    margin: 24px auto 0;
+    /* Matches the embed's native 1440x839 proportions so it scales cleanly
+       at any width instead of being stretched or cropped. */
+    aspect-ratio: 1440 / 839;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--gray-100);
+  }
+  .slideshow-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    border-top: 1px solid var(--gray-100);
+    background: var(--white);
+    color: var(--navy);
+    font-size: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px var(--pad-inline);
+    /* Sticks to the bottom of the viewport when page content is shorter than
+       the screen; behaves like a normal footer once content overflows. */
+    margin-top: auto;
+  }
+  .footer .accent { color: var(--cyan); }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
+  .footer-links a { color: var(--cyan); font-weight: 600; }
+  .footer-links a:hover { text-decoration: underline; }
+
+  /* ---------- ACCESSIBILITY ---------- */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* ---------- NEWSLETTER MODAL ---------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+  .modal-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 480px;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+  .modal-backdrop.is-open .modal { transform: translateY(0) scale(1); }
+
+  .modal-header {
+    padding: 28px 28px 0;
+    position: relative;
+  }
+  .modal-eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+  .modal-subtitle {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin: 0 0 24px;
+    line-height: 1.5;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--gray-50);
+    color: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .modal-close:hover { background: var(--gray-100); }
+  .modal-close i { font-size: 18px; line-height: 1; }
+
+  .modal-form {
+    padding: 0 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.3px;
+  }
+  .form-field label .req { color: var(--cyan); margin-left: 2px; }
+  .form-field input {
+    padding: 12px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--navy);
+    /* --off-white inverts to #182a57 (lighter navy) so inputs stay distinct from the navy modal bg in dark mode */
+    background: var(--off-white);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+  }
+  .form-field input:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0, 160, 208, 0.15);
+  }
+  .form-field input::placeholder { color: var(--gray-500); opacity: 0.7; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* Hamburger button — only visible at narrow mobile widths */
+  .nav-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-hamburger:hover { background: var(--gray-50); }
+  .nav-hamburger:focus-visible {
+    outline: 2px solid var(--cce-bright-blue);
+    outline-offset: 2px;
+  }
+  .nav-hamburger i { font-size: 24px; line-height: 1; }
+
+  /* Mobile menu panel — slides down under the nav when hamburger is tapped.
+     `hidden` attribute on the element keeps it out of the layout when closed. */
+  .mobile-menu {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+    padding: 12px var(--pad-inline) 20px;
+    position: sticky;
+    top: 80px;
+    z-index: 49;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mobile-menu[hidden] { display: none; }
+  .mobile-menu-link {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gray-500);
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .mobile-menu-link:last-of-type { border-bottom: none; }
+  .mobile-menu-link.is-active {
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .mobile-menu-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 420px) {
+    .form-row { grid-template-columns: 1fr; gap: 14px; }
+  }
+
+  /* Checkbox grids — grades, interests */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+  }
+  .checkbox-grid--stacked {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    user-select: none;
+  }
+  .checkbox-option:hover { border-color: var(--cyan); }
+  /* Custom checkbox — the native checkbox (even with accent-color) renders/animates
+     its checked state inconsistently across browsers, which can look like the box
+     "grows" or pops when clicked. Drawing it ourselves keeps it a fixed size always. */
+  .checkbox-option input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    flex: 0 0 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .checkbox-option input[type="checkbox"]:checked {
+    background: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .checkbox-option input[type="checkbox"]:checked::after {
+    content: '';
+    width: 4px;
+    height: 8px;
+    border: solid var(--cce-white-inverted);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .checkbox-option input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .checkbox-option:has(input:checked) {
+    border-color: var(--cyan);
+    background: rgba(0, 160, 208, 0.08);
+  }
+
+  /* Textarea */
+  .form-field textarea {
+    padding: 12px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--navy);
+    background: var(--off-white);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+  }
+  .form-field textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0, 160, 208, 0.15);
+  }
+  .form-field textarea::placeholder { color: var(--gray-500); opacity: 0.7; }
+
+  /* Larger modal variant for forms with more fields */
+  .modal--lg {
+    max-width: 560px;
+    max-height: calc(100vh - 32px);
+  }
+
+  /* Newsletter modal — embeds Mailchimp's own hosted signup page. Mailchimp's page
+     is always white/light and can't follow our dark mode, so we lock this modal's
+     own chrome to light-mode colors too — otherwise our text/background would
+     invert while the iframe stays white, looking like two mismatched pieces. */
+  #newsletter-modal .modal { background: #ffffff; }
+  #newsletter-modal .modal-eyebrow { color: #fac73f; }
+  #newsletter-modal .modal-title { color: #0b1e4f; }
+  #newsletter-modal .modal-subtitle { color: #737985; margin-bottom: 0; }
+  #newsletter-modal .modal-close { background: #f8f8f8; color: #0b1e4f; }
+  #newsletter-modal .modal-close:hover { background: #e9e9ea; }
+  .modal-iframe-wrap {
+    padding: 0 4px 4px;
+  }
+  .modal-iframe {
+    width: 100%;
+    height: 620px;
+    max-height: calc(100vh - 220px);
+    border: 0;
+    display: block;
+  }
+
+  /* Honeypot — hidden from real users, bots fill it */
+  .hp-field {
+    position: absolute;
+    left: -5000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .modal-submit {
+    margin-top: 6px;
+    width: 100%;
+    padding: 14px;
+    background: var(--cce-yellow);
+    color: var(--cce-dark-blue-inverted);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  .modal-submit:hover { filter: brightness(1.05); }
+  .modal-submit:active { transform: translateY(1px); }
+  .modal-submit:disabled { opacity: 0.6; cursor: wait; }
+
+  .modal-fineprint {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin: 4px 0 0;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Mailchimp GDPR consent copy — left-aligned fine print inside the form,
+     unlike .modal-fineprint which is centered and sits below the submit button. */
+  .consent-text {
+    font-size: 12px;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin: 4px 0 0;
+  }
+  .consent-text a {
+    color: var(--cyan);
+    text-decoration: underline;
+  }
+  .checkbox-group-error {
+    font-size: 12px;
+    font-weight: 600;
+    color: #d64545;
+    margin: 6px 0 0;
+  }
+  [data-required-group].is-invalid .checkbox-option {
+    border-color: #d64545;
+  }
+
+  /* Body lock while modal is open */
+  body.modal-open { overflow: hidden; }
+
+  /* hidden attribute fallback — display:flex would otherwise override it */
+  .modal-form[hidden], .modal-success[hidden] { display: none !important; }
+
+  /* Success state */
+  .modal-success {
+    padding: 12px 28px 36px;
+    text-align: center;
+  }
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--cce-yellow);
+    color: var(--cce-dark-blue-inverted);
+    margin: 8px auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .success-icon i { font-size: 32px; font-weight: 700; }
+  .success-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 8px;
+  }
+  .success-body {
+    font-size: 14px;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1280px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 48px var(--pad-inline);
+      gap: 32px;
+    }
+    /* Keep Volunteer + Board side by side well below 1280 — narrow the
+       Volunteer column instead of stacking the pair. */
+    .duo {
+      grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    }
+    /* ...and let the board hold two people per row in the narrower space it
+       now has. At the default 220px min it would drop to one tall column at
+       ~950px, leaving a short Volunteer card beside a very long board card. */
+    .board-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    /* Updates section--gray/section--white/.impact padding-top together,
+       and keeps the scroll-margin-top compensation above in sync with it. */
+    :root { --section-pad-top: 48px; }
+  }
+
+  /* Below this the board grid can no longer hold two people per row next to
+     the Volunteer card, so stack the pair instead of squeezing both. */
+  @media (max-width: 900px) {
+    .duo {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 720px) {
+    .footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .stat-value { font-size: 28px; }
+    .priority-item { padding: 16px; }
+    .sponsor-track { gap: 36px; }
+    .sponsor-item { height: 48px; }
+  }
+  @media (max-width: 600px) {
+    /* Collapse to logo + hamburger only.
+       The nav-links row and CTA group both move into the mobile menu drawer.
+       Bumped from 480 → 600 because nav-link labels ("Events & news", "Quick links")
+       start wrapping to two lines below ~590px. */
+    .nav { flex-wrap: nowrap; }
+    .nav-links { display: none; }
+    .nav-cta-group { display: none; }
+    .nav-hamburger { display: inline-flex; }
+    .nav-logo-img { height: 40px; }
+  }
+  @media (max-width: 380px) {
+    .nav-logo-img { height: 32px; }
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- MailerLite Universal -->
+<script>
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', '2546995');
+</script>
+<!-- End MailerLite Universal -->
+</head>
+<body>
+
+<main class="page" id="top">
+
+  <!-- Nav -->
+  <nav class="nav" aria-label="Primary">
+    <a href="#" class="nav-brand" aria-label="Crowders Creek Elementary PTO home">
+      <svg class="nav-logo-img" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1064 167"><path fill="currentColor" d="m1026.71 71.9-5.96-6.82 24.16-23.79.03-.06-5.49-.37v-6.85h22.62v6.85l-4.55.97zm-13.68 10.55v-6.82l5.03-1.06V41.93l-5.03-1.07v-6.85h21.3v6.85l-4.6 1.07v32.64l4.6 1.06v6.82zm27.45 0v-6.82l4.86-.37h.06l-11.64-15.93 8.15-7.22 16.97 22.69 4.96.83v6.82zm-74.44 0v-6.82l5.02-1.06V41.93l-5.02-1.07v-6.85h38.69v13.97h-8.81l-.27-4.99h-12.9v9.95h15.46v8.95h-15.47v11.54h13.54l.27-5.22h8.72v14.24zm-46.99 0v-6.82l5.02-1.06V41.93l-5.02-1.07v-6.85h38.7v13.97h-8.83l-.26-4.99h-12.91v9.95h15.47v8.95h-15.47v11.54h13.54l.27-5.22h8.71v14.24zm-50.72 0v-6.82l5.02-1.06V41.93l-5.02-1.07v-6.89h23.82q5.76 0 9.98 1.83 4.24 1.84 6.52 5.23a14 14 0 0 1 2.3 7.98q0 4.26-2.33 7.92a17 17 0 0 1-6.32 5.9 18.6 18.6 0 0 1-9.18 2.15l-8.09-.1v9.69l5.03 1.06v6.82zm30.68 0-6.52-18.9 10.14-3.46 5.9 14.4 4.58 1.17v6.79zm-13.98-26.52h7.25q3.4 0 5.23-1.56 1.83-1.6 1.83-4.6a6.7 6.7 0 0 0-1.87-4.95q-1.86-1.9-5.32-1.9h-7.12zm-40.9 27.22q-6.92 0-12.35-2.8a20.6 20.6 0 0 1-8.51-8.08q-3.1-5.33-3.1-12.9v-2.24q0-6.99 2.83-12.34 2.86-5.4 8.12-8.42 5.29-3.06 12.54-3.06 5.07 0 9.62 1.36a23.5 23.5 0 0 1 8.52 4.6v12.47h-8.49l-1.16-7.15q-1.13-.76-2.4-1.33-1.23-.57-2.66-.87-1.4-.3-3.03-.3-3.69 0-6.45 1.77a11.6 11.6 0 0 0-4.3 5.12q-1.5 3.32-1.5 8.09v2.3q0 4.45 1.57 7.84 1.56 3.36 4.36 5.26a11.4 11.4 0 0 0 6.52 1.9q1.96 0 4-.4 2.03-.45 3.92-1.13l1.17-6.86h8.51V78.2a29 29 0 0 1-7.38 3.5q-4.5 1.46-10.35 1.46m-68.3-.01q-5.92 0-10.51-1.13a28 28 0 0 1-9.15-4.26V65.18h9.01l1 6.46q1.07 1.2 3.76 2.03 2.7.8 5.89.8 2.23 0 3.73-.54 1.5-.56 2.26-1.63.76-1.05.76-2.56 0-1.42-.73-2.56a7 7 0 0 0-2.33-2.13 26 26 0 0 0-4.39-2.1 68 68 0 0 1-10.21-4.05q-4-2.06-5.96-4.9-1.93-2.82-1.93-7.01 0-4.03 2.3-7.02a15.3 15.3 0 0 1 6.32-4.76 24 24 0 0 1 9.22-1.83q5.91-.15 10.48 1.2 4.55 1.3 8.05 3.95v11.68h-8.65l-1.37-6.49q-1.13-.56-3.23-1.03a21 21 0 0 0-4.45-.46q-2.04 0-3.63.53a5.7 5.7 0 0 0-2.5 1.6q-.9 1.06-.9 2.66 0 1.3.77 2.33.76 1 2.7 2.03 1.92 1 5.39 2.33 8.25 2.42 12.5 6.08 4.3 3.63 4.3 9.89 0 4.29-2.33 7.32-2.33 3-6.49 4.59-4.16 1.56-9.68 1.56m-71.91-.7v-6.82l5.02-1.06V41.93l-5.02-1.07v-6.89h23.82q5.75 0 9.98 1.83 4.24 1.84 6.52 5.23a14 14 0 0 1 2.3 7.98q0 4.26-2.33 7.92a17 17 0 0 1-6.32 5.9 18.6 18.6 0 0 1-9.18 2.15l-8.09-.1v9.69l5.02 1.06v6.82zm30.67 0-6.52-18.9 10.15-3.46 5.89 14.4 4.6 1.17v6.79zm-13.97-26.52h7.25q3.39 0 5.23-1.56 1.83-1.6 1.83-4.6a6.7 6.7 0 0 0-1.87-4.95q-1.86-1.9-5.32-1.9h-7.12zm-63.69 26.52v-6.82l5.02-1.06V41.93l-5.02-1.07v-6.85h38.7v13.97h-8.83l-.26-4.99h-12.91v9.95h15.47v8.95h-15.47v11.54h13.54l.27-5.22h8.71v14.24zm-52.32 0v-6.82l5.1-1.23V42.13l-5.1-1.27v-6.85h22.7q6.54 0 11.6 3.06a21 21 0 0 1 7.92 8.42q2.86 5.36 2.86 12.37v.77q0 7.02-2.86 12.4a21 21 0 0 1-7.92 8.4 22 22 0 0 1-11.6 3.02zm16.77-8.85h5.32q3.7 0 6.2-1.86a11.3 11.3 0 0 0 3.75-5.23 22 22 0 0 0 1.3-7.88v-.8q0-4.5-1.3-7.85a11.3 11.3 0 0 0-3.76-5.23 10 10 0 0 0-6.19-1.86h-5.32zm-79.26 8.85-11.18-41.09-5.5-.5v-6.85h21.86v6.85l-5.38.77 6.05 24.78h.2l.8-3.16 9.48-29.24h8.05l9.98 30.6.7 2.1h.2l.57-2.1 5.65-22.98-5.55-.77v-6.85h21.42v6.85l-5.15.5-11.68 41.09h-10.41l-8.36-25.05-1.03-3.46h-.2l-1.3 3.66-8.48 24.85zm-46.36.7q-5.03 0-9.25-1.83a22 22 0 0 1-7.3-5.19 24 24 0 0 1-4.78-7.79q-1.67-4.49-1.67-9.74v-.77q0-5.21 1.67-9.68a24 24 0 0 1 4.76-7.79 22 22 0 0 1 7.28-5.19 22 22 0 0 1 9.22-1.86 22.4 22.4 0 0 1 16.53 7.05 24 24 0 0 1 4.96 7.79 26 26 0 0 1 1.77 9.68v.77q0 5.25-1.77 9.74a24 24 0 0 1-4.92 7.79 23 23 0 0 1-7.39 5.2 23 23 0 0 1-9.12 1.82m0-8.85q3.66 0 6.25-1.96a12 12 0 0 0 3.96-5.5q1.36-3.52 1.36-8.24v-.84q0-4.62-1.4-8.11a12 12 0 0 0-3.95-5.5 10 10 0 0 0-6.3-1.96q-3.89 0-6.38 1.93a11.4 11.4 0 0 0-3.66 5.43q-1.2 3.5-1.2 8.21v.84q0 4.72 1.2 8.28a11.7 11.7 0 0 0 3.73 5.5q2.52 1.92 6.38 1.92m-74.43 8.15v-6.82l5.03-1.06V41.93l-5.03-1.07v-6.89h23.83q5.75 0 9.98 1.83a14.7 14.7 0 0 1 6.52 5.23q2.3 3.36 2.3 7.98 0 4.26-2.33 7.92a17 17 0 0 1-6.33 5.9 18.6 18.6 0 0 1-9.18 2.15l-8.08-.1v9.69l5.02 1.06v6.82zm30.68 0-6.52-18.9 10.15-3.46 5.89 14.4 4.59 1.17v6.79zm-13.97-26.52h7.25q3.39 0 5.22-1.56 1.83-1.6 1.83-4.6a6.7 6.7 0 0 0-1.86-4.95q-1.87-1.9-5.32-1.9h-7.12zm-40.91 27.22q-6.92 0-12.34-2.8a20.6 20.6 0 0 1-8.52-8.08q-3.1-5.33-3.1-12.9v-2.24q0-6.99 2.84-12.34 2.86-5.4 8.11-8.42 5.3-3.06 12.55-3.06 5.05 0 9.61 1.36 4.59 1.34 8.52 4.6v12.47h-8.48l-1.17-7.15q-1.12-.76-2.4-1.33-1.22-.57-2.66-.87-1.4-.3-3.02-.3-3.7 0-6.46 1.77a11.6 11.6 0 0 0-4.29 5.12q-1.5 3.32-1.5 8.09v2.3q0 4.45 1.57 7.84 1.56 3.36 4.36 5.26a11.4 11.4 0 0 0 6.52 1.9q1.96 0 3.99-.4 2.03-.45 3.93-1.13l1.16-6.86h8.52V78.2a29 29 0 0 1-7.39 3.5 33 33 0 0 1-10.35 1.46m102.34 35.04h-5.58l-.4-4.65h-12.35v10.33h13.34v5.6h-13.34v11.67h13.04l.4-4.76h5.53v10.28h-30.36v-4.36l4.17-.8v-28.33l-4.17-.8V108h29.72zm34.6-5.82-4.6.8v27.97h11.5l.43-5.77h5.53v11.29h-28.84v-4.36l4.16-.8v-28.33l-4.16-.8V108h15.98zm59.25 5.82h-5.57l-.4-4.65h-12.35v10.33h13.33v5.6h-13.33v11.67h13.04l.4-4.76h5.52v10.28h-30.36v-4.36l4.17-.8v-28.33l-4.16-.8V108h29.71zm44.33 17.26h.16l10.6-27.46h14.76v4.38l-4.17.8v28.34l4.17.8v4.35h-15.56v-4.36l4.38-.8v-8.2l.1-17.18-.13-.03-11.79 29.85h-5.34l-12.08-29.66-.16.02.42 16.36v8.85l4.57.8v4.35H612v-4.36l4.14-.8v-28.33l-4.14-.8V108h14.69zm72-17.26h-5.58l-.4-4.65H691.3v10.33h13.33v5.6H691.3v11.67h13.04l.4-4.76h5.52v10.28h-30.35v-4.36l4.17-.8v-28.33l-4.17-.8V108h29.72zm47.4 17.32.16-.03v-22.3l-4.91-.8V108h15.56v4.38l-4.17.8v33.49h-6.93l-17.66-27.33-.16.03v22.15l4.91.8v4.35h-15.56v-4.36l4.14-.8v-28.33l-4.14-.8V108h11.47zm61.22-17.19h-5.47l-.5-4.78h-7.44v27.97l4.2.8v4.35h-15.6v-4.36l4.17-.8v-27.96h-7.4l-.51 4.78h-5.45V108h34z"/><path fill="currentColor" fill-rule="evenodd" d="m864.54 141.92 2.76.4v4.35h-12.72v-4.36l2.73-.5-1.88-5.68h-14l-1.88 5.68 2.7.5v4.36h-12.72v-4.36l2.8-.4 12.55-33.9h7.2zm-16.57-24.94-4.76 13.7h10.44l-4.76-13.75-.37-1.12h-.16zm53.91-8.98q4.38 0 7.51 1.36 3.16 1.35 4.81 3.9a11 11 0 0 1 1.67 6.1q0 3.41-1.64 6.01a11.3 11.3 0 0 1-5.06 4.3l5.24 11.9 3.16.7v4.4h-8.79l-6.33-15.72-7.3.03v10.54l4.18.8v4.35h-15.57v-4.36l4.17-.8v-28.33l-4.16-.8V108zm-6.72 17.4h6.48q3.59 0 5.3-1.46 1.74-1.5 1.74-4.3 0-2.77-1.7-4.41-1.71-1.65-5.1-1.65h-6.72z" clip-rule="evenodd"/><path fill="currentColor" d="m946.47 112.38-3.43.48 6.8 12.96.58 1.2.14-.03.58-1.14 7.44-12.99-4.3-.48V108h14.68v4.38l-3.72.54-11.39 19.75v8.85l4.2.8v4.35h-15.57v-4.36l4.17-.8v-8.28l-11.55-20.31-3.61-.54V108h14.98z"/><path fill="#00A0D0" d="M442.49 115.85a1.4 1.4 0 0 1 1.31.88l2.08 4.95 5.32.46a1.43 1.43 0 0 1 .82 2.51l-4.04 3.53 1.2 5.24a1.43 1.43 0 0 1-2.12 1.55l-4.58-2.78-4.56 2.78a1.44 1.44 0 0 1-2.13-1.55l1.2-5.24-4.03-3.53a1.43 1.43 0 0 1 .81-2.5l5.32-.47 2.08-4.95a1.4 1.4 0 0 1 1.31-.88m554.12 0a1.4 1.4 0 0 1 1.32.88l2.09 4.95 5.31.46q.43.05.77.3.34.28.48.69a1.5 1.5 0 0 1-.43 1.52h-.01l-4.03 3.53 1.21 5.24q.09.42-.05.82-.16.41-.5.66a1.4 1.4 0 0 1-1.58.07l-4.58-2.78-4.56 2.78a1.44 1.44 0 0 1-2.13-1.55l1.2-5.24-4.03-3.53a1.43 1.43 0 0 1 .81-2.5l5.33-.47 2.07-4.95a1.4 1.4 0 0 1 1.32-.88M331.15 96.8c0 11.14-1.37 21.09-4.22 29.78l-1 3.08-.05-.04a60 60 0 0 1-9.79 17.41l.03.03-1.25 1.4a50 50 0 0 1-19.05 13.4c-7.34 2.99-15.4 4.44-24.1 4.44-8.69 0-16.75-1.44-24.13-4.4h-.02l-.06-.03a52 52 0 0 1-19.1-13.34l-.01-.02-.03-.02-.03-.03v-.02a55 55 0 0 1-6.37-8.85l.22-.02 2.02-.1a53 53 0 0 0 5.64 7.67l.01.02.01.01a50 50 0 0 0 18.39 12.85q10.72 4.3 23.46 4.29 12.73.01 23.35-4.3a48 48 0 0 0 18.3-12.87q7.65-8.67 11.67-21.19 4.13-12.67 4.12-29.16V78.97q1-.48 2-.99zM2.07 61.74V162.2h36.07v-53.84h18.64c10.63 0 19.9-2.06 27.72-6.3l1.33-.74.88.23 1.8.47q-1.5.95-3.07 1.8c-8.17 4.43-17.78 6.54-28.66 6.54H40.14v53.83H.08V59.94zm141.73 56.49v43.98h35.86v-31.95l2 .54v33.4H141.8v-46.8z"/><path fill="currentColor" d="M6.43 65.57A202 202 0 0 0 10.5 69l.16.12.92.74.08.06.93.73.11.09q-.68.23-1.32.5c-.25.11-.59.27-.93.47q-.12.06-.47.3a6 6 0 0 0-1.26 1.25q-.76 1.07-.9 2.36l-.04.36v.15l-.03.3a5.7 5.7 0 0 0 .88 3.27l.01.02a5 5 0 0 0 3.2 2.34c2.35.53 6.03.64 7.55.75l3.67.28a6 6 0 0 0-.57 2.48 5 5 0 0 0 1 3.15 5.6 5.6 0 0 0 3.14 2.18c.56.15 1.05.18 1.23.2l.24.01h.13c3.04.23 6.13.36 9.1.47a5 5 0 0 0 5.19 4.95c1.34-.05 2.64-.12 4.05-.14q2.15 0 2.97.17c1.47.31 2.74.72 4.44 1.21 1.62.48 3.51 1 5.7 1.26 5.68.68 11.67.73 16.76 1.07a8 8 0 0 0 1.62-.05l1.13-.14.5-.06q1.29.24 2.67.59l.08.02Q71.66 106 56.78 106h-21.3v53.84H4.73V64.1z"/><path fill="currentColor" d="m42.35 91.51 4.62-4.45c-4.2-.33-8.52-.44-12.8-.63l-.6-.03-1.04-.05-3.93-.24c-.62-.04-.8.01-1.1-.4v-.12l.01-.06v-.01q.08-.4.38-.78a3 3 0 0 1 .43-.44l.42-.33.06-.04.25-.16h.02l.37-.23q.02 0 .05-.03l.8-.4.07-.04q.58-.27 1.2-.52l.1-.05.08-.03 1.89-.77.13-.05.48-.2.13-.06.23-.1q.87-.38 1.53-.77.6-.36.93-.75l-.03-.3c-1.05-.52-4.22-.66-5.54-.77l-11.73-.9h-.09c-.95-.07-2.08-.13-3.21-.2a25 25 0 0 1-3.5-.44l-.11-.18-.02-.02v-.02l-.07-.18c-.01-.1.01-.24.03-.59.24-.34 2.36-1 4.74-1.68l.41-.11.59-.17 1.11-.3c2.14-.57 4.13-1.07 4.82-1.26l-.67-.39-.26-.15-1.06-.64-.16-.1-.55-.34-.16-.1-.76-.5-.3-.2-.42-.28-.12-.08a89 89 0 0 1-4.14-3.03l-.57-.45q-.4-.3-.8-.63l-.44-.35c-3.9-3.13-7.69-6.54-11.03-9.56-2.96-2.67-4.05-9.54-1.89-10.35h.01l.15-.04h.02q.15-.05.35-.03h.01q.26 0 .54.1a7 7 0 0 1 2.52 1.8l.02.02a18 18 0 0 1 2.34 3.06l.33.52.11.16.27.4.02.03.1.13.28.42.04.05.34.46.1.14.28.35.11.15.28.34.11.14.25.28.16.2.03.03a26 26 0 0 0 1.16 1.23l.16.16.65.61.18.17.28.24.11.1q.15.14.32.27l.1.09.06.04.29.23.1.09a23 23 0 0 0 2.26 1.54l.09.06.36.2.1.07.31.17.18.1.31.17.14.07q.95.5 1.93.9l.07.03a31 31 0 0 0 1.54.6l.2.07.73.24.18.06.64.2.25.07.06.01q.49.15.98.27l.21.06.3.07 1.16.28.4.08.28.07.8.16.27.05.8.15.29.06.88.15.16.02.28.05.12.02 2.62.4 2.14.31q2.63.37 5.32.82a647 647 0 0 0 30.74 4.6l2.9.35h.04l2.01.22.22.03 1.28.13.45.05 1.27.13.77.07 1.06.1.09.01.6.06.4.04 3.35.28.56.05.79.06.7.05.33.03 2.64.18q.29 0 .56.03l3.57.2h.12l.69.04 1.06.05 4.02.14h.03l3.03.05h.58a38 38 0 0 0 3.87-.26l2.1-.25c4.5-.6 8.98-1.51 13.52-1.5 6.29.14 12.52 1.8 18.79 2.32l1 .07 1 .06a36 36 0 0 0 4.02-.05l.11-.01a31 31 0 0 0 2.84-.33c5.2-.72 10.33-1.9 15.48-3.03l.66-.15q2.13-.46 4.27-.9l.59-.11.47-.1 1.4-.26 3.35-.6a957 957 0 0 1 35.34-5.58q.63-.1 1.28-.18l13.14-1.77c2.7-.37 5.3-.75 7.9-1.07a157 157 0 0 1 3.68-.4l.3-.03.9-.08.18-.01 1.38-.1.99-.06.06.06c.4.43.92.84 1.36 1.22l-1.58.23q-2.38.32-4.78.62-3.21.38-6.38.8l-3.58.49-.17.02-3.32.47-1.48.22-2.01.3-2.43.36-.84.12a806 806 0 0 0-14.91 2.4 2149 2149 0 0 0-30.58 5.82l-1.81.36-.28.06q-4.8.95-9.63 1.93c-1.09.23-3.55.82-6.48 1.51l-.76.18c-1.87.44-3.9.9-5.84 1.32l-.19.05c-4.45.96-8.49 1.7-9.41 1.4l.01-.28c.67-.58 1.87-.77 2.73-.99-.88-.28-3.35-.62-3.77-1.4.51-.28 4.57-.83 5.47-1a87 87 0 0 0-27.83-.96c-1.07.13-3.97.3-4.83.64-.24.6-.28.43-.14.9 1.55 1.49 6.46.06 7.16 2.14l-.12.47c-3.28.42-8.62-.7-12.56-.15a12 12 0 0 0-1.15.22l-.15.04a8 8 0 0 0-.79.27l-.2.08-.03.01-.28.14h-.01l-.12.07-.05.02a5 5 0 0 0-1.2 1c-1.01 1.18-1.28 2.73-1.5 3.83l.36.08.16.03.14.02q1 .15 2.12.26c.91.1 1.85.2 2.69.33l.09.01.17.03.27.05.17.04.28.06.09.02.3.08.36.12.25.1c2.5.97 5.78 3 8.1 4.37q8.16 4.88 16.24 9.86c3.29 2 8.86 5.6 12.26 6.72-2.26-2.92-6.5-5.63-9.15-8.3-.8-.8-2.66-1.78-2.47-2.97.86-.36 7.47 3.04 11.69 5.1q1.14.56 2 .95.76.36 1.17.5c.72.24 2.23 1.17 3.47 1.73l.64.25q.3.1.54.14h.04l.08.02h.19c.09-.14.5-.8.33-.99-1.44-1.7-15.23-11.03-15.5-12.28.17-.6.18-.62.64-.97 1.1.04 9.14 2.2 10.83 2.63A583 583 0 0 0 138.6 85c2.74-1.36 5.5-3.33 8.34-4.49l.32-.12.2-.07.3-.12 4.19-1.49.72-.25 1.86-.63 1.16-.38 3.38-1.1 1.13-.35 1.92-.6 1.1-.32 1.04-.31a252 252 0 0 1 6.78-1.91l.59-.16 1.48-.4.55-.14a333 333 0 0 1 38.47-7.5l.21-.02 4.5-.59.23-.03.26-.03 2.26-.27.88-.1 1.82-.2 1.02-.11 2.13-.22.63-.07a406 406 0 0 1 5.87-.53l.12-.01.2-.02 7.6-.6q3.75-.28 7.51-.64c7.21-.69 14.4-1.66 21.48-3.5a96 96 0 0 0 26.06-10.8l.08-.06a76 76 0 0 0 3.35-2.2l2.3-1.64 1.56-1.08q.93-.61 1.93-1.16c.93-.5 1.97-1.02 3.03-1.47l.23-.09.28-.12.56-.22.27-.1.25-.1.3-.09a22 22 0 0 1 1.8-.54l.13-.03q.47-.1.9-.17l.16-.02.28-.03.16-.02h.35a5 5 0 0 1 1 .85q.2.25.28.5.08.26.08.51 0 .43-.12.88A463 463 0 0 0 306.5 46l-1.13.83-3.81 2.83-3.37 2.5-1.86 1.38-1.4 1.05-.19.13-3.97 2.92-.23.17-1.84 1.34c-.55.4-1.37.94-1.57 1.63.4.18 1.92-.18 3.67-.71l.97-.3.98-.32c1.9-.62 3.7-1.26 4.37-1.49l14.14-4.64 3.6-1.21 1.42-.49.6-.19.7-.23.69-.21q.2-.08.4-.13l.1-.03.78-.24.52-.15q.51-.16 1.02-.28l.04-.01.47-.13a10 10 0 0 1 1.2-.22h.06l.47-.02h.07l.1.01h.06l.08.02.06.01.08.02.05.02q.06 0 .1.03h.02l.07.04.01.01.04.02.06.04.02.02.06.07.04.06.02.04.04.14v.13l-.05.2v.03l-.11.21-.02.03-.03.04-.11.16-.04.04-.18.21-.02.03-.22.2-.04.04-.23.19-.05.04a7 7 0 0 1-.7.48q-.56.36-1.15.7l-.3.16-1.7.94-.27.15q-1.47.77-2.93 1.56-.94.5-1.84 1.03c-2.82 1.65-5.75 3.18-8.68 4.72l-2.2 1.16A169 169 0 0 0 297 66.4c9.35-2.02 18.71-3.98 28.05-6.06h.05l.87-.23c.9-.26 1.68-.52 3.07-.58h.15l.5-.02q.17 0 .31.06.23.09.4.27.11.13.19.28.13.28.1.6-.02.4-.33.83-.13.15-.3.3c-4.17 3.73-9.38 5.87-14.95 7.25a69 69 0 0 1-5.7 1.16l-.42.07-2.85.43-.4.05-1.52.2-.27.04-.34.04q-3.74.46-7.34.88l-.12.02q-2.5.3-4.9.68h.05a58 58 0 0 0 4.66.8l.4.06.64.08.47.05.61.07.53.05.53.05 1.26.1.26.02.82.06h.17l.76.05.37.02 2.45.08h.25l.9.02h.03c4.13.05 8.3-.13 12.39-.42l.54-.03 3.6-.28 3.55-.32 3.74-.34-1.12.6q-1.29.68-2.62 1.28a58 58 0 0 1-3.55 1.5l-.12.04q-1.78.68-3.6 1.23l-.14.05-.83.24-.16.05a62 62 0 0 1-2.6.68l-.18.05-.82.18-.25.06q-1.3.29-2.6.51l-.17.03q-.4.08-.79.13l-.28.05-.8.12-.3.04-1.22.16-.5.05-1.8.18-.37.03-1.1.07-.63.04-.56.03-.5.02-1.24.03h-1.82l-.86-.01-.45-.02-.69-.02-.49-.02a63 63 0 0 1-5.98-.59l-.23.54a6 6 0 0 1 1.01.16l.13.03.4.08c1.32.28 3 .69 3.7.85q7.05 1.7 14.05 3.52a85 85 0 0 1-2.83.46l-.25.04-1.04.14-.36.05-1.1.13-.43.04a77 77 0 0 1-5.57.39h-.2l-1.55.04h-.03c-9.71.1-18.54-1.58-29.18-3.52 2.62 1.24 7.45 2.81 10.26 3.82l15.84 5.75-.44 2.2c-11.1-2.16-23.47-3.54-34.7-5.42.67.36 1.34.62 2.03.92 4.63 2.04 9.22 4.14 13.87 6.14l-.59 2.51c-2.09-.19-4.7-.2-6.85-.3q-7.4-.48-14.81-.71c1.8 1.8 4.41 4.05 6.35 5.88l-15.45-.01c1.15 1.42 2.29 2.91 3.58 4.18h-.48l-.19-.01h-.16l-.3-.02-1.53-.08-.24-.02q-.8-.07-1.6-.17l-.42-.05-.38-.05-.78-.11-1.16-.18c-3.7-.58-7.31-1.3-11.12-1.06a22 22 0 0 0-5.07.92l-.4.11-.23.07-.09.02-.7.17-.06.02-.7.14h-.06a26 26 0 0 1-3.63.4 31 31 0 0 1-4.95-.18h-.03a27 27 0 0 1-3.4-.63c-2.7 1-2.43 2.24-4 3.29-1.47 1-7.25-1.77-9.4-2.42-.24.73-.48 1.18-.81 1.86 3.04 1.68 6.78 3.74 10 4.9 4.8 1.71 10 2.84 15.03 4.06q1.26.3 2.5.63l1.2.31c1.24.33 7.26 1.55 8.42 2.17l.17.12-.04.58a1 1 0 0 1-.1.33l-.02.05-.05.08-.03.05-.06.07-.04.06a1.5 1.5 0 0 1-1.02-.06l-.2-.07-.44-.16q-1.13-.36-2.44-.7l-.17-.05-.77-.19-.17-.04a55 55 0 0 0-7.33-1.2h-.06c-5.44-.5-11.11-.1-14.82 2.24l-.2.12c3.53.9 7.77 2.63 11.34 3.65.5.14.45.15.62.54-.1.55-.08.6-.4 1.02-1.27.05-5.33-.61-6.8-.81l-14.12-1.94c1.5.84 3.6 1.78 5.18 2.45 5.96 2.52 12.21 4.52 18.54 5.02l.55.04a39 39 0 0 0 4.44.02l.52-.03.37-.03.62-.06.83-.1q.17 0 .34-.04a27 27 0 0 0 1.83-.3l1.4-.3.04-.01.82-.22a34 34 0 0 0 3.43-1.13q2.68-1.06 5.32-2.35l-1.06.8-.07.06-.28.2-1.51 1.1-.18.12-.27.2-.21.13-.24.16-.46.3-.04.02-.86.52-.22.12-.16.1-.27.13-.17.1-.29.14-.13.06-.3.15-.09.04c-2.76 1.26-5.56 1.66-10.28 1.88-7.72.44-14.58-1.85-21.9-3.93-8.82-2.5-17.62-4.74-26.35-7.25l-.19-.06-2.56-.75-1.02-.3a276 276 0 0 1-7.61-2.39l-.41-.14-1.16-.38-.54-.19-1.23-.43-.23-.07-1.4-.5-.26-.1-1.04-.37-.72-.27-.87-.32-.63-.24-1-.39-.64-.24-1.54-.62-20.26-8.36c-2.27-.95-5.91-2.9-8.11-3.47-6.8-1.78-13.76-2.3-20.69-3.79q-6.84-1.48-13.62-3.3c-2.53-.66-5.31-1.45-7.88-1.89l-.28-.01h-.01c-.59 0-1.6.19-2.37.26l-.22.01q-.25.02-.44 0l-3.57-.19-3.56-.16-1.24-.06-1.7-.09a115 115 0 0 1-5.07-.4q-.22 0-.46-.04l-.8-.09h-.09l-.04-.01-.52-.08q-.13 0-.26-.04l-.32-.05-.23-.04-1.12-.23-.11-.03-.34-.08a38 38 0 0 1-1.89-.52l-1.37-.4-1.04-.3-1.97-.51-.5-.11q-.62-.13-1.37-.2a26 26 0 0 0-2.68-.08l-1.11.03z"/><path fill="#00A0D0" d="M292.31 99.23q.49.09.96.09a81 81 0 0 1-1.49 14.87c-1 4.75-2.45 8.48-4.25 11.28a16.7 16.7 0 0 1-6.61 6.09 21 21 0 0 1-9.2 1.92 22 22 0 0 1-9.43-1.93 18 18 0 0 1-6.62-6.12c-1.86-2.79-3.33-6.5-4.33-11.24a58 58 0 0 1-.65-3.67 5 5 0 0 0 .95-2.19h.78q.34 2.95.87 5.44c.97 4.58 2.37 8.04 4.04 10.56 1.7 2.54 3.66 4.3 5.85 5.43a20 20 0 0 0 8.54 1.73c3.31 0 6.05-.62 8.32-1.72a14.7 14.7 0 0 0 5.81-5.38c1.64-2.54 3-6.02 3.98-10.62a79 79 0 0 0 1.45-14.74zm-71.35 26.47c2.54.36 4.93.9 6.87 1.47q-3.15.7-6.37.68l-.33-.9v-.02q0-.63-.17-1.23m73.01-9.14-.12.45.13-.5zm37.14-48.69-.48-.07q.24-.16.47-.34zM271.5 0c8.75 0 16.83 1.53 24.19 4.68a51.5 51.5 0 0 1 19.07 13.78c5.4 6.1 9.44 13.63 12.19 22.46l.25.8v.01a78 78 0 0 1 1.72 6.58 5.3 5.3 0 0 0-2.74-2.88q-.42-1.58-.88-3.1l-.26-.82c-2.68-8.6-6.59-15.87-11.77-21.72A49.5 49.5 0 0 0 294.9 6.5Q284.27 2 271.5 2q-12.75-.01-23.39 4.51a49.5 49.5 0 0 0-18.37 13.28l-.48.55q-7.41 8.66-11.3 21.2a84 84 0 0 0-3.06 14.34l-1.94.26h-.02l-.1.02a86 86 0 0 1 3.22-15.22q.65-2.07 1.38-4.03h-35.78v24.06l-2 .35v-26.4h37.99V4.09h-111.1v30.83h37.25v32.47q-.98-.05-2-.14V36.91h-33.97a63 63 0 0 1 3.14 20.32q0 4.68-.57 9.04l-2.05.29q.63-4.5.63-9.33.02-15.26-6.3-27.27a46.7 46.7 0 0 0-18.1-19C76.73 6.34 67.43 4.1 56.77 4.1H2.08v36.34q-.96-.08-2 .16V2.1h56.7c10.73 0 20.23 2.23 28.32 6.88h.01l.47.27a48.7 48.7 0 0 1 18.87 19.8l.1.19V2.1h115.1v29.57a56 56 0 0 1 8.1-12.63v-.01l.49-.55a51.5 51.5 0 0 1 19.09-13.8C254.69 1.53 262.77 0 271.5 0"/><path fill="currentColor" d="M56.78 7.06q15.43 0 26.45 6.5a44 44 0 0 1 17.1 17.95q5.98 11.33 5.98 26.02 0 4.87-.65 9.31-1.64.14-3.23.12c-9.15-.15-18.44-.84-27.75-1.88a38 38 0 0 0 .68-7.34q0-6.6-1.9-12.38a20 20 0 0 0-5.97-9.23q-4.1-3.57-10.7-3.57H35.47v26.72c-6.77-1-12.14-1.7-16.59-4.14a19 19 0 0 1-3.63-2.6 20 20 0 0 1-1.67-1.7l-.13-.16-.24-.29-.06-.08a24 24 0 0 1-1.82-2.56 26 26 0 0 0-3.04-3.93l-.12-.12-.4-.4-.07-.06-.18-.17-.07-.06q-.1-.1-.24-.2l-.02-.03L7 42.6q-.02 0-.05-.03a11 11 0 0 0-2.2-1.4V7.05z"/><path fill="#00A0D0" d="M56.78 34.92c3.91 0 6.81 1.04 8.96 2.91l.01.01.02.02a17 17 0 0 1 5.17 8.03 37 37 0 0 1 1.76 11.55q0 3.96-.74 7.33l-1.99-.24q.65-2.91.72-6.37v-.72q0-5.94-1.65-10.93a15 15 0 0 0-4.55-7.12l-.02-.02-.03-.02-.01-.01c-1.6-1.4-3.81-2.3-7-2.42H40.14v23.1l-2-.33V34.92z"/><path fill="currentColor" d="M271.5 4.96q12.29 0 22.36 4.3 10.07 4.2 17.42 12.6 7.35 8.29 11.23 20.77.33 1.05.65 2.15H323l-.76.05-.15.01-.4.06-.09.01a13 13 0 0 0-1.25.27q-1.56.4-3.17.9a129 129 0 0 0-4.17 1.37l4.3-3.1a5 5 0 0 0 1.6-2.55 9 9 0 0 0 .28-1.71 6.8 6.8 0 0 0-2.74-5.87 10 10 0 0 0-1.24-.84 5 5 0 0 0-2.04-.6h-.35c-2 0-4.16.62-5.85 1.23a40 40 0 0 0-5.24 2.37c-2.3 1.25-4.65 3.03-6.34 4.23l-.68.47a72 72 0 0 1-3.36 2.14 27 27 0 0 0-1.7-3.1 20 20 0 0 0-7.66-7.25q-4.5-2.3-10.5-2.3-5.97 0-10.6 2.3-4.5 2.31-7.65 7.24-3.04 4.94-4.62 12.7-.3 1.6-.55 3.32l-.35.03q-.39-.61-.97-1.1l-.69-.59-.29-.27a5 5 0 0 0-3.69-1.62h-.28c-5.53.3-10.61 1.09-15.72 1.8l-8.42 1.12q.98-6.9 2.84-12.87 3.88-12.48 11.23-20.78 7.35-8.4 17.41-12.59 10.08-4.3 22.36-4.3"/><path fill="#00A0D0" d="M271.5 32.92c3.65 0 6.72.7 9.29 2.02a17 17 0 0 1 6.63 6.3q.93 1.47 1.73 3.25l-1.76.95a23 23 0 0 0-1.65-3.12 15.5 15.5 0 0 0-5.46-5.39l-.4-.21a18 18 0 0 0-7.75-1.8h-.62c-3.38 0-6.17.65-8.5 1.81a15 15 0 0 0-5.82 5.56c-1.64 2.67-3.02 6.33-3.99 11.12q-.2 1.06-.37 2.2l-2.06.23q.21-1.47.47-2.83c1.01-4.95 2.46-8.85 4.26-11.79a17 17 0 0 1 6.61-6.28 21 21 0 0 1 9.4-2.02m57.82 17.42q.4 2.05.7 4.18h-.33q-.9 0-1.68.08l-.06-.4c.5-.64 1.4-2.03 1.37-3.86M81.84 12.48l-.65-.35z"/><path fill="currentColor" d="M326.5 97.1q0 16.15-4 28.33-3.87 12.07-11.12 20.25a45 45 0 0 1-17.31 12.17q-10.08 4.1-22.35 4.1t-22.46-4.1a47 47 0 0 1-17.42-12.17 50 50 0 0 1-4.84-6.48q1.52-.18 2.96-.5l.17-.04.49-.12.25-.06.43-.12.23-.07.48-.15.2-.06a20 20 0 0 0 3.55-1.56q.84-.45 1.68-.98a51 51 0 0 0 5.2-3.81 5 5 0 0 0 1.33-2.6 5 5 0 0 0-1.23-4.27 5 5 0 0 0-5.83-1.16 6 6 0 0 0 .21-1.57l.01-.16a5 5 0 0 0-2.17-4.4q-.44-.3-.62-.38a8 8 0 0 0-1.5-.63l-.66-.2a59 59 0 0 0-4.42-1.1q-1.44-.34-2.28-.52l-.64-.16-1.88-.49-1.1-.27h-.01l-.16-.05-.6-.14-3.18-.77-.21-.05-.03-.2q2.3-.1 4.52-.52h.01l.4-.08.07-.02.76-.17.07-.02.11-.03 1.14-.32a16 16 0 0 1 4.08-.71c1.75-.09 3.55.07 5.53.34 3.26.46 7.79 1.44 12.35 1.42h.33q.6-.05 1.18-.23.24 1.43.52 2.77 1.56 7.45 4.72 12.17 3.15 4.73 7.66 7.03a24 24 0 0 0 10.6 2.2q5.87 0 10.39-2.2a19.4 19.4 0 0 0 7.66-7.03q3.03-4.72 4.61-12.17a85 85 0 0 0 1.57-16.5 5 5 0 0 0 2-2.45l.02-.04q.13-.37.21-.75l.44-2.2a5 5 0 0 0-.01-2.07 84 84 0 0 0 12.86-1.42 5 5 0 0 0 3.58-5.9l1-.22.28-.07 1.86-.46.45-.13.84-.23.42-.12h.02a77 77 0 0 0 2.46-.79l.14-.04a63 63 0 0 0 3.17-1.17l.08-.03.12-.05.6-.25zm-177.76 23.17h.03l2.15.86 1.14.44 1.66.62.75.28 2.58.92.76.26 1.1.38.13.04.38.13q3.37 1.14 6.76 2.18l.59.18 1.14.34.6.19 1 .3.68.2.83.24a469 469 0 0 0 5.98 1.7v30.32h-30.54v-40.52zm66.25-87.71h-38v29.22l-4.22.76h-.02c-4.19.77-8.39 1.74-12.34 2.6a142 142 0 0 1-11.76 2.11q-1.09.13-2.19.17V32.56h-37.25V7.06h105.78z"/></svg>
+    </a>
+
+    <div class="nav-links">
+      <a href="#top" class="is-active" aria-current="page">Home</a>
+      <a href="#sponsors">Sponsors</a>
+      <a href="#events">Events &amp; news</a>
+      <a href="#get-involved">Volunteer</a>
+      <a href="#quick-links">Quick links</a>
+      <a href="#impact">Impact</a>
+      <a href="teacher-hub.html" class="nav-link-end">Teacher hub</a>
+      <span class="nav-link-soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
+    </div>
+
+    <div class="nav-cta-group">
+      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
+        <i class="ph ph-facebook-logo" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+        <i class="ph ph-instagram-logo" aria-hidden="true"></i>
+      </a>
+      <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">
+        Join the newsletter <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <!-- Mobile hamburger: hidden above 480px, shown below -->
+    <button type="button" class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <i class="ph ph-list" aria-hidden="true"></i>
+    </button>
+  </nav>
+
+  <!-- Mobile menu panel: slides down under the nav when hamburger is tapped -->
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#top" class="mobile-menu-link is-active" aria-current="page">Home</a>
+    <a href="#sponsors" class="mobile-menu-link">Sponsors</a>
+    <a href="#events" class="mobile-menu-link">Events &amp; news</a>
+    <a href="#get-involved" class="mobile-menu-link">Volunteer</a>
+    <a href="#quick-links" class="mobile-menu-link">Quick links</a>
+    <a href="#impact" class="mobile-menu-link">Impact</a>
+    <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
+    <span class="mobile-menu-link mobile-menu-link--soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
+    <div class="mobile-menu-cta">
+      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
+        <i class="ph ph-facebook-logo" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+        <i class="ph ph-instagram-logo" aria-hidden="true"></i>
+      </a>
+      <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">
+        Join the newsletter <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <p class="eyebrow">Welcome, Eagle families</p>
+      <h1 class="hero-title" id="hero-title">Everything PTO,<br>in one place.</h1>
+      <p class="hero-lead">This is your one-stop spot for everything PTO — events, volunteer sign-ups, calendars, news, and how to find us. We're so glad you're here.</p>
+      <p class="hero-lead">Our PTO's mission is to work as partners with the parents, administrators, faculty and staff, to ensure Crowders Creek Elementary continues to be a safe and educational place for our children to learn.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="stat-grid" aria-label="PTO at a glance">
+      <div class="stat">
+        <p class="stat-value">$6.6K</p>
+        <p class="stat-label">Gifted to special subjects</p>
+      </div>
+      <div class="stat">
+        <p class="stat-value">$23.4K</p>
+        <p class="stat-label">Field trips &amp; shirts for students</p>
+      </div>
+      <div class="stat">
+        <p class="stat-value">$12.2K</p>
+        <p class="stat-label">Teacher appreciation</p>
+      </div>
+      <div class="stat">
+        <p class="stat-value">$2K</p>
+        <p class="stat-label">Grants for teachers</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sponsors -->
+  <section class="sponsors" id="sponsors" aria-labelledby="sponsors-title">
+    <div class="sponsors-head">
+      <p class="impact-eyebrow">Thank you</p>
+      <h2 class="impact-title" id="sponsors-title">Our Sponsors</h2>
+      <p class="impact-lead">Crowders Creek Elementary PTO is grateful to the local businesses whose generosity supports our Eagles.</p>
+    </div>
+
+    <!--
+      HOW TO ADD OR EDIT A SPONSOR
+      =============================
+      1. Save the sponsor's logo image into the "sponsors" folder next to this page (PNG or
+         SVG, transparent background looks best).
+      2. Find that sponsor's <a class="sponsor-item"> block below and update:
+           - src   -> the path to the logo file
+           - alt   -> the sponsor's name + " logo"
+           - href  -> the sponsor's website ("#" if they don't have one)
+           - aria-label -> the sponsor's name (on the <a> tag itself)
+      3. IMPORTANT: every sponsor appears TWICE below — once under "COPY 1" and again,
+         identically, under "COPY 2". This is what makes the strip scroll in an endless loop
+         with no visible seam. Make the SAME change in BOTH copies, in the same order, or the
+         loop will visibly jump. COPY 2 is marked aria-hidden="true" so screen readers and
+         keyboard users only ever encounter each sponsor once.
+      4. To add a new sponsor, copy one whole <a class="sponsor-item"> block and paste it
+         into both COPY 1 and COPY 2, in the same position in each.
+      5. Logos display muted/grayscale and brighten to full color on hover or keyboard focus —
+         that's automatic CSS, nothing to change per logo.
+
+      Mandar Rocks! doesn't have a confirmed website yet, so its href is "#" for now — drop in
+      their site or Facebook page URL once you have it.
+    -->
+    <div class="sponsor-marquee">
+      <div class="sponsor-track">
+        <!-- COPY 1 (read by screen readers) -->
+        <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" aria-label="Card My Yard">
+          <img src="sponsors/card-my-yard.svg" alt="Card My Yard logo" loading="lazy">
+        </a>
+        <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" aria-label="Carolina Homes Connection">
+          <img src="sponsors/carolina-homes-connection.svg" alt="Carolina Homes Connection logo" loading="lazy">
+        </a>
+        <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" aria-label="Fred Caldwell Chevrolet">
+          <img src="sponsors/fred-caldwell-chevrolet.svg" alt="Fred Caldwell Chevrolet logo" loading="lazy">
+        </a>
+        <a class="sponsor-item" href="https://dreamerycreamerylw.com/" target="_blank" rel="noopener sponsored" aria-label="Dreamery Creamery">
+          <img src="sponsors/dreamery-creamery.svg" alt="Dreamery Creamery logo" loading="lazy">
+        </a>
+        <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" aria-label="Jo's Pilates">
+          <img src="sponsors/jos-pilates.png" alt="Jo's Pilates logo" loading="lazy">
+        </a>
+        <a class="sponsor-item" href="#" target="_blank" rel="noopener sponsored" aria-label="Mandar Rocks!">
+          <img src="sponsors/mandar-rocks.svg" alt="Mandar Rocks! logo" loading="lazy">
+        </a>
+        <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" aria-label="Sisters Selling Charlotte">
+          <img src="sponsors/sisters-selling-charlotte.svg" alt="Sisters Selling Charlotte logo" loading="lazy">
+        </a>
+
+        <!-- COPY 2 (identical to COPY 1, hidden from screen readers, makes the loop seamless) -->
+        <div class="sponsor-copy" aria-hidden="true">
+          <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/card-my-yard.svg" alt="" loading="lazy">
+          </a>
+          <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/carolina-homes-connection.svg" alt="" loading="lazy">
+          </a>
+          <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/fred-caldwell-chevrolet.svg" alt="" loading="lazy">
+          </a>
+          <a class="sponsor-item" href="https://dreamerycreamerylw.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/dreamery-creamery.svg" alt="" loading="lazy">
+          </a>
+          <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/jos-pilates.png" alt="" loading="lazy">
+          </a>
+          <a class="sponsor-item" href="#" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/mandar-rocks.svg" alt="" loading="lazy">
+          </a>
+          <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <img src="sponsors/sisters-selling-charlotte.svg" alt="" loading="lazy">
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Action / Upcoming events & news -->
+  <section class="section" id="events" aria-labelledby="events-title">
+    <div class="action-block">
+      <div class="action-block-head">
+        <p class="action-block-eyebrow">Take action</p>
+        <h2 class="action-block-title" id="events-title">Upcoming events &amp; news</h2>
+      </div>
+
+      <!-- First PTO Meeting (Aug 12, 2026), Winner of the Logo Contest, and the
+           First Day of School Photo Album have all moved to event-archive.html
+           now that they've passed. The photo album's ongoing link still lives
+           on this page too, as a permanent Quick Links card. -->
+
+      <div class="priority-item">
+        <div class="priority-text">
+          <p class="priority-tag">Buy tickets</p>
+          <p class="priority-title">Golden Ticket Raffle &mdash; Quarter 2</p>
+          <p class="priority-meta">Get your Golden Ticket to skip the line at pick-up AND drop-off — just come to the front office instead. One pass per grade is up for grabs each quarter, the winner is drawn at random by grade, and it covers all your kiddos at Crowders Creek. Winners will be emailed on Oct 11th.</p>
+        </div>
+        <a href="https://www.zeffy.com/en-US/ticketing/crowders-creek-golden-ticket-raffle-q2" target="_blank" rel="noopener" class="btn btn-translucent">Buy tickets <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+
+      <!-- Way through to the past events, sitting under the live list -->
+      <a href="event-archive.html" class="archive-link">View archived events <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <!-- Board + Get involved -->
+  <section class="section section--white" id="get-involved">
+    <div class="duo">
+      <div class="card-base get-involved">
+        <div class="card-head">
+          <p class="card-eyebrow">Get involved</p>
+          <h2 class="card-title card-title--light">Volunteer</h2>
+        </div>
+        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
+        <div class="card-actions">
+          <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-translucent btn-translucent--on-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="card-base know-us">
+        <div class="card-head">
+          <p class="card-eyebrow">Get to know us</p>
+          <h2 class="card-title">Your PTO board (2026–27)</h2>
+        </div>
+        <div class="board-grid">
+          <div class="board-person">
+            <div class="avatar" aria-hidden="true">ER</div>
+            <div>
+              <p class="board-person-name">Erin Roe</p>
+              <p class="board-person-role">President</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <div class="avatar" aria-hidden="true">CH</div>
+            <div>
+              <p class="board-person-name">Carolyn Hammonds</p>
+              <p class="board-person-role">Vice President</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <div class="avatar" aria-hidden="true">LJ</div>
+            <div>
+              <p class="board-person-name">Liz Johnson</p>
+              <p class="board-person-role">Secretary</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <div class="avatar" aria-hidden="true">JW</div>
+            <div>
+              <p class="board-person-name">Jessica Wright</p>
+              <p class="board-person-role">Treasurer</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-translucent btn-translucent--on-dark">
+            Email the PTO <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current volunteer needs. Add a <li class="vol-card"> per opportunity;
+         the row scrolls horizontally on its own once the cards overflow, and
+         the arrow button appears automatically (see the vol-scroller script). -->
+    <div class="vol-panel">
+      <div class="vol-panel-head">
+        <p class="vol-eyebrow">Get involved</p>
+        <h2 class="vol-panel-title">Volunteer opportunities</h2>
+      </div>
+
+      <div class="vol-scroller">
+        <ul class="vol-track" tabindex="0" role="group" aria-label="Volunteer opportunities">
+          <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-student"></i></div>
+            <h3 class="vol-card-title">Volunteer help at school drop off</h3>
+            <p class="vol-card-body">Help us streamline this school drop off process! Let&rsquo;s get this working for all of us!</p>
+            <div class="vol-card-action">
+              <!-- Morning car line shifts, 7:00–7:40 AM (August signup) -->
+              <a href="https://www.signupgenius.com/go/5080A4AABA62CA0FC1-65204178-august#/" target="_blank" rel="noopener" class="vol-btn">Volunteer now <span class="arrow" aria-hidden="true">→</span></a>
+            </div>
+          </li>
+
+          <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-users-three"></i></div>
+            <h3 class="vol-card-title">Contact your teacher to join as a Room Parent</h3>
+            <p class="vol-card-body">Teachers will work with parents to establish a working relationship. Once this communication is set up, the teacher will fill out this form.</p>
+            <div class="vol-card-action">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLScR0vbEtoOzcMGJQXkXUHvkFO2dobUWxjUEk68akzs9KaQIRA/viewform" target="_blank" rel="noopener" class="vol-btn">Sign up <span class="arrow" aria-hidden="true">→</span></a>
+            </div>
+          </li>
+
+          <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-hands-clapping"></i></div>
+            <h3 class="vol-card-title">More opportunities to come</h3>
+            <p class="vol-card-body">Keep checking back</p>
+            <div class="vol-card-action">
+              <span class="vol-btn vol-btn--soon" aria-disabled="true">check back</span>
+            </div>
+          </li>
+        </ul>
+
+        <button type="button" class="vol-next" aria-label="Scroll to more volunteer opportunities">
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick links -->
+  <section class="section section--gray" id="quick-links" aria-labelledby="ql-title">
+    <p class="card-eyebrow">Helpful</p>
+    <h2 class="card-title" id="ql-title">Quick links</h2>
+
+    <div class="quick-grid">
+      <!-- Disabled until this year's lunch signup is ready. To restore, swap the
+           div back to an <a> with the new link, re-add the arrow span, and change
+           the sub-label back to "Join your kiddo for lunch".
+           Previous (2023-24) link: https://www.signupgenius.com/go/10C0E4DA4A722A6F4C43-20232024#/ -->
+      <div class="quick-card quick-card--soon">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-fork-knife"></i>
+          </div>
+          <p class="quick-card-title">Lunch signup</p>
+          <p class="quick-card-sub">Coming soon</p>
+        </div>
+      </div>
+      <a href="https://www.signupgenius.com/go/5080A4AABA62CA0FC1-64975631-ccespirit" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-mountains"></i>
+          </div>
+          <p class="quick-card-title">Fall spirit rock signup</p>
+          <p class="quick-card-sub">Decorate the spirit rock</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://1stplacespiritwear.com/schools/SC/Clover/Crowders+Creek+Elementary+School/collection_detail.html" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-storefront"></i>
+          </div>
+          <p class="quick-card-title">Spirit store</p>
+          <p class="quick-card-sub">Order your CCE swag</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4571/District/b3cdf6b4-362a-4f7a-bb1d-b95f8c5acf8a/Draft-A--CSD-2026-2027-Calendar-7.pdf?disposition=inline" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-calendar-dots"></i>
+          </div>
+          <p class="quick-card-title">Yearly PDF calendar<br>2026-27</p>
+          <p class="quick-card-sub">PDF of this school year</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://calendar.google.com/calendar/r?cid=0166175523e1f45eb7b90be20eef0f8f3fb52186d72b7a7b97305bbffeb98485%40group.calendar.google.com" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-calendar"></i>
+          </div>
+          <p class="quick-card-title">Google Calendar</p>
+          <p class="quick-card-sub">View the PTO calendar</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="webcal://calendar.google.com/calendar/ical/0166175523e1f45eb7b90be20eef0f8f3fb52186d72b7a7b97305bbffeb98485%40group.calendar.google.com/public/basic.ics" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-calendar"></i>
+          </div>
+          <p class="quick-card-title">Apple Calendar</p>
+          <p class="quick-card-sub">Subscribe to the PTO calendar</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-facebook-logo"></i>
+          </div>
+          <p class="quick-card-title">Facebook</p>
+          <p class="quick-card-sub">Join the Facebook group</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-instagram-logo"></i>
+          </div>
+          <p class="quick-card-title">Instagram</p>
+          <p class="quick-card-sub">Follow us on Instagram</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://photos.app.goo.gl/WvfTCwvnt9VvsAa6A" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-camera"></i>
+          </div>
+          <p class="quick-card-title">First day of school photos</p>
+          <p class="quick-card-sub">Upload your Eagle's first day pic</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="https://drive.google.com/file/d/1dSqzUeGVndf-qTZ01jSc0BUsS3MDWtUQ/view" target="_blank" rel="noopener" class="quick-card">
+        <div class="quick-card-body">
+          <div class="quick-card-icon" aria-hidden="true">
+            <i class="ph ph-bus"></i>
+          </div>
+          <p class="quick-card-title">Bus schedule</p>
+          <p class="quick-card-sub">Routes &amp; times</p>
+        </div>
+        <span class="quick-card-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Impact / How PTO Supports CCE -->
+  <section class="impact" id="impact" aria-labelledby="impact-title">
+    <p class="impact-eyebrow">What we do</p>
+    <h2 class="impact-title" id="impact-title">PTO Impact</h2>
+    <p class="impact-lead">Four areas where your support shows up for our Eagles every day.</p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon" aria-hidden="true">
+          <i class="ph ph-bus"></i>
+        </div>
+        <h3 class="pillar-title">Learning beyond the classroom</h3>
+        <p class="pillar-body">Field trips, the 5th Grade Celebration, and school-wide family events.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon" aria-hidden="true">
+          <i class="ph ph-palette"></i>
+        </div>
+        <h3 class="pillar-title">Classroom resources</h3>
+        <p class="pillar-body">Teacher grants, plus the art, music, and school supplies that keep classrooms running.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon" aria-hidden="true">
+          <i class="ph ph-books"></i>
+        </div>
+        <h3 class="pillar-title">Tools &amp; libraries</h3>
+        <p class="pillar-body">Up-to-date technology, library equipment, and the accelerated reading program.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon" aria-hidden="true">
+          <i class="ph ph-hand-heart"></i>
+        </div>
+        <h3 class="pillar-title">Caring for our community</h3>
+        <p class="pillar-body">Extra student assistance, teacher appreciation, field trip shirts, and school beautification.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slideshow -->
+  <section class="section section--white" id="slideshow" aria-labelledby="slideshow-title">
+    <p class="impact-eyebrow">Take a look</p>
+    <h2 class="impact-title" id="slideshow-title">PTO Slideshow</h2>
+    <div class="slideshow-embed">
+      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTXhkWoO9yVaMWic8nAa0kYsVeLb9W41ow7sBFx40SiuS7wwN-MPI3yUQFjZcGXoCkDL3JxVJtag7d4/pubembed?start=false&amp;loop=false&amp;delayms=3000" allowfullscreen loading="lazy" title="CCE PTO slideshow"></iframe>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
+    <nav class="footer-links" aria-label="More from the PTO">
+      <a href="event-archive.html">Event archive</a>
+    </nav>
+    <span class="accent" id="footer-dateline">School year countdown</span>
+  </footer>
+
+</main>
+
+<!-- Newsletter signup modal — embeds Mailchimp's own hosted signup page in an iframe.
+     A native form posting in the background can't work here: Mailchimp gates this
+     account's signups behind a reCAPTCHA "confirm you're human" challenge (confirmed
+     by inspecting the real response), and a hidden iframe can never let a person
+     click that checkbox. Showing the real page lets people actually complete it. -->
+<div class="modal-backdrop" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+  <div class="modal modal--lg">
+    <div class="modal-header">
+      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+      <p class="modal-eyebrow">Stay in the loop</p>
+      <h2 class="modal-title" id="modal-title">Join the newsletter</h2>
+      <p class="modal-subtitle">Get PTO events, volunteer opportunities, and CCE news delivered straight to your inbox.</p>
+    </div>
+
+    <div class="modal-iframe-wrap">
+      <iframe
+        class="modal-iframe"
+        src="https://gmail.us20.list-manage.com/subscribe?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;v_id=4688&amp;f_id=00e060eef0"
+        title="Join the CCE PTO newsletter"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Get involved (volunteer) signup modal -->
+<div class="modal-backdrop" id="volunteer-modal" role="dialog" aria-modal="true" aria-labelledby="vol-modal-title" hidden>
+  <div class="modal modal--lg">
+    <div class="modal-header">
+      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+      <p class="modal-eyebrow">Volunteer</p>
+      <h2 class="modal-title" id="vol-modal-title">Get involved</h2>
+      <p class="modal-subtitle">Tell us a little about you and how you'd like to help. Every hour counts.</p>
+    </div>
+
+    <!--
+      TODO: SWAP THIS ACTION URL
+      Replace the action URL below with your new "Volunteers" Mailchimp audience action URL.
+      Get it from Mailchimp: Audience (new volunteer audience) → Signup forms → Embedded forms → Classic tab →
+      copy the <form action="..."> URL.
+      Also update the honeypot input's `name` attribute to match the new audience's b_*_* value.
+    -->
+    <form
+      class="modal-form"
+      action="https://gmail.us20.list-manage.com/subscribe/post?u=PLACEHOLDER&amp;id=PLACEHOLDER"
+      method="post"
+      target="vol-iframe"
+      novalidate
+    >
+      <div class="form-row">
+        <div class="form-field">
+          <label for="vol-fname">First name</label>
+          <input type="text" id="vol-fname" name="FNAME" autocomplete="given-name" placeholder="Jane">
+        </div>
+        <div class="form-field">
+          <label for="vol-lname">Last name</label>
+          <input type="text" id="vol-lname" name="LNAME" autocomplete="family-name" placeholder="Doe">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="vol-email">Email <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="vol-email" name="EMAIL" autocomplete="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-field">
+        <label>Child's grade(s)</label>
+        <div class="checkbox-grid" role="group" aria-label="Child's grades">
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="K"> K
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="1"> 1st
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="2"> 2nd
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="3"> 3rd
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="4"> 4th
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="GRADES" value="5"> 5th
+          </label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Interests</label>
+        <div class="checkbox-grid" role="group" aria-label="Volunteer interests">
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Classroom helper"> Classroom helper
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Event volunteer"> Event volunteer
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Fundraising"> Fundraising
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Teacher appreciation"> Teacher appreciation
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Spirit Rock"> Spirit Rock
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="INTERESTS" value="Behind the scenes"> Behind the scenes
+          </label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="vol-notes">Notes</label>
+        <textarea id="vol-notes" name="NOTES" placeholder="Anything else you'd like us to know? Skills, availability, kids' names, etc."></textarea>
+      </div>
+
+      <!-- Mailchimp honeypot — TODO: update name attribute to match new audience -->
+      <div class="hp-field" aria-hidden="true">
+        <input type="text" name="b_PLACEHOLDER_PLACEHOLDER" tabindex="-1" value="" autocomplete="off">
+      </div>
+
+      <button type="submit" class="modal-submit">Sign me up</button>
+      <p class="modal-fineprint">We'll only reach out about volunteer opportunities. You can unsubscribe any time.</p>
+    </form>
+
+    <!-- Success state -->
+    <div class="modal-success" hidden>
+      <div class="success-icon" aria-hidden="true">
+        <i class="ph ph-check"></i>
+      </div>
+      <h3 class="success-title">Thanks for stepping up!</h3>
+      <p class="success-body">Check your inbox to confirm. We'll be in touch soon about ways to get involved.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden iframe for volunteer form -->
+<iframe name="vol-iframe" title="Volunteer submission" aria-hidden="true" tabindex="-1" style="position:absolute; width:0; height:0; border:0; left:-9999px;"></iframe>
+
+<script>
+  // Mobile menu toggle — hamburger opens/closes the slide-down link panel
+  (function () {
+    const btn = document.getElementById('nav-hamburger');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+
+    function setOpen(open) {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      // Swap icon: list <-> x
+      const icon = btn.querySelector('i');
+      if (icon) icon.className = open ? 'ph ph-x' : 'ph ph-list';
+      if (open) menu.removeAttribute('hidden');
+      else menu.setAttribute('hidden', '');
+    }
+
+    btn.addEventListener('click', function () {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      setOpen(!isOpen);
+    });
+
+    // Tapping any link inside the menu closes it (so users land on the anchor cleanly)
+    menu.addEventListener('click', function (e) {
+      const link = e.target.closest('a');
+      if (link) setOpen(false);
+    });
+
+    // If the viewport grows past the mobile breakpoint, close the menu —
+    // otherwise it stays "open" and would briefly reappear if the user resizes back down.
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', function () {
+      const w = window.innerWidth;
+      if (w > 600 && lastWidth <= 600) setOpen(false);
+      lastWidth = w;
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+  })();
+
+  // Auto-fill the year so the footer doesn't go stale
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+  // Live countdown in the footer dateline: walks the remaining dates on the
+  // 2026-27 calendar and shows the next one, then goes quiet for summer.
+  // Keep this block identical across index.html, teacher-hub.html and
+  // event-archive.html.
+  (function () {
+    // start = first day off, end = last day off (inclusive). Months are
+    // 0-indexed. kind:'day' entries are single dates rather than breaks, so
+    // they get their own phrasing — "the last day of school" can't "start
+    // tomorrow". To roll this forward a year, edit only this table.
+    const SCHEDULE = [
+      // Break runs Oct 5-9; Oct 12 is a teacher work day, so students are back Oct 13.
+      { label: 'fall break',             start: new Date(2026,  9,  5), end: new Date(2026,  9, 12) },
+      { label: 'Thanksgiving break',     start: new Date(2026, 10, 25), end: new Date(2026, 10, 27) },
+      { label: 'Christmas break',        start: new Date(2026, 11, 21), end: new Date(2027,  0,  1) },
+      { label: 'winter break',           start: new Date(2027,  1, 15), end: new Date(2027,  1, 19) },
+      { label: 'spring break',           start: new Date(2027,  2, 29), end: new Date(2027,  3,  2) },
+      { label: 'the last day of school', start: new Date(2027,  4, 28), end: new Date(2027,  4, 28), kind: 'day' },
+    ];
+
+    const target = document.getElementById('footer-dateline');
+    if (!target) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // count whole days
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const formatted = today.toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+    });
+
+    // The first entry we haven't finished yet; undefined once the year is done.
+    const next = SCHEDULE.find(e => today <= e.end);
+
+    let message;
+    if (!next) {
+      message = 'Summer break is here';
+    } else if (today >= next.start) {
+      message = next.kind === 'day'
+        ? "It's the last day of school!"
+        : `${next.label} is here`;
+    } else {
+      // Both dates sit at midnight, so ceil only matters across a DST shift.
+      const days = Math.ceil((next.start - today) / msPerDay);
+      if (days === 1) {
+        message = next.kind === 'day'
+          ? 'Last day of school is tomorrow'
+          : `${next.label} starts tomorrow`;
+      } else {
+        message = `${days} days until ${next.label}`;
+      }
+    }
+    target.textContent = `${formatted}  ·  ${message}`;
+  })();
+
+  // Keep --nav-offset in sync with the nav's real rendered height, so every
+  // anchor link (Home, Volunteer, Quick links, Impact...) scrolls its target
+  // just clear of the sticky nav — not a fixed guess that's sometimes way too
+  // generous (leaving the previous section still showing) and sometimes too
+  // tight. This also fixes mobile, where the collapsed hamburger nav is much
+  // shorter than the desktop two-row nav but was using the same offset.
+  (function () {
+    const navEl = document.querySelector('.nav');
+    if (!navEl) return;
+    function updateNavOffset() {
+      const h = Math.round(navEl.getBoundingClientRect().height);
+      // Small extra breathing room so headings don't sit flush against the nav
+      document.documentElement.style.setProperty('--nav-offset', (h + 24) + 'px');
+    }
+    window.addEventListener('load', updateNavOffset);
+    window.addEventListener('resize', updateNavOffset);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(updateNavOffset);
+    }
+    updateNavOffset();
+  })();
+
+  // Scroll spy — keeps the gold underline on the section currently in view
+  (function () {
+    const navLinks = Array.from(document.querySelectorAll('.nav-links a, .mobile-menu-link'));
+    if (!navLinks.length) return;
+
+    // Group ALL anchors (desktop nav-links + mobile-menu-links) by target id,
+    // so clicking or scrolling to a section highlights both the desktop and
+    // mobile copies of that link together, not just whichever was clicked.
+    const targets = new Map(); // id -> { section, elements: [] }
+    navLinks.forEach(a => {
+      const href = a.getAttribute('href') || '';
+      const id = href.startsWith('#') ? href.slice(1) : '';
+      const section = id ? document.getElementById(id) : null;
+      if (!section) return;
+      if (!targets.has(id)) targets.set(id, { section, elements: [] });
+      targets.get(id).elements.push(a);
+    });
+    if (!targets.size) return;
+
+    const homeId = targets.has('top') ? 'top' : null;
+    // Sections to actually observe (skip #top — that's the whole page)
+    const observedIds = Array.from(targets.keys()).filter(id => id !== 'top');
+    if (!observedIds.length) return;
+
+    function setActive(activeId) {
+      targets.forEach((target, id) => {
+        target.elements.forEach(a => a.classList.toggle('is-active', id === activeId));
+      });
+    }
+
+    // Highlight the clicked link (and its desktop/mobile counterpart)
+    // immediately, rather than waiting for the scroll-driven
+    // IntersectionObserver below to catch up — with smooth scrolling, that
+    // observer can lag a beat behind the click, which is why the link only
+    // used to highlight after an extra nudge of the scroll.
+    targets.forEach((target, id) => {
+      target.elements.forEach(a => a.addEventListener('click', () => setActive(id)));
+    });
+
+    // Trigger line = how much of the viewport the sticky nav actually covers.
+    // Measured live and RE-measured (rather than a one-time guess) since the
+    // nav's real height can shift after this script first runs — e.g. once
+    // the web font finishes loading and reflows the nav, or when resizing
+    // across the mobile hamburger breakpoint. An IntersectionObserver's
+    // rootMargin can't be updated in place, so we rebuild the observer
+    // itself whenever the nav height might have changed.
+    const navEl = document.querySelector('.nav');
+    let triggerLine = 120;
+
+    // Track which observed sections are currently intersecting,
+    // pick the one nearest the top of the viewport.
+    const visible = new Map();
+    let observer = null;
+
+    function buildObserver() {
+      if (observer) observer.disconnect();
+      visible.clear();
+      triggerLine = navEl ? Math.round(navEl.getBoundingClientRect().height) : 120;
+
+      observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            const id = observedIds.find(oid => targets.get(oid).section === entry.target);
+            if (!id) return;
+            if (entry.isIntersecting) {
+              visible.set(id, entry.boundingClientRect.top);
+            } else {
+              visible.delete(id);
+            }
+          });
+
+          if (visible.size === 0) {
+            // No tracked section in view — fall back to Home
+            if (homeId) setActive(homeId);
+            return;
+          }
+
+          // Pick the section whose top is closest to (but not past) the viewport top
+          let best = null;
+          let bestDist = Infinity;
+          visible.forEach((top, id) => {
+            // Prefer sections whose top is at or above the trigger line.
+            // Distance from trigger line — smaller is better.
+            const dist = Math.abs(top - triggerLine);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = id;
+            }
+          });
+          if (best) setActive(best);
+        },
+        {
+          // Trigger when a section's top crosses the trigger line.
+          // rootMargin top is negative so detection happens slightly into the section.
+          rootMargin: `-${triggerLine}px 0px -50% 0px`,
+          threshold: 0
+        }
+      );
+
+      observedIds.forEach(id => observer.observe(targets.get(id).section));
+    }
+
+    buildObserver();
+    window.addEventListener('load', buildObserver);
+    window.addEventListener('resize', buildObserver);
+    // Web fonts can reflow the nav's height slightly after first paint
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(buildObserver);
+    }
+
+    // Edge case: at the very top of the page, force Home active
+    function checkTop() {
+      if (window.scrollY < triggerLine && homeId) setActive(homeId);
+    }
+    window.addEventListener('scroll', checkTop, { passive: true });
+    checkTop();
+  })();
+
+  // Ensure short/late sections (like #impact, the last one before the footer)
+  // can always scroll clear of the sticky nav. Rather than guessing a fixed
+  // amount of extra space (which can look like an ugly empty gap when it's
+  // not needed), measure the exact shortfall and add only that much.
+  (function () {
+    const footer = document.querySelector('.footer');
+    const lastSection = document.getElementById('impact');
+    if (!footer || !lastSection) return;
+
+    function fix() {
+      footer.style.paddingBottom = ''; // reset before measuring
+      const navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 0;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const sectionTop = lastSection.getBoundingClientRect().top + window.scrollY;
+      const neededScroll = sectionTop - navOffset;
+      const deficit = Math.ceil(neededScroll - maxScroll);
+      if (deficit > 0) {
+        footer.style.paddingBottom = `calc(32px + ${deficit}px)`;
+      }
+    }
+
+    window.addEventListener('load', fix);
+    window.addEventListener('resize', fix);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fix);
+    }
+    fix();
+  })();
+
+  // Modal setup — generic helper used by both newsletter and volunteer modals
+  function setupModal(opts) {
+    const modal = document.getElementById(opts.modalId);
+    if (!modal) return;
+    const form = modal.querySelector('.modal-form');
+    const success = modal.querySelector('.modal-success');
+    const submitBtn = modal.querySelector('.modal-submit');
+    const iframe = document.querySelector(`iframe[name="${opts.iframeName}"]`);
+    const firstField = modal.querySelector('input:not([type="hidden"]):not([type="checkbox"])');
+    const emailField = modal.querySelector('input[name="EMAIL"]');
+    const originalSubmitText = submitBtn ? submitBtn.textContent : '';
+    let lastFocused = null;
+    let submitting = false;
+
+    function openModal(e) {
+      if (e) e.preventDefault();
+      lastFocused = document.activeElement;
+      // Always start in form state (not success) when re-opened
+      form.hidden = false;
+      success.hidden = true;
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalSubmitText;
+      submitting = false;
+      modal.hidden = false;
+      void modal.offsetWidth; // reflow so the transition runs
+      modal.classList.add('is-open');
+      document.body.classList.add('modal-open');
+      setTimeout(() => firstField && firstField.focus(), 100);
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      document.body.classList.remove('modal-open');
+      setTimeout(() => {
+        modal.hidden = true;
+        if (lastFocused) lastFocused.focus();
+        form.reset();
+      }, 200);
+    }
+
+    function showSuccess() {
+      form.hidden = true;
+      success.hidden = false;
+      setTimeout(closeModal, 3500);
+    }
+
+    // Checkbox groups (e.g. "Student's grade") can't use the native `required`
+    // attribute per-checkbox — that would force every box checked, not "at least
+    // one". This validates and shows/clears the group's own error message instead.
+    const requiredGroup = form.querySelector('[data-required-group]');
+    const requiredGroupError = requiredGroup ? requiredGroup.parentElement.querySelector('.checkbox-group-error') : null;
+    function isRequiredGroupValid() {
+      if (!requiredGroup) return true;
+      return Array.from(requiredGroup.querySelectorAll('input[type="checkbox"]')).some(cb => cb.checked);
+    }
+    if (requiredGroup) {
+      requiredGroup.addEventListener('change', function () {
+        if (isRequiredGroupValid()) {
+          requiredGroup.classList.remove('is-invalid');
+          if (requiredGroupError) requiredGroupError.hidden = true;
+        }
+      });
+    }
+
+    form.addEventListener('submit', function (e) {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        form.reportValidity();
+        return;
+      }
+      if (!isRequiredGroupValid()) {
+        e.preventDefault();
+        requiredGroup.classList.add('is-invalid');
+        if (requiredGroupError) requiredGroupError.hidden = false;
+        requiredGroup.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+      if (submitting) {
+        e.preventDefault();
+        return;
+      }
+      submitting = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = opts.submittingText || 'Submitting…';
+
+      let done = false;
+      const finish = function () {
+        if (done) return;
+        done = true;
+        iframe.removeEventListener('load', finish);
+        showSuccess();
+      };
+      iframe.addEventListener('load', finish);
+      setTimeout(finish, 2500);
+    });
+
+    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
+      btn.addEventListener('click', openModal);
+    });
+
+    modal.querySelectorAll('[data-modal-close]').forEach(btn => {
+      btn.addEventListener('click', closeModal);
+    });
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    });
+  }
+
+  // Simple modal setup — for modals that just open/close (no local form/success
+  // state to manage), like the newsletter modal which embeds Mailchimp's own
+  // hosted signup page directly rather than handling the submission itself.
+  function setupSimpleModal(opts) {
+    const modal = document.getElementById(opts.modalId);
+    if (!modal) return;
+    let lastFocused = null;
+
+    function openModal(e) {
+      if (e) e.preventDefault();
+      lastFocused = document.activeElement;
+      modal.hidden = false;
+      void modal.offsetWidth; // reflow so the transition runs
+      modal.classList.add('is-open');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      document.body.classList.remove('modal-open');
+      setTimeout(() => {
+        modal.hidden = true;
+        if (lastFocused) lastFocused.focus();
+      }, 200);
+    }
+
+    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
+      btn.addEventListener('click', openModal);
+    });
+
+    modal.querySelectorAll('[data-modal-close]').forEach(btn => {
+      btn.addEventListener('click', closeModal);
+    });
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    });
+  }
+
+  // Newsletter modal
+  setupSimpleModal({
+    modalId: 'newsletter-modal',
+    triggerAttr: 'data-newsletter-trigger'
+  });
+
+  // Volunteer opportunities scroller. The arrow is always on screen, so with a
+  // row that fits there is simply nothing to scroll to and the click is a no-op.
+  (function () {
+    const scroller = document.querySelector('.vol-scroller');
+    if (!scroller) return;
+    const track = scroller.querySelector('.vol-track');
+    const next = scroller.querySelector('.vol-next');
+    if (!track || !next) return;
+
+    next.addEventListener('click', () => {
+      const card = track.querySelector('.vol-card');
+      // Scroll by one card + gap so cards land on the snap points
+      const step = card ? card.getBoundingClientRect().width + 24 : track.clientWidth;
+      // Wrap back to the start once the end is reached
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+      track.scrollBy({ left: atEnd ? -track.scrollWidth : step });
+    });
+  })();
+
+  // Volunteer / Get involved modal
+  setupModal({
+    modalId: 'volunteer-modal',
+    iframeName: 'vol-iframe',
+    triggerAttr: 'data-volunteer-trigger',
+    submittingText: 'Signing you up…'
+  });
+</script>
+
+<!-- Mailchimp "Connected Site" script — lets Mailchimp manage its own popup/embedded
+     forms (including the reCAPTCHA challenge) directly on this page, rather than us
+     trying to replicate the submission ourselves. -->
+<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/18edc8a2096d429a064c21bde/8a29d7d3a4cdde3d3f7e71a6e.js");</script>
+
+</body>
+</html>
