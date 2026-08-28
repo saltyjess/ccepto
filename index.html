@@ -487,6 +487,10 @@
     padding: 0 var(--pad-inline) 0;
     background: var(--white);
   }
+  /* Extra breathing room above the cyan banner, so it doesn't run straight
+     into the sponsors section above it. Lives here (rather than as bottom
+     padding on .sponsors) so it's this section's own space. */
+  #events { padding-top: var(--section-pad-top); }
   .section--gray { background: var(--gray-50); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
   .section--white { background: var(--white); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
 
@@ -959,9 +963,7 @@
   .sponsors {
     background: var(--gray-50);
     padding-top: var(--section-pad-top);
-    /* A bit more breathing room below the logo row than above it, so the
-       section doesn't feel like it runs straight into the cyan banner below. */
-    padding-bottom: calc(var(--section-pad-top) + 40px);
+    padding-bottom: var(--section-pad-top);
     padding-left: var(--pad-inline);
     padding-right: var(--pad-inline);
     border-top: 1px solid var(--gray-100);
@@ -980,7 +982,7 @@
   .sponsor-track {
     display: flex;
     align-items: center;
-    gap: 56px;
+    gap: 72px;
     width: max-content;
     animation: sponsor-scroll 32s linear infinite;
   }
@@ -999,22 +1001,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 64px;
+    height: 132px;
   }
-  .sponsor-item img {
+  /* Every sponsor logo is solid single-color ink on a transparent
+     background (confirmed when the files came in), so rather than render it
+     as an <img> — which bakes in whatever color the file happens to be —
+     each one is used as a CSS mask and painted with --cce-dark-blue: navy
+     in light mode, white in dark mode, automatically, via the same token
+     the rest of the page's text/surfaces already flip on. --logo-src is set
+     per logo via an inline style (see the HTML below); aspect-ratio is set
+     the same way so the mask's box matches that logo's real proportions —
+     mask-size:contain then places the artwork inside it undistorted. */
+  .sponsor-logo {
+    display: block;
     height: 100%;
     width: auto;
-    max-width: 160px;
-    object-fit: contain;
-    /* Logos render in a uniform muted navy so mismatched sponsor-supplied
-       colors don't fight each other; full color on hover/focus rewards a
-       closer look. */
-    filter: grayscale(100%) opacity(0.55);
-    transition: filter 0.2s ease;
+    max-width: 300px;
+    background-color: var(--cce-dark-blue);
+    -webkit-mask-image: var(--logo-src);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: var(--logo-src);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    opacity: 0.55;
+    transition: opacity 0.2s ease;
   }
-  .sponsor-item:hover img,
-  .sponsor-item:focus-visible img {
-    filter: grayscale(0%) opacity(1);
+  .sponsor-item:hover .sponsor-logo,
+  .sponsor-item:focus-visible .sponsor-logo {
+    opacity: 1;
   }
   .sponsor-item:focus-visible { outline: 2px solid var(--cce-dark-blue); outline-offset: 4px; border-radius: 4px; }
   /* Wraps the duplicated (aria-hidden) second set of logos so they lay out as
@@ -1512,8 +1529,8 @@
     }
     .stat-value { font-size: 28px; }
     .priority-item { padding: 16px; }
-    .sponsor-track { gap: 36px; }
-    .sponsor-item { height: 48px; }
+    .sponsor-track { gap: 52px; }
+    .sponsor-item { height: 96px; }
   }
   @media (max-width: 600px) {
     /* Collapse to logo + hamburger only.
@@ -1647,13 +1664,18 @@
     <!--
       HOW TO ADD OR EDIT A SPONSOR
       =============================
-      1. Save the sponsor's logo image into the "sponsors" folder next to this page (PNG or
-         SVG, transparent background looks best).
-      2. Find that sponsor's <a class="sponsor-item"> block below and update:
-           - src   -> the path to the logo file
-           - alt   -> the sponsor's name + " logo"
+      1. Save the sponsor's logo image into the "sponsors" folder next to this page. It should
+         be solid single-color artwork on a transparent background (PNG or SVG) — the logo is
+         used as a mask and recolored in CSS (navy in light mode, white in dark mode), so a
+         full-color or multi-color logo file would just get flattened to a silhouette anyway.
+      2. Find that sponsor's <a class="sponsor-item"> block below and update, on the
+         <span class="sponsor-logo">:
+           - --logo-src   -> url('sponsors/the-file-name.svg') — the path to the logo file
+           - aspect-ratio -> the logo's own width/height (e.g. from its SVG viewBox, or an
+                              image's pixel dimensions) so it isn't stretched
+         And on the <a> tag itself:
            - href  -> the sponsor's website ("#" if they don't have one)
-           - aria-label -> the sponsor's name (on the <a> tag itself)
+           - aria-label -> the sponsor's name
       3. IMPORTANT: every sponsor appears TWICE below — once under "COPY 1" and again,
          identically, under "COPY 2". This is what makes the strip scroll in an endless loop
          with no visible seam. Make the SAME change in BOTH copies, in the same order, or the
@@ -1661,59 +1683,58 @@
          keyboard users only ever encounter each sponsor once.
       4. To add a new sponsor, copy one whole <a class="sponsor-item"> block and paste it
          into both COPY 1 and COPY 2, in the same position in each.
-      5. Logos display muted/grayscale and brighten to full color on hover or keyboard focus —
+      5. Logos display muted and brighten to full opacity on hover or keyboard focus —
          that's automatic CSS, nothing to change per logo.
-
-      Mandar Rocks! doesn't have a confirmed website yet, so its href is "#" for now — drop in
-      their site or Facebook page URL once you have it.
     -->
     <div class="sponsor-marquee">
       <div class="sponsor-track">
-        <!-- COPY 1 (read by screen readers) -->
+        <!-- COPY 1 (read by screen readers). Each logo's --logo-src + aspect-ratio
+             are set inline here — see the .sponsor-logo comment in the CSS above
+             for why these are masks instead of <img> tags. -->
         <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" aria-label="Card My Yard">
-          <img src="sponsors/card-my-yard.svg" alt="Card My Yard logo" loading="lazy">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/card-my-yard.svg'); aspect-ratio:4165/4300"></span>
         </a>
         <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" aria-label="Carolina Homes Connection">
-          <img src="sponsors/carolina-homes-connection.svg" alt="Carolina Homes Connection logo" loading="lazy">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/carolina-homes-connection.svg'); aspect-ratio:5564/3018"></span>
         </a>
         <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" aria-label="Fred Caldwell Chevrolet">
-          <img src="sponsors/fred-caldwell-chevrolet.svg" alt="Fred Caldwell Chevrolet logo" loading="lazy">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/fred-caldwell-chevrolet.svg'); aspect-ratio:5175/3762"></span>
         </a>
         <a class="sponsor-item" href="https://www.facebook.com/DreameryCreamery/" target="_blank" rel="noopener sponsored" aria-label="Dreamery Creamery">
-          <img src="sponsors/dreamery-creamery.svg" alt="Dreamery Creamery logo" loading="lazy">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/dreamery-creamery.svg'); aspect-ratio:6146/4942"></span>
         </a>
         <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" aria-label="Jo's Pilates">
-          <img src="sponsors/jos-pilates.png" alt="Jo's Pilates logo" loading="lazy">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/jos-pilates.png'); aspect-ratio:1/1"></span>
         </a>
-        <a class="sponsor-item" href="#" target="_blank" rel="noopener sponsored" aria-label="Mandar Rocks!">
-          <img src="sponsors/mandar-rocks.svg" alt="Mandar Rocks! logo" loading="lazy">
+        <a class="sponsor-item" href="https://www.facebook.com/groups/2102046090087860/" target="_blank" rel="noopener sponsored" aria-label="Mandar Rocks!">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/mandar-rocks.svg'); aspect-ratio:6072/4778"></span>
         </a>
         <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" aria-label="Sisters Selling Charlotte">
-          <img src="sponsors/sisters-selling-charlotte.svg" alt="Sisters Selling Charlotte logo" loading="lazy">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
         </a>
 
         <!-- COPY 2 (identical to COPY 1, hidden from screen readers, makes the loop seamless) -->
         <div class="sponsor-copy" aria-hidden="true">
           <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/card-my-yard.svg" alt="" loading="lazy">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/card-my-yard.svg'); aspect-ratio:4165/4300"></span>
           </a>
           <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/carolina-homes-connection.svg" alt="" loading="lazy">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/carolina-homes-connection.svg'); aspect-ratio:5564/3018"></span>
           </a>
           <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/fred-caldwell-chevrolet.svg" alt="" loading="lazy">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/fred-caldwell-chevrolet.svg'); aspect-ratio:5175/3762"></span>
           </a>
           <a class="sponsor-item" href="https://www.facebook.com/DreameryCreamery/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/dreamery-creamery.svg" alt="" loading="lazy">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/dreamery-creamery.svg'); aspect-ratio:6146/4942"></span>
           </a>
           <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/jos-pilates.png" alt="" loading="lazy">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/jos-pilates.png'); aspect-ratio:1/1"></span>
           </a>
-          <a class="sponsor-item" href="#" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/mandar-rocks.svg" alt="" loading="lazy">
+          <a class="sponsor-item" href="https://www.facebook.com/groups/2102046090087860/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/mandar-rocks.svg'); aspect-ratio:6072/4778"></span>
           </a>
           <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <img src="sponsors/sisters-selling-charlotte.svg" alt="" loading="lazy">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
           </a>
         </div>
       </div>
@@ -1817,6 +1838,15 @@
       <div class="vol-scroller">
         <ul class="vol-track" tabindex="0" role="group" aria-label="Volunteer opportunities">
           <li class="vol-card">
+            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-camera"></i></div>
+            <h3 class="vol-card-title">Volunteer for Fall Picture Day</h3>
+            <p class="vol-card-body">Help students move through the picture lines smoothly on September 1st and 2nd — no experience needed, just an extra set of hands.</p>
+            <div class="vol-card-action">
+              <a href="https://www.signupgenius.com/go/5080A4AABA62CA0FC1-65365517-ccefall#/" target="_blank" rel="noopener" class="vol-btn">Volunteer now <span class="arrow" aria-hidden="true">→</span></a>
+            </div>
+          </li>
+
+          <li class="vol-card">
             <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-student"></i></div>
             <h3 class="vol-card-title">Volunteer help at school drop off</h3>
             <p class="vol-card-body">Help us streamline this school drop off process! Let&rsquo;s get this working for all of us!</p>
@@ -1832,15 +1862,6 @@
             <p class="vol-card-body">Teachers will work with parents to establish a working relationship. Once this communication is set up, the teacher will fill out this form.</p>
             <div class="vol-card-action">
               <a href="https://docs.google.com/forms/d/e/1FAIpQLScR0vbEtoOzcMGJQXkXUHvkFO2dobUWxjUEk68akzs9KaQIRA/viewform" target="_blank" rel="noopener" class="vol-btn">Sign up <span class="arrow" aria-hidden="true">→</span></a>
-            </div>
-          </li>
-
-          <li class="vol-card">
-            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-camera"></i></div>
-            <h3 class="vol-card-title">Volunteer for Fall Picture Day</h3>
-            <p class="vol-card-body">Help students move through the picture lines smoothly on September 1st and 2nd — no experience needed, just an extra set of hands.</p>
-            <div class="vol-card-action">
-              <a href="https://www.signupgenius.com/go/5080A4AABA62CA0FC1-65365517-ccefall#/" target="_blank" rel="noopener" class="vol-btn">Volunteer now <span class="arrow" aria-hidden="true">→</span></a>
             </div>
           </li>
 
