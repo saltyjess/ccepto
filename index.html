@@ -175,16 +175,19 @@
      height (desktop two-row nav vs. the shorter collapsed mobile nav). */
   :root { --nav-offset: 160px; }
   :target,
-  #events {
+  /* The yellow Volunteer panel is the "Volunteer" nav target. It sits inside
+     #events with no top padding of its own, so it takes the full offset. */
+  #volunteer {
     scroll-margin-top: var(--nav-offset);
   }
-  /* #get-involved, #quick-links, and #impact each already have 80px of their
-     own top padding before their heading (#events doesn't). Without this,
-     scrolling to those three left a much bigger, inconsistent-looking gap
-     under the nav than scrolling to #events did. Subtracting that padding
-     here lets the section's own blank top padding sit behind the sticky nav
-     (nothing visible is lost) so the heading lands at the same distance
-     below the nav either way. */
+  /* These sections each have their own top padding before their heading.
+     Without this, scrolling to one left a much bigger gap under the nav than
+     the padding-less targets did. Subtracting that padding here lets the
+     section's own blank top padding sit behind the sticky nav (nothing
+     visible is lost) so every heading lands the same distance below the nav.
+     #events is in this list too — it gained a --section-pad-top of its own
+     (see the .section rules) for breathing room above the cyan banner. */
+  #events,
   #quick-links,
   #impact,
   #sponsors {
@@ -1660,7 +1663,7 @@
       <a href="#top" class="is-active" aria-current="page">Home</a>
       <a href="#sponsors">Sponsors</a>
       <a href="#events">Events &amp; news</a>
-      <a href="#get-involved">Volunteer</a>
+      <a href="#volunteer">Volunteer</a>
       <a href="#quick-links">Quick links</a>
       <a href="#impact">Impact</a>
       <a href="teacher-hub.html" class="nav-link-end">Teacher hub</a>
@@ -1690,7 +1693,7 @@
     <a href="#top" class="mobile-menu-link is-active" aria-current="page">Home</a>
     <a href="#sponsors" class="mobile-menu-link">Sponsors</a>
     <a href="#events" class="mobile-menu-link">Events &amp; news</a>
-    <a href="#get-involved" class="mobile-menu-link">Volunteer</a>
+    <a href="#volunteer" class="mobile-menu-link">Volunteer</a>
     <a href="#quick-links" class="mobile-menu-link">Quick links</a>
     <a href="#impact" class="mobile-menu-link">Impact</a>
     <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
@@ -1868,7 +1871,7 @@
     <!-- Current volunteer needs. Add a <li class="vol-card"> per opportunity;
          the row scrolls horizontally on its own once the cards overflow, and
          the arrow button appears automatically (see the vol-scroller script). -->
-    <div class="vol-panel">
+    <div class="vol-panel" id="volunteer">
       <div class="vol-panel-head">
         <p class="vol-eyebrow">Get involved</p>
         <h2 class="vol-panel-title">Volunteer opportunities</h2>
