@@ -185,12 +185,14 @@
      here lets the section's own blank top padding sit behind the sticky nav
      (nothing visible is lost) so the heading lands at the same distance
      below the nav either way. */
-  #get-involved,
   #quick-links,
   #impact,
   #sponsors {
     scroll-margin-top: calc(var(--nav-offset) - var(--section-pad-top));
   }
+  /* #get-involved now has only 24px of top padding (see .section rules), so it
+     subtracts that instead of the full --section-pad-top. */
+  #get-involved { scroll-margin-top: calc(var(--nav-offset) - 24px); }
   body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -395,10 +397,7 @@
   /* On a dark card (Volunteer/"Get involved" card) the surface inverts:
      navy in light → white in dark. Text follows along via the inverting token. */
   .btn-translucent--on-dark { color: var(--cce-dark-blue); }
-  /* Note: --on-dark above is also applied to the "Email the PTO" button on the
-     PTO Board card, which is actually a light gray surface (not dark), so its
-     navy text is correct there and should NOT change.
-     This variant is for buttons that sit on the truly dark navy "Get involved"
+  /* This variant is for buttons that sit on the truly dark navy "Get involved"
      card specifically — text needs the OPPOSITE inverting token so it stays
      readable: white in light mode (card is dark navy), navy in dark mode
      (card flips to white). */
@@ -493,6 +492,11 @@
   #events { padding-top: var(--section-pad-top); }
   .section--gray { background: var(--gray-50); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
   .section--white { background: var(--white); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
+  /* The yellow Volunteer panel ends #events directly above this section, and
+     both sit on white — a full --section-pad-top here read as dead space under
+     the yellow. 24px matches the panel's own gap above it. The scroll-margin
+     override below keeps the "Volunteer" nav jump landing correctly. */
+  #get-involved { padding-top: 24px; }
 
   /* ---------- ACTION BANNER (cyan) ---------- */
   .action-block {
@@ -623,11 +627,15 @@
   }
   .card-title--light { color: var(--white); }
 
+  /* Always two columns of board members; collapses to one on narrow phones. */
   .board-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 16px;
     margin-bottom: 24px;
+  }
+  @media (max-width: 420px) {
+    .board-grid { grid-template-columns: 1fr; }
   }
   .board-person {
     display: flex;
@@ -635,27 +643,68 @@
     gap: 12px;
   }
   .avatar {
-    width: 36px;
-    height: 36px;
+    position: relative;
+    overflow: hidden;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     background: var(--cce-yellow);
     color: var(--cce-dark-blue-inverted);
-    font-size: 13px;
+    font-size: 22px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
+  /* Headshot layered over the initials. The initials stay in the markup as the
+     fallback: if the file is missing the img removes itself (onerror) and the
+     yellow initials circle shows instead. Drop photos in board/ — see the
+     comment on the board grid below. */
+  .avatar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  /* Each headshot is a button that opens the photo modal below; the credit line
+     under the board grid carries the visible attribution. */
+  .avatar-link {
+    display: inline-flex;
+    border-radius: 50%;
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+  }
+  .avatar-link:focus-visible {
+    outline: 2px solid var(--cce-dark-blue);
+    outline-offset: 2px;
+  }
+  .photo-credit {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin: 0 0 20px;
+  }
+  .photo-credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .photo-credit a:hover { color: var(--navy); }
   .board-person-name {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--navy);
     margin: 0;
     line-height: 1.2;
   }
   .board-person-role {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--gray-500);
     letter-spacing: 0.5px;
@@ -673,9 +722,13 @@
     color: var(--cce-white);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 24px;
+    /* Head + body sit tight at the top; the buttons get pushed to the bottom
+       by the margin-top:auto below, so the body copy never floats mid-card. */
+    justify-content: flex-start;
+    gap: 12px;
   }
+  .get-involved .card-head { margin-bottom: 0; }
+  .get-involved .card-actions { margin-top: auto; padding-top: 12px; }
   .get-involved .card-title { color: var(--cce-white); }
   .get-involved .card-eyebrow { color: var(--cce-yellow); }
   .get-involved-body {
@@ -1373,6 +1426,46 @@
   .form-field textarea::placeholder { color: var(--gray-500); opacity: 0.7; }
 
   /* Larger modal variant for forms with more fields */
+  /* Board headshot lightbox. Shares .modal-backdrop/.modal with the form
+     modals; the image bleeds to the card edges and the close button sits on
+     top of it, so this variant is position:relative instead of using a
+     .modal-header as its containing block. */
+  .modal--photo {
+    max-width: 400px;
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-modal-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    background: var(--gray-100);
+  }
+  .modal--photo .modal-close {
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--cce-dark-blue-inverted);
+  }
+  .modal--photo .modal-close:hover { background: rgba(255, 255, 255, 1); }
+  .photo-modal-body { padding: 20px 24px 24px; }
+  .photo-modal-role {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-500);
+    letter-spacing: 0.5px;
+    margin: 4px 0 0;
+  }
+  .photo-modal-credit {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin: 14px 0 0;
+  }
+  .photo-modal-credit a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
   .modal--lg {
     max-width: 560px;
     max-height: calc(100vh - 32px);
@@ -1502,12 +1595,6 @@
        Volunteer column instead of stacking the pair. */
     .duo {
       grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
-    }
-    /* ...and let the board hold two people per row in the narrower space it
-       now has. At the default 220px min it would drop to one tall column at
-       ~950px, leaving a short Volunteer card beside a very long board card. */
-    .board-grid {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
     /* Updates section--gray/section--white/.impact padding-top together,
        and keeps the scroll-margin-top compensation above in sync with it. */
@@ -1763,67 +1850,19 @@
         <a href="https://www.zeffy.com/en-US/ticketing/crowders-creek-golden-ticket-raffle-q2" target="_blank" rel="noopener" class="btn btn-translucent">Buy tickets <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
+      <!-- No date or signup link supplied yet. When there is one, add a
+           <a class="btn btn-translucent"> after .priority-text like the raffle
+           item above. -->
+      <div class="priority-item">
+        <div class="priority-text">
+          <p class="priority-tag">Meeting</p>
+          <p class="priority-title">PTO Meeting @ CCE 8:00 AM</p>
+          <p class="priority-meta">Join the PTO meeting to stay in the know of what is happening at the school. Join us for an early morning sync.</p>
+        </div>
+      </div>
+
       <!-- Way through to the past events, sitting under the live list -->
       <a href="event-archive.html" class="archive-link">View archived events <span class="arrow" aria-hidden="true">→</span></a>
-    </div>
-  </section>
-
-  <!-- Board + Get involved -->
-  <section class="section section--white" id="get-involved">
-    <div class="duo">
-      <div class="card-base get-involved">
-        <div class="card-head">
-          <p class="card-eyebrow">Get involved</p>
-          <h2 class="card-title card-title--light">Volunteer</h2>
-        </div>
-        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
-        <div class="card-actions">
-          <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-translucent btn-translucent--on-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
-        </div>
-      </div>
-
-      <div class="card-base know-us">
-        <div class="card-head">
-          <p class="card-eyebrow">Get to know us</p>
-          <h2 class="card-title">Your PTO board (2026–27)</h2>
-        </div>
-        <div class="board-grid">
-          <div class="board-person">
-            <div class="avatar" aria-hidden="true">ER</div>
-            <div>
-              <p class="board-person-name">Erin Roe</p>
-              <p class="board-person-role">President</p>
-            </div>
-          </div>
-          <div class="board-person">
-            <div class="avatar" aria-hidden="true">CH</div>
-            <div>
-              <p class="board-person-name">Carolyn Hammonds</p>
-              <p class="board-person-role">Vice President</p>
-            </div>
-          </div>
-          <div class="board-person">
-            <div class="avatar" aria-hidden="true">LJ</div>
-            <div>
-              <p class="board-person-name">Liz Johnson</p>
-              <p class="board-person-role">Secretary</p>
-            </div>
-          </div>
-          <div class="board-person">
-            <div class="avatar" aria-hidden="true">JW</div>
-            <div>
-              <p class="board-person-name">Jessica Wright</p>
-              <p class="board-person-role">Treasurer</p>
-            </div>
-          </div>
-        </div>
-        <div class="card-actions">
-          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-translucent btn-translucent--on-dark">
-            Email the PTO <span class="arrow" aria-hidden="true">→</span>
-          </a>
-        </div>
-      </div>
     </div>
 
     <!-- Current volunteer needs. Add a <li class="vol-card"> per opportunity;
@@ -1861,7 +1900,7 @@
             <h3 class="vol-card-title">More opportunities to come</h3>
             <p class="vol-card-body">Keep checking back</p>
             <div class="vol-card-action">
-              <span class="vol-btn vol-btn--soon" aria-disabled="true">check back</span>
+              <span class="vol-btn vol-btn--soon" aria-disabled="true">Check back soon</span>
             </div>
           </li>
         </ul>
@@ -1869,6 +1908,90 @@
         <button type="button" class="vol-next" aria-label="Scroll to more volunteer opportunities">
           <span aria-hidden="true">→</span>
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Board + Get involved -->
+  <section class="section section--white" id="get-involved">
+    <div class="duo">
+      <div class="card-base get-involved">
+        <div class="card-head">
+          <p class="card-eyebrow">Get involved</p>
+          <h2 class="card-title card-title--light">Volunteer</h2>
+        </div>
+        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
+        <div class="card-actions">
+          <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-translucent btn-translucent--on-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="card-base know-us">
+        <div class="card-head">
+          <p class="card-eyebrow">Get to know us</p>
+          <h2 class="card-title">Your PTO board (2026–27)</h2>
+        </div>
+        <!-- Board headshots live in board/ as square JPGs named after each
+             person: board/erin-roe.jpg (320px) is the circle avatar, and
+             board/erin-roe-large.jpg (720px) is what the lightbox loads, only
+             once that person is clicked. Remove or rename the small file and
+             that person falls back to their yellow initials circle. -->
+        <div class="board-grid">
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/erin-roe-large.jpg" data-photo-name="Erin Roe" data-photo-role="President"
+               aria-label="View a larger photo of Erin Roe">
+              <div class="avatar" aria-hidden="true">ER<img src="board/erin-roe.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Erin Roe</p>
+              <p class="board-person-role">President</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/carolyn-hammonds-large.jpg" data-photo-name="Carolyn Hammonds" data-photo-role="Vice President"
+               aria-label="View a larger photo of Carolyn Hammonds">
+              <div class="avatar" aria-hidden="true">CH<img src="board/carolyn-hammonds.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Carolyn Hammonds</p>
+              <p class="board-person-role">Vice President</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/liz-johnson-large.jpg" data-photo-name="Liz Johnson" data-photo-role="Secretary"
+               aria-label="View a larger photo of Liz Johnson">
+              <div class="avatar" aria-hidden="true">LJ<img src="board/liz-johnson.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Liz Johnson</p>
+              <p class="board-person-role">Secretary</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/jessica-wright-large.jpg" data-photo-name="Jessica Wright" data-photo-role="Treasurer"
+               aria-label="View a larger photo of Jessica Wright">
+              <div class="avatar" aria-hidden="true">JW<img src="board/jessica-wright.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Jessica Wright</p>
+              <p class="board-person-role">Treasurer</p>
+            </div>
+          </div>
+        </div>
+        <p class="photo-credit">
+          Huge shout out to <a href="https://www.facebook.com/cristyparsonsphotography" target="_blank" rel="noopener">Cristy Parsons</a>
+          for our board photos.
+        </p>
+        <div class="card-actions">
+          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-navy">
+            Email the PTO <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -2048,6 +2171,22 @@
      account's signups behind a reCAPTCHA "confirm you're human" challenge (confirmed
      by inspecting the real response), and a hidden iframe can never let a person
      click that checkbox. Showing the real page lets people actually complete it. -->
+<!-- Board headshot lightbox; populated from the data-photo* attributes on
+     whichever .avatar-link was clicked. -->
+<div class="modal-backdrop" id="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title" hidden>
+  <div class="modal modal--photo">
+    <button type="button" class="modal-close" aria-label="Close" data-modal-close>
+      <i class="ph ph-x" aria-hidden="true"></i>
+    </button>
+    <img class="photo-modal-img" id="photo-modal-img" src="" alt="">
+    <div class="photo-modal-body">
+      <h2 class="modal-title" id="photo-modal-title"></h2>
+      <p class="photo-modal-role"></p>
+      <p class="photo-modal-credit">Photo by <a href="https://www.facebook.com/cristyparsonsphotography" target="_blank" rel="noopener">Cristy Parsons</a></p>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
   <div class="modal modal--lg">
     <div class="modal-header">
@@ -2633,6 +2772,50 @@
       // Wrap back to the start once the end is reached
       const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
       track.scrollBy({ left: atEnd ? -track.scrollWidth : step });
+    });
+  })();
+
+  // Board headshot lightbox
+  (function () {
+    const modal = document.getElementById('photo-modal');
+    if (!modal) return;
+    const img = modal.querySelector('#photo-modal-img');
+    const title = modal.querySelector('#photo-modal-title');
+    const role = modal.querySelector('.photo-modal-role');
+    const closeBtn = modal.querySelector('.modal-close');
+    let lastFocused = null;
+
+    function openPhoto(btn) {
+      lastFocused = btn;
+      img.src = btn.dataset.photo;
+      img.alt = 'Photo of ' + btn.dataset.photoName;
+      title.textContent = btn.dataset.photoName;
+      role.textContent = btn.dataset.photoRole;
+      modal.hidden = false;
+      void modal.offsetWidth; // reflow so the transition runs
+      modal.classList.add('is-open');
+      document.body.classList.add('modal-open');
+      setTimeout(() => closeBtn.focus(), 100);
+    }
+
+    function closePhoto() {
+      modal.classList.remove('is-open');
+      document.body.classList.remove('modal-open');
+      setTimeout(() => {
+        modal.hidden = true;
+        if (lastFocused) lastFocused.focus();
+      }, 200);
+    }
+
+    document.querySelectorAll('.avatar-link').forEach(btn => {
+      btn.addEventListener('click', () => openPhoto(btn));
+    });
+    // Backdrop click and the X both close
+    modal.addEventListener('click', e => {
+      if (e.target === modal || e.target.closest('[data-modal-close]')) closePhoto();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modal.hidden) closePhoto();
     });
   })();
 
