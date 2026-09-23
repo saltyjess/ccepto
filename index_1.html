@@ -568,21 +568,6 @@
     margin: 0;
   }
 
-  /* Centered link to the archive, last item in the events block.
-     align-self centers it in .action-block's flex column. */
-  .archive-link {
-    align-self: center;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    /* Non-inverting: the cyan banner stays cyan, so this stays white in both modes */
-    color: var(--cce-white-inverted);
-    font-size: 14px;
-    font-weight: 600;
-    padding: 8px 4px;
-  }
-  .archive-link:hover { text-decoration: underline; }
-  .archive-link .arrow { font-size: 18px; line-height: 1; }
 
   /* ---------- KNOW US + GET INVOLVED ROW ---------- */
   .duo {
@@ -1072,9 +1057,6 @@
     margin-top: auto;
   }
   .footer .accent { color: var(--cyan); }
-  .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
-  .footer-links a { color: var(--cyan); font-weight: 600; }
-  .footer-links a:hover { text-decoration: underline; }
 
   /* ---------- ACCESSIBILITY ---------- */
   .visually-hidden {
@@ -1729,7 +1711,7 @@
       </div>
 
       <!-- First PTO Meeting (Aug 12, 2026), Winner of the Logo Contest, and the
-           First Day of School Photo Album have all moved to event-archive.html
+           First Day of School Photo Album have been removed
            now that they've passed. The photo album's ongoing link still lives
            on this page too, as a permanent Quick Links card. -->
 
@@ -1741,9 +1723,6 @@
         </div>
         <a href="https://www.zeffy.com/en-US/ticketing/crowders-creek-golden-ticket-raffle-q2" target="_blank" rel="noopener" class="btn btn-translucent">Buy tickets <span class="arrow" aria-hidden="true">→</span></a>
       </div>
-
-      <!-- Way through to the past events, sitting under the live list -->
-      <a href="event-archive.html" class="archive-link">View archived events <span class="arrow" aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -2014,9 +1993,6 @@
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
-    <nav class="footer-links" aria-label="More from the PTO">
-      <a href="event-archive.html">Event archive</a>
-    </nav>
     <span class="accent" id="footer-dateline">School year countdown</span>
   </footer>
 
@@ -2218,8 +2194,7 @@
 
   // Live countdown in the footer dateline: walks the remaining dates on the
   // 2026-27 calendar and shows the next one, then goes quiet for summer.
-  // Keep this block identical across index.html, teacher-hub.html and
-  // event-archive.html.
+  // Keep this block identical across index.html and teacher-hub.html.
   (function () {
     // start = first day off, end = last day off (inclusive). Months are
     // 0-indexed. kind:'day' entries are single dates rather than breaks, so

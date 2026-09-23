@@ -372,9 +372,6 @@
     padding: 32px var(--pad-inline);
   }
   .footer .accent { color: var(--cyan); }
-  .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
-  .footer-links a { color: var(--cyan); font-weight: 600; }
-  .footer-links a:hover { text-decoration: underline; }
   @media (max-width: 720px) {
     .footer { flex-direction: column; align-items: flex-start; gap: 4px; }
   }
@@ -658,9 +655,6 @@
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
-    <nav class="footer-links" aria-label="More from the PTO">
-      <a href="event-archive.html">Event archive</a>
-    </nav>
     <span class="accent" id="footer-dateline">School year countdown</span>
   </footer>
 
@@ -739,8 +733,7 @@
 
   // Live countdown in the footer dateline: walks the remaining dates on the
   // 2026-27 calendar and shows the next one, then goes quiet for summer.
-  // Keep this block identical across index.html, teacher-hub.html and
-  // event-archive.html.
+  // Keep this block identical across index.html and teacher-hub.html.
   (function () {
     // start = first day off, end = last day off (inclusive). Months are
     // 0-indexed. kind:'day' entries are single dates rather than breaks, so
