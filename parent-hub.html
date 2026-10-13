@@ -549,7 +549,6 @@
   .profile-card--about .profile-hand { color: var(--cce-white); }
   .about-fields { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
   .about-field { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
-  .about-fun-fact { margin: 0; }
 
   .wishlist { display: flex; flex-direction: column; gap: 8px; }
   .wishlist li { display: flex; align-items: center; gap: 12px; }
@@ -679,10 +678,6 @@
           <div class="profile-card profile-card--about">
             <h2 class="profile-card-title">A little bit about me</h2>
             <div class="about-fields" id="about-fields"></div>
-            <p class="about-fun-fact" id="about-fun-fact" hidden>
-              <span class="profile-label">Fun fact:</span>
-              <span class="profile-hand"></span>
-            </p>
           </div>
 
           <div class="profile-card">
@@ -826,7 +821,6 @@
     const empty = document.getElementById('hub-empty');
     const profile = document.getElementById('teacher-profile');
     const aboutFields = document.getElementById('about-fields');
-    const funFact = document.getElementById('about-fun-fact');
     const wishlist = document.getElementById('wishlist');
     const favorites = document.getElementById('favorites');
     if (!select) return;
@@ -1013,9 +1007,7 @@
       aboutFields.replaceChildren(labeled('about-field', 'Name', t.name));
       if (t.role) aboutFields.append(labeled('about-field', 'Role', t.role));
       if (t.birthday) aboutFields.append(labeled('about-field', 'Birthday', t.birthday));
-
-      funFact.hidden = !t.funFact;
-      funFact.querySelector('.profile-hand').textContent = t.funFact || '';
+      if (t.funFact) aboutFields.append(labeled('about-field', 'Fun fact', t.funFact));
 
       renderWishlist(t);
 
