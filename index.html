@@ -1567,8 +1567,11 @@
 
       <!-- Fri Oct 16, 2026: PTO meeting 8:00 AM (RSVP form below), Room Parent
            meeting 9:00 AM (no signup link yet; add a <a class="btn btn-translucent">
-           after its .priority-text when there is one). -->
-      <div class="priority-item">
+           after its .priority-text when there is one).
+           data-hide-after removes a card once that moment has passed (see the
+           "Expired events" script). Write it with the Eastern offset: -04:00
+           during daylight time (Mar-Nov), -05:00 in winter. -->
+      <div class="priority-item" data-hide-after="2026-10-16T12:00:00-04:00">
         <div class="priority-text">
           <p class="priority-tag">Meeting</p>
           <p class="priority-title">PTO Meeting Friday Oct 16th @ CCE 8:00 AM</p>
@@ -1577,7 +1580,7 @@
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSf6w5wLSlzbOhgiXhy8Z1LEYLAFFkzUKSu_pLA3aTdkLcNEFQ/viewform" target="_blank" rel="noopener" class="btn btn-translucent">RSVP <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
-      <div class="priority-item">
+      <div class="priority-item" data-hide-after="2026-10-16T12:00:00-04:00">
         <div class="priority-text">
           <p class="priority-tag">Meeting</p>
           <p class="priority-title">Room Parent Meeting Friday Oct 16th @ CCE 9:00 AM</p>
@@ -2171,6 +2174,15 @@
     }
     fix();
   })();
+
+  // Expired events: drop anything whose data-hide-after time has passed, so
+  // past meetings disappear on their own without a redeploy. Uses the
+  // visitor's clock; the timestamp carries its own offset, so time zones
+  // don't matter.
+  document.querySelectorAll('[data-hide-after]').forEach(item => {
+    const expires = Date.parse(item.dataset.hideAfter);
+    if (!Number.isNaN(expires) && Date.now() >= expires) item.remove();
+  });
 
   // Volunteer opportunities scroller. The arrow is always on screen, so with a
   // row that fits there is simply nothing to scroll to and the click is a no-op.

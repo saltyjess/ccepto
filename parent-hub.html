@@ -971,7 +971,7 @@
       wishlist.replaceChildren();
       const w = t.wishlist;
       if (!w) {
-        wishlist.append(el('p', 'wishlist-none', 'No wishlist shared yet — check back soon.'));
+        wishlist.append(el('p', 'wishlist-none', 'No wishlist shared yet'));
         return;
       }
       if (w.url) {
