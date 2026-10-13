@@ -209,7 +209,7 @@
      squash rather than scale, so the mobile steps below shrink height instead. */
   .nav-logo-img {
     display: block;
-    height: 52px;
+    height: 60px;
     width: auto;
     /* It is a flex child of .nav-brand: without this the flex container can
        shrink its width independently of its height and squash the wordmark. */
@@ -231,6 +231,7 @@
     -webkit-overflow-scrolling: touch;
   }
   .nav-links a {
+    white-space: nowrap;
     font-size: 14px;
     font-weight: 500;
     color: var(--gray-500);
@@ -301,15 +302,24 @@
   .mobile-menu-link.is-active { color: var(--navy); font-weight: 600; }
   .mobile-menu-cta { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
 
-  @media (max-width: 600px) {
+  /* Collapse to logo + hamburger as soon as the nav links can't all fit on
+     one line. The 8 links need ~714px in a row; 880px leaves room for the
+     side gutters and a desktop scrollbar, so no label ever wraps to two lines
+     ("Events &" / "news"). Keep in sync with NAV_COLLAPSE in the menu script. */
+  @media (max-width: 880px) {
     .nav { flex-wrap: nowrap; }
     .nav-links { display: none; }
     .nav-cta-group { display: none; }
     .nav-hamburger { display: inline-flex; }
-    .nav-logo-img { height: 40px; }
+    /* Full-size logo makes the nav 92px tall here, not the 80px minimum. */
+    .mobile-menu { top: 92px; }
+  }
+  @media (max-width: 600px) {
+    .nav-logo-img { height: 44px; }
+    .mobile-menu { top: 80px; }
   }
   @media (max-width: 380px) {
-    .nav-logo-img { height: 32px; }
+    .nav-logo-img { height: 36px; }
   }
 
   /* ---------- TEACHER HUB HERO ---------- */
@@ -425,7 +435,7 @@
      Sized to match the teacher hub: the hero reuses .teacher-hero*, cards use
      the .teacher-card surface/border/radius/padding, titles 22px, body 15px.
      Teachers' answers stay handwritten (Caveat, the closest Google Font to the
-     Figma hand font); 22px Caveat reads about as large as 15px Inter. */
+     Figma hand font), sized up so it reads a touch larger than body text. */
   .parent-body { display: flex; flex-direction: column; gap: 24px; }
 
   .classroom-picker {
@@ -523,7 +533,7 @@
   }
   .profile-hand {
     font-family: 'Caveat', 'Bradley Hand', cursive;
-    font-size: 22px;
+    font-size: 26px;
     line-height: 1.2;
     color: var(--navy);
     overflow-wrap: anywhere;
@@ -537,22 +547,6 @@
   }
   .profile-card--about .profile-card-title,
   .profile-card--about .profile-hand { color: var(--cce-white); }
-  .about-inner { display: flex; align-items: center; gap: 24px; }
-  .teacher-avatar {
-    width: 96px;
-    height: 96px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    border: 2px solid var(--cce-white);
-    background: var(--cce-yellow);
-    color: var(--cce-dark-blue-inverted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
   .about-fields { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
   .about-field { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
   .about-fun-fact { margin: 0; }
@@ -585,8 +579,6 @@
   }
   @media (max-width: 480px) {
     .profile-card { padding: 20px; }
-    .about-inner { flex-direction: column; align-items: flex-start; }
-    .teacher-avatar { width: 80px; height: 80px; font-size: 26px; }
   }
 </style>
 <!-- MailerLite Universal -->
@@ -632,7 +624,7 @@
       </a>
     </div>
 
-    <!-- Mobile hamburger: hidden above 600px, shown below -->
+    <!-- Mobile hamburger: hidden above 880px, shown below -->
     <button type="button" class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <i class="ph ph-list" aria-hidden="true"></i>
     </button>
@@ -686,10 +678,7 @@
         <div class="profile-row">
           <div class="profile-card profile-card--about">
             <h2 class="profile-card-title">A little bit about me</h2>
-            <div class="about-inner">
-              <div class="teacher-avatar" id="teacher-avatar" aria-hidden="true"></div>
-              <div class="about-fields" id="about-fields"></div>
-            </div>
+            <div class="about-fields" id="about-fields"></div>
             <p class="about-fun-fact" id="about-fun-fact" hidden>
               <span class="profile-label">Fun fact:</span>
               <span class="profile-hand"></span>
@@ -744,10 +733,11 @@
       if (link) setOpen(false);
     });
 
+    const NAV_COLLAPSE = 880; // matches the max-width: 880px nav media query
     let lastWidth = window.innerWidth;
     window.addEventListener('resize', function () {
       const w = window.innerWidth;
-      if (w > 600 && lastWidth <= 600) setOpen(false);
+      if (w > NAV_COLLAPSE && lastWidth <= NAV_COLLAPSE) setOpen(false);
       lastWidth = w;
     });
 
@@ -835,7 +825,6 @@
     const select = document.getElementById('classroom-select');
     const empty = document.getElementById('hub-empty');
     const profile = document.getElementById('teacher-profile');
-    const avatar = document.getElementById('teacher-avatar');
     const aboutFields = document.getElementById('about-fields');
     const funFact = document.getElementById('about-fun-fact');
     const wishlist = document.getElementById('wishlist');
@@ -984,13 +973,6 @@
       return row;
     }
 
-    function initials(name) {
-      const parts = name.split(/\s+/).filter(Boolean);
-      const first = parts[0] ? parts[0][0] : '';
-      const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
-      return (first + last).toUpperCase();
-    }
-
     function renderWishlist(t) {
       wishlist.replaceChildren();
       const w = t.wishlist;
@@ -1027,8 +1009,6 @@
       empty.hidden = !!t;
       profile.hidden = !t;
       if (!t) return;
-
-      avatar.textContent = initials(t.name);
 
       aboutFields.replaceChildren(labeled('about-field', 'Name', t.name));
       if (t.role) aboutFields.append(labeled('about-field', 'Role', t.role));

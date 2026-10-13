@@ -209,7 +209,7 @@
      squash rather than scale, so the mobile steps below shrink height instead. */
   .nav-logo-img {
     display: block;
-    height: 52px;
+    height: 60px;
     width: auto;
     /* It is a flex child of .nav-brand: without this the flex container can
        shrink its width independently of its height and squash the wordmark. */
@@ -231,6 +231,7 @@
     -webkit-overflow-scrolling: touch;
   }
   .nav-links a {
+    white-space: nowrap;
     font-size: 14px;
     font-weight: 500;
     color: var(--gray-500);
@@ -301,15 +302,24 @@
   .mobile-menu-link.is-active { color: var(--navy); font-weight: 600; }
   .mobile-menu-cta { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
 
-  @media (max-width: 600px) {
+  /* Collapse to logo + hamburger as soon as the nav links can't all fit on
+     one line. The 8 links need ~714px in a row; 880px leaves room for the
+     side gutters and a desktop scrollbar, so no label ever wraps to two lines
+     ("Events &" / "news"). Keep in sync with NAV_COLLAPSE in the menu script. */
+  @media (max-width: 880px) {
     .nav { flex-wrap: nowrap; }
     .nav-links { display: none; }
     .nav-cta-group { display: none; }
     .nav-hamburger { display: inline-flex; }
-    .nav-logo-img { height: 40px; }
+    /* Full-size logo makes the nav 92px tall here, not the 80px minimum. */
+    .mobile-menu { top: 92px; }
+  }
+  @media (max-width: 600px) {
+    .nav-logo-img { height: 44px; }
+    .mobile-menu { top: 80px; }
   }
   @media (max-width: 380px) {
-    .nav-logo-img { height: 32px; }
+    .nav-logo-img { height: 36px; }
   }
 
   /* ---------- TEACHER HUB HERO ---------- */
@@ -464,7 +474,7 @@
       </a>
     </div>
 
-    <!-- Mobile hamburger: hidden above 600px, shown below -->
+    <!-- Mobile hamburger: hidden above 880px, shown below -->
     <button type="button" class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <i class="ph ph-list" aria-hidden="true"></i>
     </button>
@@ -570,10 +580,11 @@
       if (link) setOpen(false);
     });
 
+    const NAV_COLLAPSE = 880; // matches the max-width: 880px nav media query
     let lastWidth = window.innerWidth;
     window.addEventListener('resize', function () {
       const w = window.innerWidth;
-      if (w > 600 && lastWidth <= 600) setOpen(false);
+      if (w > NAV_COLLAPSE && lastWidth <= NAV_COLLAPSE) setOpen(false);
       lastWidth = w;
     });
 
