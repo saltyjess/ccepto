@@ -295,44 +295,10 @@
     padding-bottom: 16px;
   }
   .nav-links a:hover { color: var(--navy); }
-  /* Teacher hub + Parent portal are destinations, not section anchors, so they
+  /* Teacher hub + Parent hub are destinations, not section anchors, so they
      sit apart at the end of the row. margin-left:auto collapses harmlessly once
      the row overflows and scrolls instead. */
   .nav-links .nav-link-end { margin-left: auto; }
-  /* Parent portal isn't built yet: a <span>, not a dimmed <a>, so there is
-     nothing to click, nothing to tab to and no dead URL to maintain. */
-  .nav-link-soon {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--gray-500);
-    opacity: 0.7;
-    cursor: default;
-    user-select: none;
-    white-space: nowrap;
-    padding: 8px 2px 16px;
-    border-bottom: 3px solid transparent;
-  }
-  .nav-soon-badge {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    background: var(--gray-100);
-    border-radius: 999px;
-    padding: 2px 6px;
-    line-height: 1.5;
-  }
-  .mobile-menu-link--soon {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.7;
-    cursor: default;
-    user-select: none;
-  }
   .nav-links a.is-active {
     color: var(--navy);
     font-weight: 600;
@@ -1230,40 +1196,6 @@
   .modal-close:hover { background: var(--gray-100); }
   .modal-close i { font-size: 18px; line-height: 1; }
 
-  .modal-form {
-    padding: 0 28px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .form-field { display: flex; flex-direction: column; gap: 6px; }
-  .form-field label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--navy);
-    letter-spacing: 0.3px;
-  }
-  .form-field label .req { color: var(--cyan); margin-left: 2px; }
-  .form-field input {
-    padding: 12px 14px;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-family: inherit;
-    color: var(--navy);
-    /* --off-white inverts to #182a57 (lighter navy) so inputs stay distinct from the navy modal bg in dark mode */
-    background: var(--off-white);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    width: 100%;
-  }
-  .form-field input:focus {
-    outline: none;
-    border-color: var(--cyan);
-    box-shadow: 0 0 0 3px rgba(28, 143, 196, 0.15);
-  }
-  .form-field input::placeholder { color: var(--gray-500); opacity: 0.7; }
-
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   /* Hamburger button — only visible at narrow mobile widths */
   .nav-hamburger {
     display: none;
@@ -1318,106 +1250,8 @@
     margin-top: 16px;
   }
 
-  @media (max-width: 420px) {
-    .form-row { grid-template-columns: 1fr; gap: 14px; }
-  }
-
-  /* Checkbox grids — grades, interests */
-  .checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-    gap: 8px;
-  }
-  .checkbox-grid--stacked {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .checkbox-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--navy);
-    user-select: none;
-  }
-  .checkbox-option:hover { border-color: var(--cyan); }
-  /* Custom checkbox — the native checkbox (even with accent-color) renders/animates
-     its checked state inconsistently across browsers, which can look like the box
-     "grows" or pops when clicked. Drawing it ourselves keeps it a fixed size always. */
-  .checkbox-option input[type="checkbox"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    max-width: 16px;
-    max-height: 16px;
-    flex: 0 0 16px;
-    border: 1.5px solid var(--gray-200);
-    border-radius: 4px;
-    background: var(--white);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease, border-color 0.15s ease;
-  }
-  .checkbox-option input[type="checkbox"]:checked {
-    background: var(--cyan);
-    border-color: var(--cyan);
-  }
-  .checkbox-option input[type="checkbox"]:checked::after {
-    content: '';
-    width: 4px;
-    height: 8px;
-    border: solid var(--cce-white-inverted);
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg) translate(-1px, -1px);
-  }
-  .checkbox-option input[type="checkbox"]:focus-visible {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
-  }
-  .checkbox-option:has(input:checked) {
-    border-color: var(--cyan);
-    background: rgba(28, 143, 196, 0.08);
-  }
-
-  /* Textarea */
-  .form-field textarea {
-    padding: 12px 14px;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-family: inherit;
-    color: var(--navy);
-    background: var(--off-white);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    width: 100%;
-    min-height: 80px;
-    resize: vertical;
-  }
-  .form-field textarea:focus {
-    outline: none;
-    border-color: var(--cyan);
-    box-shadow: 0 0 0 3px rgba(28, 143, 196, 0.15);
-  }
-  .form-field textarea::placeholder { color: var(--gray-500); opacity: 0.7; }
-
-  /* Larger modal variant for forms with more fields */
-  /* Board headshot lightbox. Shares .modal-backdrop/.modal with the form
-     modals; the image bleeds to the card edges and the close button sits on
+  /* Board headshot lightbox. Uses the shared .modal-backdrop/.modal
+     styles; the image bleeds to the card edges and the close button sits on
      top of it, so this variant is position:relative instead of using a
      .modal-header as its containing block. */
   .modal--photo {
@@ -1456,123 +1290,8 @@
     text-underline-offset: 2px;
   }
 
-  .modal--lg {
-    max-width: 560px;
-    max-height: calc(100vh - 32px);
-  }
-
-  /* Newsletter modal — embeds Mailchimp's own hosted signup page. Mailchimp's page
-     is always white/light and can't follow our dark mode, so we lock this modal's
-     own chrome to light-mode colors too — otherwise our text/background would
-     invert while the iframe stays white, looking like two mismatched pieces. */
-  #newsletter-modal .modal { background: #fdfcfa; }
-  #newsletter-modal .modal-eyebrow { color: #c69a4c; }
-  #newsletter-modal .modal-title { color: #051f47; }
-  #newsletter-modal .modal-subtitle { color: #737985; margin-bottom: 0; }
-  #newsletter-modal .modal-close { background: #fcf9f4; color: #051f47; }
-  #newsletter-modal .modal-close:hover { background: #efede6; }
-  .modal-iframe-wrap {
-    padding: 0 4px 4px;
-  }
-  .modal-iframe {
-    width: 100%;
-    height: 620px;
-    max-height: calc(100vh - 220px);
-    border: 0;
-    display: block;
-  }
-
-  /* Honeypot — hidden from real users, bots fill it */
-  .hp-field {
-    position: absolute;
-    left: -5000px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-
-  .modal-submit {
-    margin-top: 6px;
-    width: 100%;
-    padding: 14px;
-    background: var(--cce-yellow);
-    color: var(--cce-dark-blue-inverted);
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: filter 0.15s ease, transform 0.1s ease;
-  }
-  .modal-submit:hover { filter: brightness(1.05); }
-  .modal-submit:active { transform: translateY(1px); }
-  .modal-submit:disabled { opacity: 0.6; cursor: wait; }
-
-  .modal-fineprint {
-    font-size: 12px;
-    color: var(--gray-500);
-    margin: 4px 0 0;
-    text-align: center;
-    line-height: 1.5;
-  }
-
-  /* Mailchimp GDPR consent copy — left-aligned fine print inside the form,
-     unlike .modal-fineprint which is centered and sits below the submit button. */
-  .consent-text {
-    font-size: 12px;
-    color: var(--gray-500);
-    line-height: 1.5;
-    margin: 4px 0 0;
-  }
-  .consent-text a {
-    color: var(--cyan);
-    text-decoration: underline;
-  }
-  .checkbox-group-error {
-    font-size: 12px;
-    font-weight: 600;
-    color: #d64545;
-    margin: 6px 0 0;
-  }
-  [data-required-group].is-invalid .checkbox-option {
-    border-color: #d64545;
-  }
-
   /* Body lock while modal is open */
   body.modal-open { overflow: hidden; }
-
-  /* hidden attribute fallback — display:flex would otherwise override it */
-  .modal-form[hidden], .modal-success[hidden] { display: none !important; }
-
-  /* Success state */
-  .modal-success {
-    padding: 12px 28px 36px;
-    text-align: center;
-  }
-  .success-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--cce-yellow);
-    color: var(--cce-dark-blue-inverted);
-    margin: 8px auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .success-icon i { font-size: 32px; font-weight: 700; }
-  .success-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--navy);
-    margin: 0 0 8px;
-  }
-  .success-body {
-    font-size: 14px;
-    color: var(--gray-500);
-    line-height: 1.5;
-    margin: 0;
-  }
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 1280px) {
@@ -1654,7 +1373,7 @@
       <a href="#quick-links">Quick links</a>
       <a href="#impact">Impact</a>
       <a href="teacher-hub.html" class="nav-link-end">Teacher hub</a>
-      <span class="nav-link-soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
+      <a href="parent-hub.html">Parent hub</a>
     </div>
 
     <div class="nav-cta-group">
@@ -1684,7 +1403,7 @@
     <a href="#quick-links" class="mobile-menu-link">Quick links</a>
     <a href="#impact" class="mobile-menu-link">Impact</a>
     <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
-    <span class="mobile-menu-link mobile-menu-link--soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
+    <a href="parent-hub.html" class="mobile-menu-link">Parent hub</a>
     <div class="mobile-menu-cta">
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph ph-facebook-logo" aria-hidden="true"></i>
@@ -2160,11 +1879,6 @@
 
 </main>
 
-<!-- Newsletter signup modal — embeds Mailchimp's own hosted signup page in an iframe.
-     A native form posting in the background can't work here: Mailchimp gates this
-     account's signups behind a reCAPTCHA "confirm you're human" challenge (confirmed
-     by inspecting the real response), and a hidden iframe can never let a person
-     click that checkbox. Showing the real page lets people actually complete it. -->
 <!-- Board headshot lightbox; populated from the data-photo* attributes on
      whichever .avatar-link was clicked. -->
 <div class="modal-backdrop" id="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title" hidden>
@@ -2180,146 +1894,6 @@
     </div>
   </div>
 </div>
-
-<div class="modal-backdrop" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
-  <div class="modal modal--lg">
-    <div class="modal-header">
-      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
-        <i class="ph ph-x" aria-hidden="true"></i>
-      </button>
-      <p class="modal-eyebrow">Stay in the loop</p>
-      <h2 class="modal-title" id="modal-title">Join the newsletter</h2>
-      <p class="modal-subtitle">Get PTO events, volunteer opportunities, and CCE news delivered straight to your inbox.</p>
-    </div>
-
-    <div class="modal-iframe-wrap">
-      <iframe
-        class="modal-iframe"
-        src="https://gmail.us20.list-manage.com/subscribe?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;v_id=4688&amp;f_id=00e060eef0"
-        title="Join the CCE PTO newsletter"
-        loading="lazy"
-      ></iframe>
-    </div>
-  </div>
-</div>
-
-<!-- Get involved (volunteer) signup modal -->
-<div class="modal-backdrop" id="volunteer-modal" role="dialog" aria-modal="true" aria-labelledby="vol-modal-title" hidden>
-  <div class="modal modal--lg">
-    <div class="modal-header">
-      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
-        <i class="ph ph-x" aria-hidden="true"></i>
-      </button>
-      <p class="modal-eyebrow">Volunteer</p>
-      <h2 class="modal-title" id="vol-modal-title">Get involved</h2>
-      <p class="modal-subtitle">Tell us a little about you and how you'd like to help. Every hour counts.</p>
-    </div>
-
-    <!--
-      TODO: SWAP THIS ACTION URL
-      Replace the action URL below with your new "Volunteers" Mailchimp audience action URL.
-      Get it from Mailchimp: Audience (new volunteer audience) → Signup forms → Embedded forms → Classic tab →
-      copy the <form action="..."> URL.
-      Also update the honeypot input's `name` attribute to match the new audience's b_*_* value.
-    -->
-    <form
-      class="modal-form"
-      action="https://gmail.us20.list-manage.com/subscribe/post?u=PLACEHOLDER&amp;id=PLACEHOLDER"
-      method="post"
-      target="vol-iframe"
-      novalidate
-    >
-      <div class="form-row">
-        <div class="form-field">
-          <label for="vol-fname">First name</label>
-          <input type="text" id="vol-fname" name="FNAME" autocomplete="given-name" placeholder="Jane">
-        </div>
-        <div class="form-field">
-          <label for="vol-lname">Last name</label>
-          <input type="text" id="vol-lname" name="LNAME" autocomplete="family-name" placeholder="Doe">
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label for="vol-email">Email <span class="req" aria-hidden="true">*</span></label>
-        <input type="email" id="vol-email" name="EMAIL" autocomplete="email" placeholder="you@example.com" required>
-      </div>
-
-      <div class="form-field">
-        <label>Child's grade(s)</label>
-        <div class="checkbox-grid" role="group" aria-label="Child's grades">
-          <label class="checkbox-option">
-            <input type="checkbox" name="GRADES" value="K"> K
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="GRADES" value="1"> 1st
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="GRADES" value="2"> 2nd
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="GRADES" value="3"> 3rd
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="GRADES" value="4"> 4th
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="GRADES" value="5"> 5th
-          </label>
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label>Interests</label>
-        <div class="checkbox-grid" role="group" aria-label="Volunteer interests">
-          <label class="checkbox-option">
-            <input type="checkbox" name="INTERESTS" value="Classroom helper"> Classroom helper
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="INTERESTS" value="Event volunteer"> Event volunteer
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="INTERESTS" value="Fundraising"> Fundraising
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="INTERESTS" value="Teacher appreciation"> Teacher appreciation
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="INTERESTS" value="Spirit Rock"> Spirit Rock
-          </label>
-          <label class="checkbox-option">
-            <input type="checkbox" name="INTERESTS" value="Behind the scenes"> Behind the scenes
-          </label>
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label for="vol-notes">Notes</label>
-        <textarea id="vol-notes" name="NOTES" placeholder="Anything else you'd like us to know? Skills, availability, kids' names, etc."></textarea>
-      </div>
-
-      <!-- Mailchimp honeypot — TODO: update name attribute to match new audience -->
-      <div class="hp-field" aria-hidden="true">
-        <input type="text" name="b_PLACEHOLDER_PLACEHOLDER" tabindex="-1" value="" autocomplete="off">
-      </div>
-
-      <button type="submit" class="modal-submit">Sign me up</button>
-      <p class="modal-fineprint">We'll only reach out about volunteer opportunities. You can unsubscribe any time.</p>
-    </form>
-
-    <!-- Success state -->
-    <div class="modal-success" hidden>
-      <div class="success-icon" aria-hidden="true">
-        <i class="ph ph-check"></i>
-      </div>
-      <h3 class="success-title">Thanks for stepping up!</h3>
-      <p class="success-body">Check your inbox to confirm. We'll be in touch soon about ways to get involved.</p>
-    </div>
-  </div>
-</div>
-
-<!-- Hidden iframe for volunteer form -->
-<iframe name="vol-iframe" title="Volunteer submission" aria-hidden="true" tabindex="-1" style="position:absolute; width:0; height:0; border:0; left:-9999px;"></iframe>
 
 <script>
   // Mobile menu toggle — hamburger opens/closes the slide-down link panel
@@ -2372,7 +1946,7 @@
 
   // Live countdown in the footer dateline: walks the remaining dates on the
   // 2026-27 calendar and shows the next one, then goes quiet for summer.
-  // Keep this block identical across index.html and teacher-hub.html.
+  // Keep this block identical across index.html, teacher-hub.html and parent-hub.html.
   (function () {
     // start = first day off, end = last day off (inclusive). Months are
     // 0-indexed. kind:'day' entries are single dates rather than breaks, so
@@ -2591,164 +2165,6 @@
     fix();
   })();
 
-  // Modal setup — generic helper used by both newsletter and volunteer modals
-  function setupModal(opts) {
-    const modal = document.getElementById(opts.modalId);
-    if (!modal) return;
-    const form = modal.querySelector('.modal-form');
-    const success = modal.querySelector('.modal-success');
-    const submitBtn = modal.querySelector('.modal-submit');
-    const iframe = document.querySelector(`iframe[name="${opts.iframeName}"]`);
-    const firstField = modal.querySelector('input:not([type="hidden"]):not([type="checkbox"])');
-    const emailField = modal.querySelector('input[name="EMAIL"]');
-    const originalSubmitText = submitBtn ? submitBtn.textContent : '';
-    let lastFocused = null;
-    let submitting = false;
-
-    function openModal(e) {
-      if (e) e.preventDefault();
-      lastFocused = document.activeElement;
-      // Always start in form state (not success) when re-opened
-      form.hidden = false;
-      success.hidden = true;
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalSubmitText;
-      submitting = false;
-      modal.hidden = false;
-      void modal.offsetWidth; // reflow so the transition runs
-      modal.classList.add('is-open');
-      document.body.classList.add('modal-open');
-      setTimeout(() => firstField && firstField.focus(), 100);
-    }
-
-    function closeModal() {
-      modal.classList.remove('is-open');
-      document.body.classList.remove('modal-open');
-      setTimeout(() => {
-        modal.hidden = true;
-        if (lastFocused) lastFocused.focus();
-        form.reset();
-      }, 200);
-    }
-
-    function showSuccess() {
-      form.hidden = true;
-      success.hidden = false;
-      setTimeout(closeModal, 3500);
-    }
-
-    // Checkbox groups (e.g. "Student's grade") can't use the native `required`
-    // attribute per-checkbox — that would force every box checked, not "at least
-    // one". This validates and shows/clears the group's own error message instead.
-    const requiredGroup = form.querySelector('[data-required-group]');
-    const requiredGroupError = requiredGroup ? requiredGroup.parentElement.querySelector('.checkbox-group-error') : null;
-    function isRequiredGroupValid() {
-      if (!requiredGroup) return true;
-      return Array.from(requiredGroup.querySelectorAll('input[type="checkbox"]')).some(cb => cb.checked);
-    }
-    if (requiredGroup) {
-      requiredGroup.addEventListener('change', function () {
-        if (isRequiredGroupValid()) {
-          requiredGroup.classList.remove('is-invalid');
-          if (requiredGroupError) requiredGroupError.hidden = true;
-        }
-      });
-    }
-
-    form.addEventListener('submit', function (e) {
-      if (!form.checkValidity()) {
-        e.preventDefault();
-        form.reportValidity();
-        return;
-      }
-      if (!isRequiredGroupValid()) {
-        e.preventDefault();
-        requiredGroup.classList.add('is-invalid');
-        if (requiredGroupError) requiredGroupError.hidden = false;
-        requiredGroup.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        return;
-      }
-      if (submitting) {
-        e.preventDefault();
-        return;
-      }
-      submitting = true;
-      submitBtn.disabled = true;
-      submitBtn.textContent = opts.submittingText || 'Submitting…';
-
-      let done = false;
-      const finish = function () {
-        if (done) return;
-        done = true;
-        iframe.removeEventListener('load', finish);
-        showSuccess();
-      };
-      iframe.addEventListener('load', finish);
-      setTimeout(finish, 2500);
-    });
-
-    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
-      btn.addEventListener('click', openModal);
-    });
-
-    modal.querySelectorAll('[data-modal-close]').forEach(btn => {
-      btn.addEventListener('click', closeModal);
-    });
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
-    });
-  }
-
-  // Simple modal setup — for modals that just open/close (no local form/success
-  // state to manage), like the newsletter modal which embeds Mailchimp's own
-  // hosted signup page directly rather than handling the submission itself.
-  function setupSimpleModal(opts) {
-    const modal = document.getElementById(opts.modalId);
-    if (!modal) return;
-    let lastFocused = null;
-
-    function openModal(e) {
-      if (e) e.preventDefault();
-      lastFocused = document.activeElement;
-      modal.hidden = false;
-      void modal.offsetWidth; // reflow so the transition runs
-      modal.classList.add('is-open');
-      document.body.classList.add('modal-open');
-    }
-
-    function closeModal() {
-      modal.classList.remove('is-open');
-      document.body.classList.remove('modal-open');
-      setTimeout(() => {
-        modal.hidden = true;
-        if (lastFocused) lastFocused.focus();
-      }, 200);
-    }
-
-    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
-      btn.addEventListener('click', openModal);
-    });
-
-    modal.querySelectorAll('[data-modal-close]').forEach(btn => {
-      btn.addEventListener('click', closeModal);
-    });
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
-    });
-  }
-
-  // Newsletter modal
-  setupSimpleModal({
-    modalId: 'newsletter-modal',
-    triggerAttr: 'data-newsletter-trigger'
-  });
-
   // Volunteer opportunities scroller. The arrow is always on screen, so with a
   // row that fits there is simply nothing to scroll to and the click is a no-op.
   (function () {
@@ -2811,20 +2227,7 @@
       if (e.key === 'Escape' && !modal.hidden) closePhoto();
     });
   })();
-
-  // Volunteer / Get involved modal
-  setupModal({
-    modalId: 'volunteer-modal',
-    iframeName: 'vol-iframe',
-    triggerAttr: 'data-volunteer-trigger',
-    submittingText: 'Signing you up…'
-  });
 </script>
-
-<!-- Mailchimp "Connected Site" script — lets Mailchimp manage its own popup/embedded
-     forms (including the reCAPTCHA challenge) directly on this page, rather than us
-     trying to replicate the submission ourselves. -->
-<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/18edc8a2096d429a064c21bde/8a29d7d3a4cdde3d3f7e71a6e.js");</script>
 
 </body>
 </html>

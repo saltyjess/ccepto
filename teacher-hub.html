@@ -242,44 +242,10 @@
     padding-bottom: 16px;
   }
   .nav-links a:hover { color: var(--navy); }
-  /* Teacher hub + Parent portal are destinations, not section anchors, so they
+  /* Teacher hub + Parent hub are destinations, not section anchors, so they
      sit apart at the end of the row. margin-left:auto collapses harmlessly once
      the row overflows and scrolls instead. */
   .nav-links .nav-link-end { margin-left: auto; }
-  /* Parent portal isn't built yet: a <span>, not a dimmed <a>, so there is
-     nothing to click, nothing to tab to and no dead URL to maintain. */
-  .nav-link-soon {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--gray-500);
-    opacity: 0.7;
-    cursor: default;
-    user-select: none;
-    white-space: nowrap;
-    padding: 8px 2px 16px;
-    border-bottom: 3px solid transparent;
-  }
-  .nav-soon-badge {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    background: var(--gray-100);
-    border-radius: 999px;
-    padding: 2px 6px;
-    line-height: 1.5;
-  }
-  .mobile-menu-link--soon {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.7;
-    cursor: default;
-    user-select: none;
-  }
   .nav-links a.is-active { color: var(--navy); font-weight: 600; border-bottom-color: var(--gold); }
 
   .nav-cta-group { display: flex; align-items: center; gap: 16px; }
@@ -454,171 +420,16 @@
   }
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
 
-  /* ---------- NEWSLETTER MODAL ---------- */
-  .modal-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; z-index: 100; opacity: 0; visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-  }
-  .modal-backdrop.is-open { opacity: 1; visibility: visible; }
-  .modal {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    width: 100%; max-width: 480px;
-    transform: translateY(20px) scale(0.97);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-  }
-  .modal-backdrop.is-open .modal { transform: translateY(0) scale(1); }
-  .modal-header { padding: 28px 28px 0; position: relative; }
-  .modal-eyebrow {
-    color: var(--cce-mustard-yellow); font-size: 11px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 8px;
-  }
-  .modal-title { font-size: 24px; font-weight: 700; color: var(--navy); margin: 0 0 8px; line-height: 1.2; }
-  .modal-subtitle { font-size: 14px; color: var(--gray-500); margin: 0 0 24px; line-height: 1.5; }
-  .modal-close {
-    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
-    border: none; background: var(--gray-50); color: var(--navy); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-    transition: background 0.15s ease;
-  }
-  .modal-close:hover { background: var(--gray-100); }
-  .modal-close i { font-size: 18px; line-height: 1; }
-  .modal--lg {
-    max-width: 560px;
-    max-height: calc(100vh - 32px);
-  }
-  /* Newsletter modal — embeds Mailchimp's own hosted signup page. Mailchimp's page
-     is always white/light and can't follow our dark mode, so we lock this modal's
-     own chrome to light-mode colors too — otherwise our text/background would
-     invert while the iframe stays white, looking like two mismatched pieces. */
-  #newsletter-modal .modal { background: #fdfcfa; }
-  #newsletter-modal .modal-eyebrow { color: #c69a4c; }
-  #newsletter-modal .modal-title { color: #051f47; }
-  #newsletter-modal .modal-subtitle { color: #737985; margin-bottom: 0; }
-  #newsletter-modal .modal-close { background: #fcf9f4; color: #051f47; }
-  #newsletter-modal .modal-close:hover { background: #efede6; }
-  .modal-iframe-wrap {
-    padding: 0 4px 4px;
-  }
-  .modal-iframe {
-    width: 100%;
-    height: 620px;
-    max-height: calc(100vh - 220px);
-    border: 0;
-    display: block;
-  }
-  .modal-form { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 14px; }
-  .form-field { display: flex; flex-direction: column; gap: 6px; }
-  .form-field label { font-size: 12px; font-weight: 600; color: var(--navy); letter-spacing: 0.3px; }
-  .form-field label .req { color: var(--cyan); margin-left: 2px; }
-  .form-field input {
-    padding: 12px 14px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
-    font-size: 15px; font-family: inherit; color: var(--navy); background: var(--off-white);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease; width: 100%;
-  }
-  .form-field input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(28, 143, 196, 0.15); }
-  .form-field input::placeholder { color: var(--gray-500); opacity: 0.7; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 420px) { .form-row { grid-template-columns: 1fr; gap: 14px; } }
-  .checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-    gap: 8px;
-  }
-  .checkbox-grid--stacked {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .checkbox-option {
-    display: flex; align-items: center; gap: 8px; padding: 10px 12px;
-    border: 1px solid var(--gray-200); border-radius: var(--radius-sm); cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-    font-size: 14px; font-weight: 500; color: var(--navy); user-select: none;
-  }
-  .checkbox-option:hover { border-color: var(--cyan); }
-  /* Custom checkbox — the native checkbox (even with accent-color) renders/animates
-     its checked state inconsistently across browsers, which can look like the box
-     "grows" or pops when clicked. Drawing it ourselves keeps it a fixed size always. */
-  .checkbox-option input[type="checkbox"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    max-width: 16px;
-    max-height: 16px;
-    flex: 0 0 16px;
-    border: 1.5px solid var(--gray-200);
-    border-radius: 4px;
-    background: var(--white);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease, border-color 0.15s ease;
-  }
-  .checkbox-option input[type="checkbox"]:checked {
-    background: var(--cyan);
-    border-color: var(--cyan);
-  }
-  .checkbox-option input[type="checkbox"]:checked::after {
-    content: '';
-    width: 4px;
-    height: 8px;
-    border: solid var(--cce-white-inverted);
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg) translate(-1px, -1px);
-  }
-  .checkbox-option input[type="checkbox"]:focus-visible {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
-  }
-  .checkbox-option:has(input:checked) { border-color: var(--cyan); background: rgba(28, 143, 196, 0.08); }
-  .hp-field { position: absolute; left: -5000px; width: 1px; height: 1px; overflow: hidden; }
-  .modal-submit {
-    margin-top: 6px; width: 100%; padding: 14px; background: var(--cce-yellow);
-    color: var(--cce-dark-blue-inverted); border: none; border-radius: var(--radius-sm);
-    font-size: 15px; font-weight: 700; cursor: pointer;
-    transition: filter 0.15s ease, transform 0.1s ease;
-  }
-  .modal-submit:hover { filter: brightness(1.05); }
-  .modal-submit:active { transform: translateY(1px); }
-  .modal-submit:disabled { opacity: 0.6; cursor: wait; }
-  .modal-fineprint { font-size: 12px; color: var(--gray-500); margin: 4px 0 0; text-align: center; line-height: 1.5; }
-  .consent-text { font-size: 12px; color: var(--gray-500); line-height: 1.5; margin: 4px 0 0; }
-  .consent-text a { color: var(--cyan); text-decoration: underline; }
-  .checkbox-group-error {
-    font-size: 12px;
-    font-weight: 600;
-    color: #d64545;
-    margin: 6px 0 0;
-  }
-  [data-required-group].is-invalid .checkbox-option {
-    border-color: #d64545;
-  }
-  body.modal-open { overflow: hidden; }
-  .modal-form[hidden], .modal-success[hidden] { display: none !important; }
-  .modal-success { padding: 12px 28px 36px; text-align: center; }
-  .success-icon {
-    width: 64px; height: 64px; border-radius: 50%; background: var(--cce-yellow);
-    color: var(--cce-dark-blue-inverted); margin: 8px auto 20px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .success-icon i { font-size: 32px; font-weight: 700; }
-  .success-title { font-size: 22px; font-weight: 700; color: var(--navy); margin: 0 0 8px; }
-  .success-body { font-size: 14px; color: var(--gray-500); line-height: 1.5; margin: 0; }
 </style>
+<!-- MailerLite Universal -->
+<script>
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', '2546995');
+</script>
+<!-- End MailerLite Universal -->
 </head>
 <body>
 
@@ -632,12 +443,13 @@
 
     <div class="nav-links">
       <a href="index.html#top">Home</a>
+      <a href="index.html#sponsors">Sponsors</a>
       <a href="index.html#events">Events &amp; news</a>
-      <a href="index.html#get-involved">Volunteer</a>
+      <a href="index.html#volunteer">Volunteer</a>
       <a href="index.html#quick-links">Quick links</a>
       <a href="index.html#impact">Impact</a>
       <a href="teacher-hub.html" class="nav-link-end is-active" aria-current="page">Teacher hub</a>
-      <span class="nav-link-soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
+      <a href="parent-hub.html">Parent hub</a>
     </div>
 
     <div class="nav-cta-group">
@@ -647,7 +459,7 @@
       <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
         <i class="ph ph-instagram-logo" aria-hidden="true"></i>
       </a>
-      <a href="#" class="btn btn-gold" data-newsletter-trigger>
+      <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">
         Join the newsletter <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
@@ -661,12 +473,13 @@
   <!-- Mobile menu panel -->
   <div class="mobile-menu" id="mobile-menu" hidden>
     <a href="index.html#top" class="mobile-menu-link">Home</a>
+    <a href="index.html#sponsors" class="mobile-menu-link">Sponsors</a>
     <a href="index.html#events" class="mobile-menu-link">Events &amp; news</a>
-    <a href="index.html#get-involved" class="mobile-menu-link">Volunteer</a>
+    <a href="index.html#volunteer" class="mobile-menu-link">Volunteer</a>
     <a href="index.html#quick-links" class="mobile-menu-link">Quick links</a>
     <a href="index.html#impact" class="mobile-menu-link">Impact</a>
     <a href="teacher-hub.html" class="mobile-menu-link is-active" aria-current="page">Teacher hub</a>
-    <span class="mobile-menu-link mobile-menu-link--soon" aria-disabled="true">Parent portal <span class="nav-soon-badge">Soon</span></span>
+    <a href="parent-hub.html" class="mobile-menu-link">Parent hub</a>
     <div class="mobile-menu-cta">
       <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
         <i class="ph ph-facebook-logo" aria-hidden="true"></i>
@@ -674,7 +487,7 @@
       <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
         <i class="ph ph-instagram-logo" aria-hidden="true"></i>
       </a>
-      <a href="#" class="btn btn-gold" data-newsletter-trigger>
+      <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">
         Join the newsletter <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
@@ -731,33 +544,6 @@
 
 </main>
 
-<!-- Newsletter signup modal — embeds Mailchimp's own hosted signup page in an iframe.
-     A native form posting in the background can't work here: Mailchimp gates this
-     account's signups behind a reCAPTCHA "confirm you're human" challenge (confirmed
-     by inspecting the real response), and a hidden iframe can never let a person
-     click that checkbox. Showing the real page lets people actually complete it. -->
-<div class="modal-backdrop" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
-  <div class="modal modal--lg">
-    <div class="modal-header">
-      <button type="button" class="modal-close" aria-label="Close" data-modal-close>
-        <i class="ph ph-x" aria-hidden="true"></i>
-      </button>
-      <p class="modal-eyebrow">Stay in the loop</p>
-      <h2 class="modal-title" id="modal-title">Join the newsletter</h2>
-      <p class="modal-subtitle">Get PTO events, volunteer opportunities, and CCE news delivered straight to your inbox.</p>
-    </div>
-
-    <div class="modal-iframe-wrap">
-      <iframe
-        class="modal-iframe"
-        src="https://gmail.us20.list-manage.com/subscribe?u=18edc8a2096d429a064c21bde&amp;id=c7ed4d5149&amp;v_id=4688&amp;f_id=00e060eef0"
-        title="Join the CCE PTO newsletter"
-        loading="lazy"
-      ></iframe>
-    </div>
-  </div>
-</div>
-
 <script>
   // Mobile menu toggle
   (function () {
@@ -804,7 +590,7 @@
 
   // Live countdown in the footer dateline: walks the remaining dates on the
   // 2026-27 calendar and shows the next one, then goes quiet for summer.
-  // Keep this block identical across index.html and teacher-hub.html.
+  // Keep this block identical across index.html, teacher-hub.html and parent-hub.html.
   (function () {
     // start = first day off, end = last day off (inclusive). Months are
     // 0-indexed. kind:'day' entries are single dates rather than breaks, so
@@ -854,58 +640,7 @@
     target.textContent = `${formatted}  ·  ${message}`;
   })();
 
-  // Simple modal setup — for modals that just open/close (no local form/success
-  // state to manage), like the newsletter modal which embeds Mailchimp's own
-  // hosted signup page directly rather than handling the submission itself.
-  function setupSimpleModal(opts) {
-    const modal = document.getElementById(opts.modalId);
-    if (!modal) return;
-    let lastFocused = null;
-
-    function openModal(e) {
-      if (e) e.preventDefault();
-      lastFocused = document.activeElement;
-      modal.hidden = false;
-      void modal.offsetWidth;
-      modal.classList.add('is-open');
-      document.body.classList.add('modal-open');
-    }
-
-    function closeModal() {
-      modal.classList.remove('is-open');
-      document.body.classList.remove('modal-open');
-      setTimeout(() => {
-        modal.hidden = true;
-        if (lastFocused) lastFocused.focus();
-      }, 200);
-    }
-
-    document.querySelectorAll(`[${opts.triggerAttr}]`).forEach(btn => {
-      btn.addEventListener('click', openModal);
-    });
-
-    modal.querySelectorAll('[data-modal-close]').forEach(btn => {
-      btn.addEventListener('click', closeModal);
-    });
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
-    });
-  }
-
-  // Newsletter modal
-  setupSimpleModal({
-    modalId: 'newsletter-modal',
-    triggerAttr: 'data-newsletter-trigger'
-  });
 </script>
-
-<!-- Mailchimp "Connected Site" script — lets Mailchimp manage its own popup/embedded
-     forms (including the reCAPTCHA challenge) directly on this page, rather than us
-     trying to replicate the submission ourselves. -->
-<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/18edc8a2096d429a064c21bde/8a29d7d3a4cdde3d3f7e71a6e.js");</script>
 
 </body>
 </html>
