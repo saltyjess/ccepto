@@ -1557,10 +1557,9 @@
            now that they've passed. The photo album's Quick Links card was
            removed too (Oct 2026). -->
 
-      <!-- Fall Book Fair, 2026: preview week Oct 19-23, sales week Oct 26-28
-           (dates from the volunteer SignUpGenius pages). Each card hides at
-           the end of its last day. -->
-      <div class="priority-item" data-hide-after="2026-10-23T23:59:00-04:00">
+      <!-- Fall Book Fair, 2026: preview week Oct 19-23, sales week Oct 26-30.
+           Each card hides at 5:00 PM on Friday, when that week closes. -->
+      <div class="priority-item" data-hide-after="2026-10-23T17:00:00-04:00">
         <div class="priority-text">
           <p class="priority-tag">Book Fair</p>
           <p class="priority-title">Fall Book Fair Preview Week &mdash; Oct 19th&ndash;23rd</p>
@@ -1568,10 +1567,10 @@
         </div>
       </div>
 
-      <div class="priority-item" data-hide-after="2026-10-28T23:59:00-04:00">
+      <div class="priority-item" data-hide-after="2026-10-30T17:00:00-04:00">
         <div class="priority-text">
           <p class="priority-tag">Book Fair</p>
-          <p class="priority-title">Fall Book Fair &mdash; Oct 26th&ndash;28th</p>
+          <p class="priority-title">Fall Book Fair &mdash; Oct 26th&ndash;30th</p>
           <p class="priority-meta">Students shop before school and during their class&rsquo;s time slot. Families can shop together at the Fall Festival on Tuesday, Oct 27th from 4:00&ndash;6:00 PM.</p>
         </div>
       </div>
@@ -1587,7 +1586,9 @@
         </div>
       </div>
 
-      <div class="priority-item">
+      <!-- Q3 raffle winners are drawn Jan 4, 2027, so the card hides at the
+           start of that day (-05:00: Eastern standard time). -->
+      <div class="priority-item" data-hide-after="2027-01-04T00:00:00-05:00">
         <div class="priority-text">
           <p class="priority-tag">Buy tickets</p>
           <p class="priority-title">Golden Ticket Raffle &mdash; Quarter 3</p>
@@ -1641,7 +1642,7 @@
             </div>
           </li>
 
-          <li class="vol-card">
+          <li class="vol-card" data-hide-after="2026-10-23T17:00:00-04:00">
             <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-books"></i></div>
             <h3 class="vol-card-title">Fall Book Fair &mdash; preview week</h3>
             <p class="vol-card-body">Help students find books and fill out their wish lists during preview week, Oct 19&ndash;23.</p>
@@ -1651,7 +1652,7 @@
             </div>
           </li>
 
-          <li class="vol-card">
+          <li class="vol-card" data-hide-after="2026-10-30T17:00:00-04:00">
             <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-shopping-cart"></i></div>
             <h3 class="vol-card-title">Fall Book Fair &mdash; sales week</h3>
             <p class="vol-card-body">Run the register or help students shop, Oct 26&ndash;28. Volunteers get a Scholastic credit as a thank you!</p>
