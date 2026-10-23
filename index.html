@@ -195,6 +195,7 @@
   #events,
   #quick-links,
   #impact,
+  #instagram,
   #sponsors {
     scroll-margin-top: calc(var(--nav-offset) - var(--section-pad-top));
   }
@@ -1035,6 +1036,64 @@
       scroll-snap-align: start;
     }
     .committee-browser.is-ready .committee-card { padding: 24px; }
+  }
+
+  /* ---------- INSTAGRAM ---------- */
+  .ig-head {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;
+  }
+  .ig-head .btn .ph { font-size: 18px; }
+  .ig-scroller { position: relative; margin-top: 24px; }
+  .ig-scroller[hidden] { display: none; }
+  .ig-track {
+    list-style: none; margin: 0; padding: 0 0 4px;
+    display: flex; gap: 16px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .ig-track::-webkit-scrollbar { display: none; }
+  .ig-post {
+    flex: 0 0 calc((100% - 48px) / 4);
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+  .ig-post a {
+    display: flex; flex-direction: column; height: 100%;
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .ig-post a:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(5, 31, 71, 0.18); }
+  .ig-media { position: relative; aspect-ratio: 1 / 1; background: var(--gray-100); }
+  .ig-media img { width: 100%; height: 100%; object-fit: cover; }
+  .ig-badge {
+    position: absolute; top: 10px; right: 10px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(5, 31, 71, 0.65); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .ig-caption {
+    margin: 0; padding: 14px 16px 16px;
+    font-size: 13px; line-height: 1.5; color: var(--navy);
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ig-date { display: block; padding: 0 16px 14px; margin-top: auto; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--gray-500); }
+  .ig-nav {
+    position: absolute; top: calc(50% - 40px); transform: translateY(-50%);
+    width: 44px; height: 44px; border: none; border-radius: 50%;
+    background: var(--cce-dark-blue); color: var(--cce-white);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; box-shadow: var(--shadow-card);
+  }
+  .ig-nav--prev { left: -12px; }
+  .ig-nav--next { right: -12px; }
+  .ig-nav[disabled] { opacity: 0; pointer-events: none; }
+  @media (max-width: 1000px) { .ig-post { flex-basis: calc((100% - 32px) / 3); } }
+  @media (max-width: 720px) {
+    .ig-post { flex-basis: 72%; }
+    .ig-nav { display: none; }
   }
 
   /* ---------- IMPACT (How PTO Supports CCE) ---------- */
@@ -2215,6 +2274,28 @@
     </div>
   </section>
 
+  <!-- Instagram: recent posts from @crowderscreekpto via a Behold.so JSON feed
+       (free plan: up to 6 posts). To connect it, paste the feed ID from
+       behold.so into data-behold-feed below. With no ID, or if the feed can't
+       load, the carousel stays hidden and only the "Follow us" button shows. -->
+  <section class="section section--gray" id="instagram" aria-labelledby="ig-title">
+    <div class="ig-head">
+      <div>
+        <p class="card-eyebrow">Follow along</p>
+        <h2 class="card-title" id="ig-title">Recent Instagram posts</h2>
+      </div>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="btn btn-outline">
+        <i class="ph ph-instagram-logo" aria-hidden="true"></i> Follow @crowderscreekpto <span class="arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+
+    <div class="ig-scroller" data-behold-feed="" hidden>
+      <ul class="ig-track" tabindex="0" role="group" aria-label="Recent Instagram posts"></ul>
+      <button type="button" class="ig-nav ig-nav--prev" aria-label="Previous posts"><span aria-hidden="true">&larr;</span></button>
+      <button type="button" class="ig-nav ig-nav--next" aria-label="More posts"><span aria-hidden="true">&rarr;</span></button>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
     <span>Crowders Creek Elementary PTO &nbsp;·&nbsp; Where Young Minds Soar &nbsp;·&nbsp; Clover, SC &nbsp;·&nbsp; <span id="footer-year"></span></span>
@@ -2559,6 +2640,75 @@
     }
     select(0);
     browser.classList.add('is-ready');
+  })();
+
+  // Instagram carousel: loads recent posts from the Behold.so feed named in
+  // data-behold-feed. Stays hidden if no feed ID is set or the feed fails.
+  (async () => {
+    const scroller = document.querySelector('.ig-scroller');
+    const feedId = scroller && scroller.dataset.beholdFeed.trim();
+    if (!feedId) return;
+    try {
+      const res = await fetch('https://feeds.behold.so/' + encodeURIComponent(feedId));
+      if (!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      const posts = (Array.isArray(data) ? data : data.posts || []).slice(0, 12);
+      if (!posts.length) return;
+      const track = scroller.querySelector('.ig-track');
+      const fmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+      posts.forEach(post => {
+        const img = (post.sizes && (post.sizes.medium || post.sizes.small) || {}).mediaUrl
+          || (post.mediaType === 'VIDEO' ? post.thumbnailUrl : post.mediaUrl);
+        if (!img) return;
+        const caption = (post.prunedCaption || post.caption || '').trim();
+        const li = document.createElement('li');
+        li.className = 'ig-post';
+        const a = document.createElement('a');
+        a.href = post.permalink; a.target = '_blank'; a.rel = 'noopener';
+        a.setAttribute('aria-label', 'View on Instagram' + (caption ? ': ' + caption.slice(0, 80) : ''));
+        const media = document.createElement('div');
+        media.className = 'ig-media';
+        if (post.colorPalette && post.colorPalette.dominant) media.style.background = 'rgb(' + post.colorPalette.dominant + ')';
+        const im = document.createElement('img');
+        im.src = img; im.alt = post.altText || ''; im.loading = 'lazy';
+        media.appendChild(im);
+        if (post.mediaType === 'VIDEO' || post.mediaType === 'CAROUSEL_ALBUM') {
+          const b = document.createElement('span');
+          b.className = 'ig-badge'; b.setAttribute('aria-hidden', 'true');
+          b.innerHTML = post.mediaType === 'VIDEO' ? '<i class="ph-fill ph-play"></i>' : '<i class="ph-fill ph-copy"></i>';
+          media.appendChild(b);
+        }
+        a.appendChild(media);
+        if (caption) {
+          const p = document.createElement('p');
+          p.className = 'ig-caption'; p.textContent = caption;
+          a.appendChild(p);
+        }
+        if (post.timestamp) {
+          const d = document.createElement('span');
+          d.className = 'ig-date'; d.textContent = fmt.format(new Date(post.timestamp));
+          a.appendChild(d);
+        }
+        li.appendChild(a);
+        track.appendChild(li);
+      });
+      if (!track.children.length) return;
+      scroller.hidden = false;
+      const prev = scroller.querySelector('.ig-nav--prev');
+      const next = scroller.querySelector('.ig-nav--next');
+      const step = () => track.clientWidth * 0.9;
+      const sync = () => {
+        prev.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      };
+      prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
+      next.addEventListener('click', () => track.scrollBy({ left: step() }));
+      track.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+    } catch (err) {
+      // Feed unavailable: leave the carousel hidden; the Follow button remains.
+    }
   })();
 
   // Expired events: drop anything whose data-hide-after time has passed, so
