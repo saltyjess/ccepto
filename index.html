@@ -1066,8 +1066,9 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .ig-post a:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(5, 31, 71, 0.18); }
-  .ig-media { position: relative; aspect-ratio: 1 / 1; background: var(--gray-100); }
-  .ig-media img { width: 100%; height: 100%; object-fit: cover; }
+  /* Square crop for every post; tall Reel covers are cropped, not stretched. */
+  .ig-media { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--gray-100); }
+  .ig-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .ig-badge {
     position: absolute; top: 10px; right: 10px;
     width: 30px; height: 30px; border-radius: 50%;
