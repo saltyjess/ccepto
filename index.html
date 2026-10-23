@@ -909,6 +909,127 @@
     flex-shrink: 0;
   }
 
+  /* ---------- COMMITTEES ---------- */
+  /* Committees sit inside the "What we do" (#impact) section, below the pillars. */
+  .committees {
+    margin-top: 64px;
+    padding-top: 64px;
+    border-top: 1px solid var(--gray-100);
+    scroll-margin-top: var(--nav-offset);
+  }
+  .committees .card-eyebrow { text-align: left; }
+  .committees-actions { margin-top: 24px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
+  .committees-lead {
+    max-width: 720px;
+    color: var(--gray-500);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 12px 0 0;
+  }
+  .committee-grid {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .committee-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+  .committee-head { display: flex; align-items: center; gap: 12px; }
+  .committee-icon {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--cce-dark-blue);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .committee-name { font-size: 18px; font-weight: 700; color: var(--navy); line-height: 1.25; margin: 0; }
+  .committee-what, .committee-helps, .committee-time { font-size: 14px; line-height: 1.55; margin: 0; color: var(--navy); }
+  .committee-helps strong, .committee-time strong { font-weight: 600; }
+  .committee-time { display: flex; gap: 8px; color: var(--gray-500); }
+  .committee-time .ph { font-size: 18px; flex-shrink: 0; margin-top: 1px; color: var(--cce-mustard-yellow); }
+  .committee-time strong { color: var(--navy); }
+  .committee-contact {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--gray-100);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .committee-contact-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gray-500); margin: 0;
+  }
+  .committee-email { font-size: 15px; font-weight: 600; color: var(--cyan-deep); }
+  .committee-email:hover { text-decoration: underline; }
+  @media (max-width: 720px) {
+    .committees { margin-top: 40px; padding-top: 40px; }
+    .committee-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Committee browser (one at a time): a tab list beside a single card. */
+  .committee-tabs { display: none; }
+  .committee-browser.is-ready {
+    display: grid;
+    grid-template-columns: minmax(200px, 240px) 1fr;
+    gap: 32px;
+    margin-top: 32px;
+    align-items: stretch;
+  }
+  .committee-browser.is-ready .committee-tabs { display: flex; flex-direction: column; gap: 2px; }
+  .committee-browser.is-ready .committee-grid { display: flex; flex-direction: column; margin: 0; }
+  .committee-browser.is-ready .committee-card.is-active { flex: 1; }
+  .committee-browser.is-ready .committee-card { padding: 40px; gap: 20px; }
+  .committee-browser.is-ready .committee-card:not(.is-active) { display: none; }
+  .committee-browser.is-ready .committee-name { font-size: 24px; }
+  .committee-browser.is-ready .committee-what,
+  .committee-browser.is-ready .committee-helps,
+  .committee-browser.is-ready .committee-time { font-size: 16px; max-width: 760px; }
+  .committee-tab {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--navy);
+    font: inherit; font-size: 13px; font-weight: 600; line-height: 1.3; text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .committee-tab .ph { font-size: 16px; color: var(--cce-mustard-yellow); flex-shrink: 0; }
+  .committee-tab:hover { background: var(--gray-50); }
+  .committee-tab[aria-selected="true"] { background: var(--cce-dark-blue); color: var(--cce-white); }
+  .committee-tab[aria-selected="true"] .ph { color: var(--gold); }
+  @media (max-width: 880px) {
+    .committee-browser.is-ready { grid-template-columns: 1fr; gap: 16px; }
+    .committee-browser.is-ready .committee-tabs {
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .committee-tab {
+      width: auto; flex-shrink: 0; white-space: nowrap;
+      padding: 8px 14px;
+      border-color: var(--gray-100);
+      border-radius: 999px;
+      scroll-snap-align: start;
+    }
+    .committee-browser.is-ready .committee-card { padding: 24px; }
+  }
+
   /* ---------- IMPACT (How PTO Supports CCE) ---------- */
   .impact {
     background: var(--white);
@@ -1066,26 +1187,6 @@
   }
 
   /* ---------- SLIDESHOW EMBED ---------- */
-  .slideshow-embed {
-    position: relative;
-    width: 100%;
-    margin: 24px auto 0;
-    /* Matches the embed's native 1440x839 proportions so it scales cleanly
-       at any width instead of being stretched or cropped. */
-    aspect-ratio: 1440 / 839;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--gray-100);
-  }
-  .slideshow-embed iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-
   /* ---------- FOOTER ---------- */
   .footer {
     border-top: 1px solid var(--gray-100);
@@ -1378,7 +1479,8 @@
       <a href="#events">Events &amp; news</a>
       <a href="#volunteer">Volunteer</a>
       <a href="#quick-links">Quick links</a>
-      <a href="#impact">Impact</a>
+      <a href="#impact">What we do</a>
+      <a href="#committees">Committees</a>
       <a href="teacher-hub.html" class="nav-link-end">Teacher hub</a>
       <a href="parent-hub.html">Parent hub</a>
     </div>
@@ -1408,7 +1510,8 @@
     <a href="#events" class="mobile-menu-link">Events &amp; news</a>
     <a href="#volunteer" class="mobile-menu-link">Volunteer</a>
     <a href="#quick-links" class="mobile-menu-link">Quick links</a>
-    <a href="#impact" class="mobile-menu-link">Impact</a>
+    <a href="#impact" class="mobile-menu-link">What we do</a>
+    <a href="#committees" class="mobile-menu-link">Committees</a>
     <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
     <a href="parent-hub.html" class="mobile-menu-link">Parent hub</a>
     <div class="mobile-menu-cta">
@@ -1871,8 +1974,8 @@
 
   <!-- Impact / How PTO Supports CCE -->
   <section class="impact" id="impact" aria-labelledby="impact-title">
-    <p class="impact-eyebrow">What we do</p>
-    <h2 class="impact-title" id="impact-title">PTO Impact</h2>
+    <p class="impact-eyebrow">PTO impact</p>
+    <h2 class="impact-title" id="impact-title">What we do</h2>
     <p class="impact-lead">Four areas where your support shows up for our Eagles every day.</p>
 
     <div class="pillars">
@@ -1905,14 +2008,210 @@
         <p class="pillar-body">Extra student assistance, teacher appreciation, field trip shirts, and school beautification.</p>
       </div>
     </div>
-  </section>
 
-  <!-- Slideshow -->
-  <section class="section section--white" id="slideshow" aria-labelledby="slideshow-title">
-    <p class="impact-eyebrow">Take a look</p>
-    <h2 class="impact-title" id="slideshow-title">PTO Slideshow</h2>
-    <div class="slideshow-embed">
-      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTXhkWoO9yVaMWic8nAa0kYsVeLb9W41ow7sBFx40SiuS7wwN-MPI3yUQFjZcGXoCkDL3JxVJtag7d4/pubembed?start=false&amp;loop=false&amp;delayms=3000" allowfullscreen loading="lazy" title="CCE PTO slideshow"></iframe>
+    <!-- Committees (DRAFT, Oct 2026). Sources: the 2026-27 PTO welcome deck
+         (descriptions, time commitments) and the newsletter committee list
+         (chairs, emails). Emails are assembled by the "Committee emails" script
+         so the addresses aren't sitting in the page source for spam scrapers.
+         A committee with no chair links to the PTO inbox instead. -->
+    <div class="committees" id="committees">
+      <p class="card-eyebrow">Join a committee</p>
+      <h3 class="card-title" id="committees-title">PTO committees</h3>
+      <p class="committees-lead">Every committee is run by parent volunteers like you. Find one that fits your time and interests, then reach out to the contact listed &mdash; or email the PTO and we&rsquo;ll help you find your spot.</p>
+
+      <!-- Committee browser: the script builds one tab per card and shows one
+         committee at a time. Without JavaScript every card still shows. -->
+    <div class="committee-browser" id="committee-browser">
+    <div class="committee-tabs" role="tablist" aria-label="PTO committees" aria-orientation="vertical"></div>
+    <ul class="committee-grid">
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-confetti"></i></div>
+              <h3 class="committee-name">Special Events</h3>
+            </div>
+            <p class="committee-what">Organizes our big school-wide events: Boosterthon (Fun Run) in the fall, Family Fun Night, and one more event each year. Coordinates with outside vendors.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> These are the nights families remember, and the Fun Run is one of our biggest fundraisers for the school.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 1&ndash;2 hours a month, more leading up to an event, and possibly all day on event day.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Chair needed</p>
+              <a class="committee-email" data-email-user="crowderscreekpto" data-email-domain="gmail.com" data-email-subject="Special Events committee" href="#">Interested? Email the PTO <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-paint-brush"></i></div>
+              <h3 class="committee-name">Spirit Rock &amp; Spirit Wear</h3>
+            </div>
+            <p class="committee-what">Manages Spirit Rock sign-ups through SignUpGenius all year and coordinates our spirit wear vendors.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Gives kids a way to celebrate birthdays and big moments, and gets CCE swag into families&rsquo; hands.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 1&ndash;2 hours a month, a little more when the spirit store opens and closes.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="crowderscreekpto" data-email-domain="gmail.com" data-email-subject="Spirit Rock &amp; Spirit Wear committee" href="#">Email Erin Roe <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-handshake"></i></div>
+              <h3 class="committee-name">Sponsorships</h3>
+            </div>
+            <p class="committee-what">Secures business sponsorships for CCE, usually toward the end of the school year to prepare for the next one. A great fit if you have lots of community connections.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Sponsor dollars fund the programs, supplies, and events the PTO provides all year.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> Works around your schedule and is done mostly online.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="clinrichard" data-email-domain="gmail.com" data-email-subject="Sponsorships committee" href="#">Email Christina Richard <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-users-three"></i></div>
+              <h3 class="committee-name">Room Parent &amp; Volunteer Coordinator</h3>
+            </div>
+            <p class="committee-what">Room parents are chosen by classroom teachers. This committee runs the room parent orientation in the fall, serves as the liaison between room parents and the PTO, and supports the winter and spring classroom parties.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Keeps every classroom connected to the PTO and makes class parties easy for teachers. All parents are invited!</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 1&ndash;2 hours to plan the fall meeting, then as needed by email.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="lizjohnson318" data-email-domain="gmail.com" data-email-subject="Room Parent &amp; Volunteer Coordinator committee" href="#">Email Liz Johnson <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-books"></i></div>
+              <h3 class="committee-name">Book Fair &amp; Library Liaison</h3>
+            </div>
+            <p class="committee-what">Partners with Scholastic to host two Book Fairs a year (fall and spring) and runs the Coin Challenge, which collects spare change to help kids who come up short at the Book Fair.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Puts new books in kids&rsquo; hands and supports our school library.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 4&ndash;5 hours the week before, daily during Book Fair weeks, and 1&ndash;2 hours every other month for the Coin Challenge.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Chair needed</p>
+              <a class="committee-email" data-email-user="crowderscreekpto" data-email-domain="gmail.com" data-email-subject="Book Fair &amp; Library Liaison committee" href="#">Interested? Email the PTO <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-heartbeat"></i></div>
+              <h3 class="committee-name">Health &amp; Wellness</h3>
+            </div>
+            <p class="committee-what">Works with our school nurses and PE teachers on clothing drives, student health needs, and Field Day, the end-of-year celebration with outdoor games for every grade.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Makes sure students have what they need to feel well, and gives every grade a fun, active day to end the year.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 2&ndash;4 hours a month coordinating with the nurses; 2&ndash;3 hours a week in April planning Field Day, plus both Field Days.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="carolynhammonds77" data-email-domain="gmail.com" data-email-subject="Health &amp; Wellness committee" href="#">Email Carolyn Hammonds <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-storefront"></i></div>
+              <h3 class="committee-name">Ways &amp; Means (Spirit Nights)</h3>
+            </div>
+            <p class="committee-what">Plans monthly Spirit Nights with local businesses that donate a portion of their proceeds to our school, like Moe&rsquo;s Night, McTeacher Night, and Domino&rsquo;s.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> An easy way for families to raise money for CCE just by going out to eat.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 2&ndash;3 hours a month.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="cheriefesperman" data-email-domain="yahoo.com" data-email-subject="Ways &amp; Means (Spirit Nights) committee" href="#">Email Cherie <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-bowl-food"></i></div>
+              <h3 class="committee-name">Special Programs &amp; Food Pantry</h3>
+            </div>
+            <p class="committee-what">Organizes food drives and the PTO food pantry, which feeds children in need on scheduled days off with breakfast, lunch, dinner, and snacks. Also keeps snacks on hand for students who forget theirs or can&rsquo;t bring one.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> No CCE student should go hungry, at school or on a day off.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 1&ndash;2 hours a month.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="godsgirl311" data-email-domain="yahoo.com" data-email-subject="Special Programs &amp; Food Pantry committee" href="#">Email Cari Walker <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-apple-logo"></i></div>
+              <h3 class="committee-name">Teacher Appreciation</h3>
+            </div>
+            <p class="committee-what">Makes sure our teachers and staff feel appreciated and loved all year with a monthly Treat Trolley, two staff luncheons, Teacher Appreciation Week in the spring, and the Teacher Favorites lists.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Happy, supported teachers make for happy classrooms.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 3&ndash;4 hours a month, more during Teacher Appreciation Week in May.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="jolenehamz" data-email-domain="gmail.com" data-email-subject="Teacher Appreciation committee" href="#">Email Jolene Hamilton <span aria-hidden="true">&rarr;</span></a>
+              <a class="committee-email" data-email-user="apblakeney" data-email-domain="ymail.com" data-email-subject="Teacher Appreciation committee" href="#">Email Amber Blakeney <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-megaphone"></i></div>
+              <h3 class="committee-name">Communications</h3>
+            </div>
+            <p class="committee-what">Manages the PTO&rsquo;s social media accounts and communication tools. A good role for someone with marketing or design experience.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Keeps families in the loop on events, volunteer needs, and school news.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> About 1 hour a week.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="katie_levesque" data-email-domain="yahoo.com" data-email-subject="Communications committee" href="#">Email Katie <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-trophy"></i></div>
+              <h3 class="committee-name">Battle of the Books</h3>
+            </div>
+            <p class="committee-what">Kids read books and memorize facts to compete in a Family Feud&ndash;style tournament against other district teams. Usually led by parents of 4th and 5th graders with the librarian. The parent lead organizes volunteers, orders materials, and sets up for the event.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Builds a love of reading and a little friendly competition.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> Meet with the librarian 1&ndash;3 times a year, about 5 hours of prep, and all day on event day.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="katie_levesque" data-email-domain="yahoo.com" data-email-subject="Battle of the Books committee" href="#">Email Katie <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-gift"></i></div>
+              <h3 class="committee-name">Angel Tree</h3>
+            </div>
+            <p class="committee-what">Runs our holiday giving initiative starting in late October: creating family wish lists, shopping for gifts, organizing donations, and coordinating deliveries.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Brings holiday joy to CCE families who need a little extra help.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 1&ndash;2 hours in October; 1&ndash;2 full days in November; 2&ndash;3 times a week before Thanksgiving; and 8 AM&ndash;2 PM daily the week of gift collection (the week after Thanksgiving).</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Chair needed</p>
+              <a class="committee-email" data-email-user="crowderscreekpto" data-email-domain="gmail.com" data-email-subject="Angel Tree committee" href="#">Interested? Email the PTO <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-star"></i></div>
+              <h3 class="committee-name">SOAR Celebrations</h3>
+            </div>
+            <p class="committee-what">Plans two celebrations a year for students chosen by teachers and staff as SOAR students. These can include seasonal themed parties, a treat, and games. Works with admin to plan each event.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Celebrates kids for showing what it means to SOAR at CCE.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> 2&ndash;3 hours of planning before each event (one at the end of each semester), plus 1&ndash;2 hours on event day including setup.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="clinrichard" data-email-domain="gmail.com" data-email-subject="SOAR Celebrations committee" href="#">Email Christina Richard <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+          <li class="committee-card">
+            <div class="committee-head">
+              <div class="committee-icon" aria-hidden="true"><i class="ph ph-graduation-cap"></i></div>
+              <h3 class="committee-name">5th Grade Celebration</h3>
+            </div>
+            <p class="committee-what">Plans the special end-of-year celebration for our graduating 5th graders with the lead 5th grade teacher, and helps order supplies like yard signs and t-shirts.</p>
+            <p class="committee-helps"><strong>How it helps:</strong> Gives our 5th graders a send-off they&rsquo;ll remember.</p>
+            <p class="committee-time"><i class="ph ph-clock" aria-hidden="true"></i><span><strong>Time:</strong> About 2 hours a month from February through event day.</span></p>
+            <div class="committee-contact">
+              <p class="committee-contact-label">Contact</p>
+              <a class="committee-email" data-email-user="mmochel28" data-email-domain="gmail.com" data-email-subject="5th Grade Celebration committee" href="#">Email Megan Mochel <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+      </ul>
+    </div>
+      <div class="committees-actions">
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vTXhkWoO9yVaMWic8nAa0kYsVeLb9W41ow7sBFx40SiuS7wwN-MPI3yUQFjZcGXoCkDL3JxVJtag7d4/pub?start=false&amp;loop=false&amp;delayms=3000" target="_blank" rel="noopener" class="btn btn-outline">View the PTO slideshow <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
     </div>
   </section>
 
@@ -2209,6 +2508,57 @@
       document.fonts.ready.then(fix);
     }
     fix();
+  })();
+
+  // Committee emails: build each mailto link from its data attributes so the
+  // addresses aren't plain text in the page source.
+  document.querySelectorAll('.committee-email[data-email-user]').forEach(a => {
+    const addr = a.dataset.emailUser + '@' + a.dataset.emailDomain;
+    const subj = a.dataset.emailSubject ? '?subject=' + encodeURIComponent(a.dataset.emailSubject) : '';
+    a.href = 'mailto:' + addr + subj;
+  });
+
+  // Committee browser: one tab per committee card, one card visible at a time.
+  (() => {
+    const browser = document.getElementById('committee-browser');
+    if (!browser) return;
+    const tablist = browser.querySelector('.committee-tabs');
+    const cards = [...browser.querySelectorAll('.committee-card')];
+    const tabs = cards.map((card, i) => {
+      const name = card.querySelector('.committee-name');
+      const icon = card.querySelector('.committee-icon i');
+      card.id = card.id || 'committee-' + i;
+      card.setAttribute('role', 'tabpanel');
+      const tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'committee-tab';
+      tab.id = card.id + '-tab';
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', card.id);
+      card.setAttribute('aria-labelledby', tab.id);
+      if (icon) tab.appendChild(icon.cloneNode());
+      tab.appendChild(document.createTextNode(name.textContent.trim()));
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', e => {
+        const k = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        if (k) { e.preventDefault(); select((i + k + cards.length) % cards.length, true); }
+        else if (e.key === 'Home') { e.preventDefault(); select(0, true); }
+        else if (e.key === 'End') { e.preventDefault(); select(cards.length - 1, true); }
+      });
+      tablist.appendChild(tab);
+      return tab;
+    });
+    function select(i, focus) {
+      tabs.forEach((t, j) => {
+        const on = i === j;
+        t.setAttribute('aria-selected', on);
+        t.tabIndex = on ? 0 : -1;
+        cards[j].classList.toggle('is-active', on);
+      });
+      if (focus) { tabs[i].focus(); tabs[i].scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+    }
+    select(0);
+    browser.classList.add('is-ready');
   })();
 
   // Expired events: drop anything whose data-hide-after time has passed, so
