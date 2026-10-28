@@ -2519,8 +2519,32 @@
 
     // Track which observed sections are currently intersecting,
     // pick the one nearest the top of the viewport.
-    const visible = new Map();
+    const visible = new Set();
     let observer = null;
+
+    // Read each visible section's top NOW. The observer only reports a
+    // position when a section enters or leaves, so a stored value goes stale
+    // while you scroll. That kept "What we do" (#impact) active over
+    // #committees, which sits inside it and starts lower on the page.
+    function pickActive() {
+      if (visible.size === 0) {
+        // No tracked section in view — fall back to Home
+        if (homeId) setActive(homeId);
+        return;
+      }
+      let best = null;
+      let bestDist = Infinity;
+      visible.forEach(id => {
+        // Distance from trigger line — smaller is better.
+        const top = targets.get(id).section.getBoundingClientRect().top;
+        const dist = Math.abs(top - triggerLine);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = id;
+        }
+      });
+      if (best) setActive(best);
+    }
 
     function buildObserver() {
       if (observer) observer.disconnect();
@@ -2533,31 +2557,12 @@
             const id = observedIds.find(oid => targets.get(oid).section === entry.target);
             if (!id) return;
             if (entry.isIntersecting) {
-              visible.set(id, entry.boundingClientRect.top);
+              visible.add(id);
             } else {
               visible.delete(id);
             }
           });
-
-          if (visible.size === 0) {
-            // No tracked section in view — fall back to Home
-            if (homeId) setActive(homeId);
-            return;
-          }
-
-          // Pick the section whose top is closest to (but not past) the viewport top
-          let best = null;
-          let bestDist = Infinity;
-          visible.forEach((top, id) => {
-            // Prefer sections whose top is at or above the trigger line.
-            // Distance from trigger line — smaller is better.
-            const dist = Math.abs(top - triggerLine);
-            if (dist < bestDist) {
-              bestDist = dist;
-              best = id;
-            }
-          });
-          if (best) setActive(best);
+          pickActive();
         },
         {
           // Trigger when a section's top crosses the trigger line.
@@ -2578,11 +2583,18 @@
       document.fonts.ready.then(buildObserver);
     }
 
-    // Edge case: at the very top of the page, force Home active
+    // Edge case: at the very top of the page, force Home active.
+    // Otherwise re-pick on scroll (once per frame), because the section
+    // nearest the trigger line can change with no observer event.
+    let frame = 0;
     function checkTop() {
       if (window.scrollY < triggerLine && homeId) setActive(homeId);
+      else pickActive();
     }
-    window.addEventListener('scroll', checkTop, { passive: true });
+    window.addEventListener('scroll', () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => { frame = 0; checkTop(); });
+    }, { passive: true });
     checkTop();
   })();
 
