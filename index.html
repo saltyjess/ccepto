@@ -1086,8 +1086,12 @@
   .ig-head .btn .ph { font-size: 18px; }
   .ig-scroller { position: relative; margin-top: 24px; }
   .ig-scroller[hidden] { display: none; }
+  /* A scrolling row also crops anything outside it, so pad it on every side
+     (and cancel that with negative margins) to leave room for the hover lift
+     and shadow. scroll-padding keeps the snap points on the cards. */
   .ig-track {
-    list-style: none; margin: 0; padding: 0 0 4px;
+    list-style: none; margin: -6px -12px -24px; padding: 6px 12px 24px;
+    scroll-padding-inline: 12px;
     display: flex; gap: 16px;
     overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
     scrollbar-width: none;
@@ -1116,8 +1120,9 @@
     background: rgba(5, 31, 71, 0.65); color: #fff;
     display: flex; align-items: center; justify-content: center; font-size: 16px;
   }
+  /* No bottom padding on the clamped box: padding would show a 4th line. */
   .ig-caption {
-    margin: 0; padding: 14px 16px 16px;
+    margin: 0 0 12px; padding: 14px 16px 0;
     font-size: 13px; line-height: 1.5; color: var(--navy);
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   }
@@ -1434,14 +1439,28 @@
     background: var(--white);
     border-bottom: 1px solid var(--gray-100);
     padding: 12px var(--pad-inline) 20px;
-    position: sticky;
+    /* Overlay pinned under the sticky nav, so opening it doesn't push the
+       page down. Scrolls on its own if it is taller than the screen. */
+    position: fixed;
+    left: 0;
+    right: 0;
     top: 80px;
+    max-height: calc(100dvh - 80px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     z-index: 49;
     display: flex;
     flex-direction: column;
     gap: 4px;
+    box-shadow: 0 12px 24px -10px rgba(3, 22, 49, 0.28);
+    transition: opacity 0.22s ease, transform 0.22s ease;
   }
+  /* Closed state the menu fades and slides from (see setOpen in the menu script). */
+  .mobile-menu:not(.is-open) { opacity: 0; transform: translateY(-8px); pointer-events: none; }
   .mobile-menu[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu { transition: none; }
+  }
   .mobile-menu-link {
     font-size: 16px;
     font-weight: 500;
@@ -1549,11 +1568,11 @@
     .nav-cta-group { display: none; }
     .nav-hamburger { display: inline-flex; }
     /* Full-size logo makes the nav 92px tall here, not the 80px minimum. */
-    .mobile-menu { top: 92px; }
+    .mobile-menu { top: 92px; max-height: calc(100dvh - 92px); }
   }
   @media (max-width: 600px) {
     .nav-logo-img { height: 44px; }
-    .mobile-menu { top: 80px; }
+    .mobile-menu { top: 80px; max-height: calc(100dvh - 80px); }
   }
   @media (max-width: 380px) {
     .nav-logo-img { height: 36px; }
@@ -1644,7 +1663,7 @@
       <p class="hero-lead">Our PTO's mission is to work as partners with the parents, administrators, faculty and staff, to ensure Crowders Creek Elementary continues to be a safe and educational place for our children to learn.</p>
       <div class="hero-actions">
         <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#volunteer" class="btn btn-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="stat-grid" aria-label="PTO at a glance">
@@ -1885,7 +1904,7 @@
         <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
         <div class="card-actions">
           <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyw_gcanH_0puF1cIYyQ2aZC4Cs-6qeyqW9QyP0-aLK54vhA/viewform" target="_blank" rel="noopener" class="btn btn-translucent btn-translucent--on-navy">Get involved <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="#committees" class="btn btn-translucent btn-translucent--on-navy">Join a committee <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
 
@@ -2390,6 +2409,7 @@
     const btn = document.getElementById('nav-hamburger');
     const menu = document.getElementById('mobile-menu');
     if (!btn || !menu) return;
+    let hideTimer = 0;
 
     function setOpen(open) {
       btn.setAttribute('aria-expanded', String(open));
@@ -2397,8 +2417,18 @@
       // Swap icon: list <-> x
       const icon = btn.querySelector('i');
       if (icon) icon.className = open ? 'ph ph-x' : 'ph ph-list';
-      if (open) menu.removeAttribute('hidden');
-      else menu.setAttribute('hidden', '');
+      // Unhide first, then add .is-open on the next style pass so the fade
+      // and slide play. On close, hide again once the transition ends.
+      clearTimeout(hideTimer);
+      if (open) {
+        menu.removeAttribute('hidden');
+        void menu.offsetHeight;
+        menu.classList.add('is-open');
+      } else {
+        menu.classList.remove('is-open');
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        hideTimer = setTimeout(() => menu.setAttribute('hidden', ''), reduce ? 0 : 220);
+      }
     }
 
     btn.addEventListener('click', function () {
