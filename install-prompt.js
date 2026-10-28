@@ -129,7 +129,16 @@
   });
   window.addEventListener('appinstalled', () => { remember(); hide(); });
 
-  window.addEventListener('load', () => setTimeout(() => {
-    if (!dismissed()) build();
+  // Chrome on Android can say whether this site is already installed (see
+  // related_applications in manifest.webmanifest). Other browsers lack it.
+  async function installed() {
+    if (!navigator.getInstalledRelatedApps) return false;
+    try { return (await navigator.getInstalledRelatedApps()).length > 0; } catch (e) { return false; }
+  }
+
+  window.addEventListener('load', () => setTimeout(async () => {
+    if (dismissed()) return;
+    if (await installed()) { remember(); return; }
+    build();
   }, SHOW_DELAY_MS));
 })();
