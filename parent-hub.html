@@ -678,6 +678,7 @@
   .profile-card--about .profile-card-title,
   .profile-card--about .profile-hand { color: var(--cce-white); }
   .about-fields { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .room-parent { margin-top: 20px; display: flex; flex-direction: column; }
   .about-field { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
 
   .wishlist { display: flex; flex-direction: column; gap: 8px; }
@@ -816,6 +817,7 @@
           <div class="profile-card profile-card--about">
             <h2 class="profile-card-title">A little bit about me</h2>
             <div class="about-fields" id="about-fields"></div>
+            <div class="room-parent" id="room-parent" hidden></div>
           </div>
 
           <div class="profile-card">
@@ -1015,7 +1017,15 @@
     const aboutFields = document.getElementById('about-fields');
     const wishlist = document.getElementById('wishlist');
     const favorites = document.getElementById('favorites');
+    const roomParent = document.getElementById('room-parent');
     if (!select) return;
+
+    // Room parent emails by teacher last name, as [user, domain] pairs so the
+    // addresses aren't plain text in the page. Names and phone numbers stay in
+    // the sign-up sheet. Regenerate with "Claude outputs/update-room-parents.py".
+    // ROOM_PARENTS:start
+    const ROOM_PARENTS = {"chiampa":[["erinmkinder","gmail.com"],["mariiatenciio","gmail.com"]],"clamp":[["scardinosrna","hotmail.com"]],"clussman":[["jennadavis1102","gmail.com"]],"costello":[["jrandall84088","gmail.com"]],"few":[["mariiatenciio","gmail.com"],["cdrozinski","gmail.com"]],"ford":[["lizjohnson318","gmail.com"]],"formanek":[["monica_gates","yahoo.com"],["jolenehamz","gmail.com"],["familyrobinsonsc","gmail.com"]],"graham":[["ashleebrookpedersen","gmail.com"]],"hough":[["katepuckettvt","gmail.com"]],"hussey":[["suzhannadickerson","yahoo.com"],["abm0724","gmail.com"],["ashley_kuitems","yahoo.com"]],"kane":[["ryndeemitchell","gmail.com"]],"kaplan":[["kryswithak","aol.com"],["cheiliger2011","gmail.com"]],"linn":[["jessielarsen","gmail.com"]],"mcilwain":[["meganmazzucco","gmail.com"]],"ostrom":[["kellymartin627","gmail.com"]],"petriella":[["ryndeemitchell","gmail.com"]],"pitzer":[["monica_gates","yahoo.com"],["vanassen.jessica","gmail.com"]],"romberger":[["ashley_kuitems","yahoo.com"]],"sconzo":[["caitlin.msipe","gmail.com"]],"sullivan":[["lizjohnson318","gmail.com"],["mgsnipes22","gmail.com"]],"szymborski":[["nicole.vigorito","yahoo.com"],["macheria811","gmail.com"]],"whitesides":[["harley.lindsey","gmail.com"]]};
+    // ROOM_PARENTS:end
 
     const emptyText = empty.textContent;
     let byId = new Map();
@@ -1189,6 +1199,23 @@
       wishlist.append(list);
     }
 
+    // One button that emails every room parent for the class at once.
+    function renderRoomParent(t) {
+      const parents = ROOM_PARENTS[t.name.split(' ').pop().toLowerCase()] || [];
+      roomParent.replaceChildren();
+      roomParent.hidden = !parents.length;
+      if (!parents.length) return;
+      const many = parents.length > 1;
+      const to = parents.map(([user, domain]) => user + '@' + domain).join(',');
+      const subject = `Question for the room parent${many ? 's' : ''}: ${t.name}'s class`;
+      const link = el('a', 'teacher-card-btn', many ? 'Email the room parents ' : 'Email the room parent ');
+      link.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject);
+      const arrow = el('span', 'arrow', '→');
+      arrow.setAttribute('aria-hidden', 'true');
+      link.append(arrow);
+      roomParent.append(link);
+    }
+
     function show(id) {
       const t = byId.get(id);
       select.value = t ? t.id : '';
@@ -1202,6 +1229,7 @@
       if (t.funFact) aboutFields.append(labeled('about-field', 'Fun fact', t.funFact));
 
       renderWishlist(t);
+      renderRoomParent(t);
 
       favorites.replaceChildren(...t.favorites.map(([label, value]) => labeled('favorite-row', label, value)));
     }
