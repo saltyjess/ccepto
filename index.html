@@ -1047,6 +1047,15 @@
   .committee-tab:hover { background: var(--gray-50); }
   .committee-tab[aria-selected="true"] { background: var(--cce-dark-blue); color: var(--cce-white); }
   .committee-tab[aria-selected="true"] .ph { color: var(--gold); }
+  /* Swipe feedback: the new card slides in from the side it came from. */
+  .committee-grid { touch-action: pan-y; }
+  .committee-card.slide-from-right { animation: committee-in-right 0.25s ease; }
+  .committee-card.slide-from-left { animation: committee-in-left 0.25s ease; }
+  @keyframes committee-in-right { from { opacity: 0; transform: translateX(32px); } }
+  @keyframes committee-in-left { from { opacity: 0; transform: translateX(-32px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .committee-card.slide-from-right, .committee-card.slide-from-left { animation: none; }
+  }
   @media (max-width: 880px) {
     .committee-browser.is-ready { grid-template-columns: 1fr; gap: 16px; }
     .committee-browser.is-ready .committee-tabs {
@@ -2740,7 +2749,9 @@
       tablist.appendChild(tab);
       return tab;
     });
+    let current = 0;
     function select(i, focus) {
+      current = i;
       tabs.forEach((t, j) => {
         const on = i === j;
         t.setAttribute('aria-selected', on);
@@ -2773,6 +2784,33 @@
     window.addEventListener('resize', update);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
     update();
+
+    // Swipe the card sideways (phones) for the next or previous committee.
+    // Only a clearly sideways swipe counts, so up-and-down scrolling still works.
+    const grid = browser.querySelector('.committee-grid');
+    let startX = 0, startY = 0, tracking = false;
+    grid.addEventListener('touchstart', e => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+    grid.addEventListener('touchend', e => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      const next = current + (dx < 0 ? 1 : -1);
+      if (next < 0 || next >= cards.length) return;
+      select(next);
+      const card = cards[next];
+      card.classList.remove('slide-from-right', 'slide-from-left');
+      void card.offsetWidth; // restart the animation
+      card.classList.add(dx < 0 ? 'slide-from-right' : 'slide-from-left');
+      // Keep the matching tab in view without moving the page.
+      tablist.scrollTo({ left: tabs[next].offsetLeft - 16, behavior: 'smooth' });
+    }, { passive: true });
   })();
 
   // Instagram carousel: loads recent posts from the Behold.so feed named in
