@@ -152,6 +152,7 @@
      Both end up nearly identical to the page bg, so the header/footer edges disappear.
      This block bumps them to a deeper navy in dark mode only — light mode untouched. */
   [data-theme="dark"] .nav,
+  [data-theme="dark"] .mobile-menu,
   [data-theme="dark"] .footer {
     background: #031631;
   }
@@ -160,6 +161,7 @@
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) .nav,
+    :root:not([data-theme]) .mobile-menu,
     :root:not([data-theme]) .footer {
       background: #031631;
     }
