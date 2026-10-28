@@ -919,6 +919,17 @@
     line-height: 1;
     flex-shrink: 0;
   }
+  /* Phones: two compact columns so the links take less scrolling. The
+     whole card stays tappable, so the arrow is dropped to give the title room. */
+  @media (max-width: 720px) {
+    .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    .quick-card { min-height: 0; padding: 14px; gap: 8px; align-items: flex-start; }
+    .quick-card-icon { margin-bottom: 6px; }
+    .quick-card-icon i { font-size: 20px; }
+    .quick-card-title { font-size: 15px; margin-bottom: 4px; overflow-wrap: anywhere; }
+    .quick-card-sub { font-size: 10px; letter-spacing: 0.3px; }
+    .quick-card-arrow { display: none; }
+  }
 
   /* ---------- COMMITTEES ---------- */
   /* Committees sit inside the "What we do" (#impact) section, below the pillars. */
@@ -926,7 +937,10 @@
     margin-top: 64px;
     padding-top: 64px;
     border-top: 1px solid var(--gray-100);
-    scroll-margin-top: var(--nav-offset);
+    /* Subtract the top padding (like the sections in the scroll-margin
+       rules above) so "Join a committee" lands as close under the nav as
+       the other section headings. The divider scrolls behind the nav. */
+    scroll-margin-top: calc(var(--nav-offset) - 64px);
   }
   .committees .card-eyebrow { text-align: left; }
   .committees-actions { margin-top: 24px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
@@ -984,7 +998,7 @@
   .committee-email { font-size: 15px; font-weight: 600; color: var(--cyan-deep); }
   .committee-email:hover { text-decoration: underline; }
   @media (max-width: 720px) {
-    .committees { margin-top: 40px; padding-top: 40px; }
+    .committees { margin-top: 40px; padding-top: 40px; scroll-margin-top: calc(var(--nav-offset) - 40px); }
     .committee-grid { grid-template-columns: 1fr; }
   }
 
