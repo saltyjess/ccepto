@@ -808,119 +808,17 @@
     <p class="card-eyebrow">Helpful</p>
     <h2 class="card-title" id="ql-title">Quick links</h2>
 
-    <div class="quick-grid">
-      <!-- To disable when the signup isn't live, swap the <a> back to a
-           <div class="quick-card quick-card--soon">, drop the arrow span, and
-           change the sub-label to "Coming soon". -->
-      <a href="https://www.signupgenius.com/go/10C0E4DA4A722A6F4C43-20232024#/" target="_blank" rel="noopener" class="quick-card">
+    <!-- Mirrors the Quick links on index.html: the script below copies those
+         cards in, so add or change quick links on index.html only. This card
+         shows only if that copy fails (offline, or JavaScript turned off). -->
+    <div class="quick-grid" id="quick-grid-mirror">
+      <a href="index.html#quick-links" class="quick-card">
         <div class="quick-card-body">
           <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-fork-knife"></i>
+            <i class="ph ph-link"></i>
           </div>
-          <p class="quick-card-title">Lunch signup</p>
-          <p class="quick-card-sub">Join your kiddo for lunch</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://www.signupgenius.com/go/5080A4AABA62CA0FC1-64975631-ccespirit" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-mountains"></i>
-          </div>
-          <p class="quick-card-title">Fall spirit rock signup</p>
-          <p class="quick-card-sub">Decorate the spirit rock</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://1stplacespiritwear.com/schools/SC/Clover/Crowders+Creek+Elementary+School/collection_detail.html" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-storefront"></i>
-          </div>
-          <p class="quick-card-title">Spirit store</p>
-          <p class="quick-card-sub">Order your CCE swag</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/4571/District/b3cdf6b4-362a-4f7a-bb1d-b95f8c5acf8a/Draft-A--CSD-2026-2027-Calendar-7.pdf?disposition=inline" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-calendar-dots"></i>
-          </div>
-          <p class="quick-card-title">Yearly PDF calendar<br>2026-27</p>
-          <p class="quick-card-sub">PDF of this school year</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://calendar.google.com/calendar/r?cid=0166175523e1f45eb7b90be20eef0f8f3fb52186d72b7a7b97305bbffeb98485%40group.calendar.google.com" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-calendar"></i>
-          </div>
-          <p class="quick-card-title">Google Calendar</p>
-          <p class="quick-card-sub">View the PTO calendar</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="webcal://calendar.google.com/calendar/ical/0166175523e1f45eb7b90be20eef0f8f3fb52186d72b7a7b97305bbffeb98485%40group.calendar.google.com/public/basic.ics" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-calendar"></i>
-          </div>
-          <p class="quick-card-title">Apple Calendar</p>
-          <p class="quick-card-sub">Subscribe to the PTO calendar</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://www.facebook.com/profile.php?id=100057057986403" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-facebook-logo"></i>
-          </div>
-          <p class="quick-card-title">Facebook</p>
-          <p class="quick-card-sub">Join the Facebook group</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-instagram-logo"></i>
-          </div>
-          <p class="quick-card-title">Instagram</p>
-          <p class="quick-card-sub">Follow us on Instagram</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://drive.google.com/file/d/1dSqzUeGVndf-qTZ01jSc0BUsS3MDWtUQ/view" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-bus"></i>
-          </div>
-          <p class="quick-card-title">Bus schedule</p>
-          <p class="quick-card-sub">Routes &amp; times</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <!-- Clover School District absence forms: parents must be signed in to a
-           Google account (any account works) because the forms take uploads. -->
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScYiGjEBKVC8n9YuWTLs0z5wha687lthd0omZ4M_VT_sC3Ysg/viewform" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-calendar-x"></i>
-          </div>
-          <p class="quick-card-title">Single day absence</p>
-          <p class="quick-card-sub">Excuse one missed day</p>
-        </div>
-        <span class="quick-card-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd4taJkxxn-7NbTtOvGWRe9gbxB9Q57HT3EP6Jnek_PtEUPpg/viewform" target="_blank" rel="noopener" class="quick-card">
-        <div class="quick-card-body">
-          <div class="quick-card-icon" aria-hidden="true">
-            <i class="ph ph-calendar-minus"></i>
-          </div>
-          <p class="quick-card-title">Multiple day absence</p>
-          <p class="quick-card-sub">Excuse two or more days</p>
+          <p class="quick-card-title">Quick links</p>
+          <p class="quick-card-sub">See them on the home page</p>
         </div>
         <span class="quick-card-arrow" aria-hidden="true">→</span>
       </a>
@@ -936,6 +834,27 @@
 </main>
 
 <script>
+  // Quick links mirror: copy the Quick links cards from index.html, so the
+  // home page is the only place they are edited. Cards whose
+  // data-hide-after time has passed are left out, the same as on the home page.
+  (async () => {
+    const grid = document.getElementById('quick-grid-mirror');
+    if (!grid) return;
+    try {
+      const res = await fetch('index.html', { cache: 'no-cache' });
+      if (!res.ok) return;
+      const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+      const cards = [...doc.querySelectorAll('#quick-links .quick-grid > .quick-card')]
+        .filter(card => {
+          const expires = Date.parse(card.dataset.hideAfter || '');
+          return Number.isNaN(expires) || Date.now() < expires;
+        });
+      if (cards.length) grid.replaceChildren(...cards.map(card => document.importNode(card, true)));
+    } catch (e) {
+      // Keep the fallback card that links to the home page.
+    }
+  })();
+
   // Mobile menu toggle
   (function () {
     const btn = document.getElementById('nav-hamburger');
