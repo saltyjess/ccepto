@@ -208,9 +208,6 @@
   #sponsors {
     scroll-margin-top: calc(var(--nav-offset) - var(--section-pad-top));
   }
-  /* #get-involved now has only 24px of top padding (see .section rules), so it
-     subtracts that instead of the full --section-pad-top. */
-  #get-involved { scroll-margin-top: calc(var(--nav-offset) - 24px); }
   body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -478,17 +475,12 @@
     padding: 0 var(--pad-inline) 0;
     background: var(--white);
   }
-  /* Extra breathing room above the cyan banner, so it doesn't run straight
-     into the sponsors section above it. Lives here (rather than as bottom
-     padding on .sponsors) so it's this section's own space. */
-  #events { padding-top: var(--section-pad-top); }
+  /* Breathing room above the cyan banner and below the yellow Volunteer
+     panel, so neither runs straight into the gray Instagram section above
+     or the gray Sponsors section below. */
+  #events { padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
   .section--gray { background: var(--gray-50); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
   .section--white { background: var(--white); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
-  /* The yellow Volunteer panel ends #events directly above this section, and
-     both sit on white — a full --section-pad-top here read as dead space under
-     the yellow. 24px matches the panel's own gap above it. The scroll-margin
-     override below keeps the "Volunteer" nav jump landing correctly. */
-  #get-involved { padding-top: 24px; }
 
   /* ---------- ACTION BANNER (cyan) ---------- */
   .action-block {
@@ -568,7 +560,6 @@
     margin: 0;
   }
   .priority-meta + .priority-meta { margin-top: 8px; }
-
 
   /* ---------- KNOW US + GET INVOLVED ROW ---------- */
   .duo {
@@ -1697,91 +1688,25 @@
     </div>
   </section>
 
-  <!-- Sponsors -->
-  <section class="sponsors" id="sponsors" aria-labelledby="sponsors-title">
-    <div class="sponsors-head">
-      <p class="impact-eyebrow">Thank you</p>
-      <h2 class="impact-title" id="sponsors-title">Our Sponsors</h2>
-      <p class="impact-lead">Crowders Creek Elementary PTO is grateful to the local businesses whose generosity supports our Eagles.</p>
+  <!-- Instagram: recent posts from @crowderscreekpto via a Behold.so JSON feed
+       (free plan: up to 6 posts). To connect it, paste the feed ID from
+       behold.so into data-behold-feed below. With no ID, or if the feed can't
+       load, the carousel stays hidden and only the "Follow us" button shows. -->
+  <section class="section section--gray" id="instagram" aria-labelledby="ig-title">
+    <div class="ig-head">
+      <div>
+        <p class="card-eyebrow">Follow along</p>
+        <h2 class="card-title" id="ig-title">Recent Instagram posts</h2>
+      </div>
+      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="btn btn-outline">
+        <i class="ph ph-instagram-logo" aria-hidden="true"></i> Follow @crowderscreekpto <span class="arrow" aria-hidden="true">&rarr;</span>
+      </a>
     </div>
 
-    <!--
-      HOW TO ADD OR EDIT A SPONSOR
-      =============================
-      1. Save the sponsor's logo image into the "sponsors" folder next to this page. It should
-         be solid single-color artwork on a transparent background (PNG or SVG) — the logo is
-         used as a mask and recolored in CSS (navy in light mode, white in dark mode), so a
-         full-color or multi-color logo file would just get flattened to a silhouette anyway.
-      2. Find that sponsor's <a class="sponsor-item"> block below and update, on the
-         <span class="sponsor-logo">:
-           - --logo-src   -> url('sponsors/the-file-name.svg') — the path to the logo file
-           - aspect-ratio -> the logo's own width/height (e.g. from its SVG viewBox, or an
-                              image's pixel dimensions) so it isn't stretched
-         And on the <a> tag itself:
-           - href  -> the sponsor's website ("#" if they don't have one)
-           - aria-label -> the sponsor's name
-      3. IMPORTANT: every sponsor appears TWICE below — once under "COPY 1" and again,
-         identically, under "COPY 2". This is what makes the strip scroll in an endless loop
-         with no visible seam. Make the SAME change in BOTH copies, in the same order, or the
-         loop will visibly jump. COPY 2 is marked aria-hidden="true" so screen readers and
-         keyboard users only ever encounter each sponsor once.
-      4. To add a new sponsor, copy one whole <a class="sponsor-item"> block and paste it
-         into both COPY 1 and COPY 2, in the same position in each.
-      5. Logos display muted and brighten to full opacity on hover or keyboard focus —
-         that's automatic CSS, nothing to change per logo.
-    -->
-    <div class="sponsor-marquee">
-      <div class="sponsor-track">
-        <!-- COPY 1 (read by screen readers). Each logo's --logo-src + aspect-ratio
-             are set inline here — see the .sponsor-logo comment in the CSS above
-             for why these are masks instead of <img> tags. -->
-        <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" aria-label="Card My Yard">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/card-my-yard.svg'); aspect-ratio:4165/4300"></span>
-        </a>
-        <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" aria-label="Carolina Homes Connection">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/carolina-homes-connection.svg'); aspect-ratio:5564/3018"></span>
-        </a>
-        <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" aria-label="Fred Caldwell Chevrolet">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/fred-caldwell-chevrolet.svg'); aspect-ratio:5175/3762"></span>
-        </a>
-        <a class="sponsor-item" href="https://www.facebook.com/DreameryCreamery/" target="_blank" rel="noopener sponsored" aria-label="Dreamery Creamery">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/dreamery-creamery.svg'); aspect-ratio:6146/4942"></span>
-        </a>
-        <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" aria-label="Jo's Pilates">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/jos-pilates.svg'); aspect-ratio:1/1"></span>
-        </a>
-        <a class="sponsor-item" href="https://www.facebook.com/groups/2102046090087860/" target="_blank" rel="noopener sponsored" aria-label="Mandar Rocks!">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/mandar-rocks.svg'); aspect-ratio:6072/4778"></span>
-        </a>
-        <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" aria-label="Sisters Selling Charlotte">
-          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
-        </a>
-
-        <!-- COPY 2 (identical to COPY 1, hidden from screen readers, makes the loop seamless) -->
-        <div class="sponsor-copy" aria-hidden="true">
-          <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/card-my-yard.svg'); aspect-ratio:4165/4300"></span>
-          </a>
-          <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/carolina-homes-connection.svg'); aspect-ratio:5564/3018"></span>
-          </a>
-          <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/fred-caldwell-chevrolet.svg'); aspect-ratio:5175/3762"></span>
-          </a>
-          <a class="sponsor-item" href="https://www.facebook.com/DreameryCreamery/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/dreamery-creamery.svg'); aspect-ratio:6146/4942"></span>
-          </a>
-          <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/jos-pilates.svg'); aspect-ratio:1/1"></span>
-          </a>
-          <a class="sponsor-item" href="https://www.facebook.com/groups/2102046090087860/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/mandar-rocks.svg'); aspect-ratio:6072/4778"></span>
-          </a>
-          <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
-            <span class="sponsor-logo" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
-          </a>
-        </div>
-      </div>
+    <div class="ig-scroller" data-behold-feed="qCydU22eGHoOHOw2uf9q" hidden>
+      <ul class="ig-track" tabindex="0" role="group" aria-label="Recent Instagram posts"></ul>
+      <button type="button" class="ig-nav ig-nav--prev" aria-label="Previous posts"><span aria-hidden="true">&larr;</span></button>
+      <button type="button" class="ig-nav ig-nav--next" aria-label="More posts"><span aria-hidden="true">&rarr;</span></button>
     </div>
   </section>
 
@@ -1913,6 +1838,94 @@
         <button type="button" class="vol-next" aria-label="Scroll to more volunteer opportunities">
           <span aria-hidden="true">→</span>
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sponsors -->
+  <section class="sponsors" id="sponsors" aria-labelledby="sponsors-title">
+    <div class="sponsors-head">
+      <p class="impact-eyebrow">Thank you</p>
+      <h2 class="impact-title" id="sponsors-title">Our Sponsors</h2>
+      <p class="impact-lead">Crowders Creek Elementary PTO is grateful to the local businesses whose generosity supports our Eagles.</p>
+    </div>
+
+    <!--
+      HOW TO ADD OR EDIT A SPONSOR
+      =============================
+      1. Save the sponsor's logo image into the "sponsors" folder next to this page. It should
+         be solid single-color artwork on a transparent background (PNG or SVG) — the logo is
+         used as a mask and recolored in CSS (navy in light mode, white in dark mode), so a
+         full-color or multi-color logo file would just get flattened to a silhouette anyway.
+      2. Find that sponsor's <a class="sponsor-item"> block below and update, on the
+         <span class="sponsor-logo">:
+           - --logo-src   -> url('sponsors/the-file-name.svg') — the path to the logo file
+           - aspect-ratio -> the logo's own width/height (e.g. from its SVG viewBox, or an
+                              image's pixel dimensions) so it isn't stretched
+         And on the <a> tag itself:
+           - href  -> the sponsor's website ("#" if they don't have one)
+           - aria-label -> the sponsor's name
+      3. IMPORTANT: every sponsor appears TWICE below — once under "COPY 1" and again,
+         identically, under "COPY 2". This is what makes the strip scroll in an endless loop
+         with no visible seam. Make the SAME change in BOTH copies, in the same order, or the
+         loop will visibly jump. COPY 2 is marked aria-hidden="true" so screen readers and
+         keyboard users only ever encounter each sponsor once.
+      4. To add a new sponsor, copy one whole <a class="sponsor-item"> block and paste it
+         into both COPY 1 and COPY 2, in the same position in each.
+      5. Logos display muted and brighten to full opacity on hover or keyboard focus —
+         that's automatic CSS, nothing to change per logo.
+    -->
+    <div class="sponsor-marquee">
+      <div class="sponsor-track">
+        <!-- COPY 1 (read by screen readers). Each logo's --logo-src + aspect-ratio
+             are set inline here — see the .sponsor-logo comment in the CSS above
+             for why these are masks instead of <img> tags. -->
+        <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" aria-label="Card My Yard">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/card-my-yard.svg'); aspect-ratio:4165/4300"></span>
+        </a>
+        <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" aria-label="Carolina Homes Connection">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/carolina-homes-connection.svg'); aspect-ratio:5564/3018"></span>
+        </a>
+        <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" aria-label="Fred Caldwell Chevrolet">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/fred-caldwell-chevrolet.svg'); aspect-ratio:5175/3762"></span>
+        </a>
+        <a class="sponsor-item" href="https://www.facebook.com/DreameryCreamery/" target="_blank" rel="noopener sponsored" aria-label="Dreamery Creamery">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/dreamery-creamery.svg'); aspect-ratio:6146/4942"></span>
+        </a>
+        <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" aria-label="Jo's Pilates">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/jos-pilates.svg'); aspect-ratio:1/1"></span>
+        </a>
+        <a class="sponsor-item" href="https://www.facebook.com/groups/2102046090087860/" target="_blank" rel="noopener sponsored" aria-label="Mandar Rocks!">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/mandar-rocks.svg'); aspect-ratio:6072/4778"></span>
+        </a>
+        <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" aria-label="Sisters Selling Charlotte">
+          <span class="sponsor-logo" aria-hidden="true" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
+        </a>
+
+        <!-- COPY 2 (identical to COPY 1, hidden from screen readers, makes the loop seamless) -->
+        <div class="sponsor-copy" aria-hidden="true">
+          <a class="sponsor-item" href="https://www.cardmyyard.com/clover-sc/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/card-my-yard.svg'); aspect-ratio:4165/4300"></span>
+          </a>
+          <a class="sponsor-item" href="https://www.carolinahomesconnection.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/carolina-homes-connection.svg'); aspect-ratio:5564/3018"></span>
+          </a>
+          <a class="sponsor-item" href="https://www.cloverchevrolet.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/fred-caldwell-chevrolet.svg'); aspect-ratio:5175/3762"></span>
+          </a>
+          <a class="sponsor-item" href="https://www.facebook.com/DreameryCreamery/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/dreamery-creamery.svg'); aspect-ratio:6146/4942"></span>
+          </a>
+          <a class="sponsor-item" href="https://jospilates.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/jos-pilates.svg'); aspect-ratio:1/1"></span>
+          </a>
+          <a class="sponsor-item" href="https://www.facebook.com/groups/2102046090087860/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/mandar-rocks.svg'); aspect-ratio:6072/4778"></span>
+          </a>
+          <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
+            <span class="sponsor-logo" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -2388,28 +2401,6 @@
           </li>
       </ul>
     </div>
-    </div>
-  </section>
-
-  <!-- Instagram: recent posts from @crowderscreekpto via a Behold.so JSON feed
-       (free plan: up to 6 posts). To connect it, paste the feed ID from
-       behold.so into data-behold-feed below. With no ID, or if the feed can't
-       load, the carousel stays hidden and only the "Follow us" button shows. -->
-  <section class="section section--gray" id="instagram" aria-labelledby="ig-title">
-    <div class="ig-head">
-      <div>
-        <p class="card-eyebrow">Follow along</p>
-        <h2 class="card-title" id="ig-title">Recent Instagram posts</h2>
-      </div>
-      <a href="https://www.instagram.com/crowderscreekpto" target="_blank" rel="noopener" class="btn btn-outline">
-        <i class="ph ph-instagram-logo" aria-hidden="true"></i> Follow @crowderscreekpto <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
-
-    <div class="ig-scroller" data-behold-feed="qCydU22eGHoOHOw2uf9q" hidden>
-      <ul class="ig-track" tabindex="0" role="group" aria-label="Recent Instagram posts"></ul>
-      <button type="button" class="ig-nav ig-nav--prev" aria-label="Previous posts"><span aria-hidden="true">&larr;</span></button>
-      <button type="button" class="ig-nav ig-nav--next" aria-label="More posts"><span aria-hidden="true">&rarr;</span></button>
     </div>
   </section>
 
