@@ -1574,8 +1574,7 @@
   }
   /* Collapse to logo + hamburger as soon as the nav links can't all fit on
      one line. The 8 links need ~714px in a row; 880px leaves room for the
-     side gutters and a desktop scrollbar, so no label ever wraps to two lines
-     ("Events &" / "news"). Keep in sync with NAV_COLLAPSE in the menu script. */
+     side gutters and a desktop scrollbar, so no label ever wraps to two lines. Keep in sync with NAV_COLLAPSE in the menu script. */
   @media (max-width: 880px) {
     .nav { flex-wrap: nowrap; }
     .nav-links { display: none; }
@@ -1616,11 +1615,10 @@
 
     <div class="nav-links">
       <a href="#top" class="is-active" aria-current="page">Home</a>
-      <a href="#sponsors">Sponsors</a>
-      <a href="#events">Events &amp; news</a>
+      <a href="#events">Events</a>
       <a href="#volunteer">Volunteer</a>
+      <a href="#sponsors">Sponsors</a>
       <a href="#quick-links">Quick links</a>
-      <a href="#impact">What we do</a>
       <a href="#committees">Committees</a>
       <a href="teacher-hub.html" class="nav-link-end">Teacher hub</a>
       <a href="parent-hub.html">Parent hub</a>
@@ -1647,11 +1645,10 @@
   <!-- Mobile menu panel: slides down under the nav when hamburger is tapped -->
   <div class="mobile-menu" id="mobile-menu" hidden>
     <a href="#top" class="mobile-menu-link is-active" aria-current="page">Home</a>
-    <a href="#sponsors" class="mobile-menu-link">Sponsors</a>
-    <a href="#events" class="mobile-menu-link">Events &amp; news</a>
+    <a href="#events" class="mobile-menu-link">Events</a>
     <a href="#volunteer" class="mobile-menu-link">Volunteer</a>
+    <a href="#sponsors" class="mobile-menu-link">Sponsors</a>
     <a href="#quick-links" class="mobile-menu-link">Quick links</a>
-    <a href="#impact" class="mobile-menu-link">What we do</a>
     <a href="#committees" class="mobile-menu-link">Committees</a>
     <a href="teacher-hub.html" class="mobile-menu-link">Teacher hub</a>
     <a href="parent-hub.html" class="mobile-menu-link">Parent hub</a>
@@ -1788,12 +1785,12 @@
     </div>
   </section>
 
-  <!-- Action / Upcoming events & news -->
+  <!-- Action / Upcoming events -->
   <section class="section" id="events" aria-labelledby="events-title">
     <div class="action-block">
       <div class="action-block-head">
         <p class="action-block-eyebrow">Take action</p>
-        <h2 class="action-block-title" id="events-title">Upcoming events &amp; news</h2>
+        <h2 class="action-block-title" id="events-title">Upcoming events</h2>
       </div>
 
       <!-- First PTO Meeting (Aug 12, 2026), Winner of the Logo Contest, the
@@ -2594,15 +2591,21 @@
     });
     if (!targets.size) return;
 
+    // "What we do" (#impact) has no nav link of its own: the committees sit
+    // inside it, so the Committees link stays highlighted over that section.
+    const impact = document.getElementById('impact');
+    if (impact && targets.has('committees')) {
+      targets.set('impact', { section: impact, elements: targets.get('committees').elements });
+    }
+
     const homeId = targets.has('top') ? 'top' : null;
     // Sections to actually observe (skip #top — that's the whole page)
     const observedIds = Array.from(targets.keys()).filter(id => id !== 'top');
     if (!observedIds.length) return;
 
     function setActive(activeId) {
-      targets.forEach((target, id) => {
-        target.elements.forEach(a => a.classList.toggle('is-active', id === activeId));
-      });
+      const on = new Set(targets.has(activeId) ? targets.get(activeId).elements : []);
+      navLinks.forEach(a => a.classList.toggle('is-active', on.has(a)));
     }
 
     // Highlight the clicked link (and its desktop/mobile counterpart)
@@ -2611,6 +2614,7 @@
     // observer can lag a beat behind the click, which is why the link only
     // used to highlight after an extra nudge of the scroll.
     targets.forEach((target, id) => {
+      if (id === 'impact') return; // shares the Committees links
       target.elements.forEach(a => a.addEventListener('click', () => setActive(id)));
     });
 
