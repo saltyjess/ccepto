@@ -208,6 +208,9 @@
   #sponsors {
     scroll-margin-top: calc(var(--nav-offset) - var(--section-pad-top));
   }
+  /* #get-involved now has only 24px of top padding (see .section rules), so it
+     subtracts that instead of the full --section-pad-top. */
+  #get-involved { scroll-margin-top: calc(var(--nav-offset) - 24px); }
   body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -475,12 +478,16 @@
     padding: 0 var(--pad-inline) 0;
     background: var(--white);
   }
-  /* Breathing room above the cyan banner and below the yellow Volunteer
-     panel, so neither runs straight into the gray Instagram section above
-     or the gray Sponsors section below. */
-  #events { padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
+  /* Breathing room above the cyan banner, so it doesn't run straight into
+     the gray Instagram section above it. */
+  #events { padding-top: var(--section-pad-top); }
   .section--gray { background: var(--gray-50); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
   .section--white { background: var(--white); padding-top: var(--section-pad-top); padding-bottom: var(--section-pad-top); }
+  /* The yellow Volunteer panel ends #events directly above this section, and
+     both sit on white — a full --section-pad-top here read as dead space under
+     the yellow. 24px matches the panel's own gap above it. The scroll-margin
+     override below keeps the "Volunteer" nav jump landing correctly. */
+  #get-involved { padding-top: 24px; }
 
   /* ---------- ACTION BANNER (cyan) ---------- */
   .action-block {
@@ -1842,6 +1849,90 @@
     </div>
   </section>
 
+  <!-- Board + Get involved -->
+  <section class="section section--white" id="get-involved">
+    <div class="duo">
+      <div class="card-base get-involved">
+        <div class="card-head">
+          <p class="card-eyebrow">Get involved</p>
+          <h2 class="card-title card-title--light">Volunteer</h2>
+        </div>
+        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
+        <div class="card-actions">
+          <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="#committees" class="btn btn-translucent btn-translucent--on-navy">Join a committee <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="card-base know-us">
+        <div class="card-head">
+          <p class="card-eyebrow">Get to know us</p>
+          <h2 class="card-title">Your PTO board (2026–27)</h2>
+        </div>
+        <!-- Board headshots live in board/ as square JPGs named after each
+             person: board/erin-roe.jpg (320px) is the circle avatar, and
+             board/erin-roe-large.jpg (720px) is what the lightbox loads, only
+             once that person is clicked. Remove or rename the small file and
+             that person falls back to their yellow initials circle. -->
+        <div class="board-grid">
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/erin-roe-large.jpg" data-photo-name="Erin Roe" data-photo-role="President"
+               aria-label="View a larger photo of Erin Roe">
+              <div class="avatar" aria-hidden="true">ER<img src="board/erin-roe.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Erin Roe</p>
+              <p class="board-person-role">President</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/carolyn-hammonds-large.jpg" data-photo-name="Carolyn Hammonds" data-photo-role="Vice President"
+               aria-label="View a larger photo of Carolyn Hammonds">
+              <div class="avatar" aria-hidden="true">CH<img src="board/carolyn-hammonds.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Carolyn Hammonds</p>
+              <p class="board-person-role">Vice President</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/liz-johnson-large.jpg" data-photo-name="Liz Johnson" data-photo-role="Secretary"
+               aria-label="View a larger photo of Liz Johnson">
+              <div class="avatar" aria-hidden="true">LJ<img src="board/liz-johnson.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Liz Johnson</p>
+              <p class="board-person-role">Secretary</p>
+            </div>
+          </div>
+          <div class="board-person">
+            <button type="button" class="avatar-link"
+               data-photo="board/jessica-wright-large.jpg" data-photo-name="Jessica Wright" data-photo-role="Treasurer"
+               aria-label="View a larger photo of Jessica Wright">
+              <div class="avatar" aria-hidden="true">JW<img src="board/jessica-wright.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+            </button>
+            <div>
+              <p class="board-person-name">Jessica Wright</p>
+              <p class="board-person-role">Treasurer</p>
+            </div>
+          </div>
+        </div>
+        <p class="photo-credit">
+          Huge shout out to <a href="https://www.facebook.com/cristyparsonsphotography" target="_blank" rel="noopener">Cristy Parsons</a>
+          for our board photos.
+        </p>
+        <div class="card-actions">
+          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-navy">
+            Email the PTO <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Sponsors -->
   <section class="sponsors" id="sponsors" aria-labelledby="sponsors-title">
     <div class="sponsors-head">
@@ -1924,90 +2015,6 @@
           </a>
           <a class="sponsor-item" href="https://www.sisterssellingcharlotte.com/" target="_blank" rel="noopener sponsored" tabindex="-1">
             <span class="sponsor-logo" style="--logo-src:url('sponsors/sisters-selling-charlotte.svg'); aspect-ratio:5045/3120"></span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Board + Get involved -->
-  <section class="section section--white" id="get-involved">
-    <div class="duo">
-      <div class="card-base get-involved">
-        <div class="card-head">
-          <p class="card-eyebrow">Get involved</p>
-          <h2 class="card-title card-title--light">Volunteer</h2>
-        </div>
-        <p class="get-involved-body">Big or small, every hour counts. Join the newsletter for email updates or check out our Facebook page for upcoming events.</p>
-        <div class="card-actions">
-          <a href="#" class="btn btn-gold ml-onclick-form" onclick="ml('show', '0yD7cu', true); return false;">Join the newsletter <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="#committees" class="btn btn-translucent btn-translucent--on-navy">Join a committee <span class="arrow" aria-hidden="true">→</span></a>
-        </div>
-      </div>
-
-      <div class="card-base know-us">
-        <div class="card-head">
-          <p class="card-eyebrow">Get to know us</p>
-          <h2 class="card-title">Your PTO board (2026–27)</h2>
-        </div>
-        <!-- Board headshots live in board/ as square JPGs named after each
-             person: board/erin-roe.jpg (320px) is the circle avatar, and
-             board/erin-roe-large.jpg (720px) is what the lightbox loads, only
-             once that person is clicked. Remove or rename the small file and
-             that person falls back to their yellow initials circle. -->
-        <div class="board-grid">
-          <div class="board-person">
-            <button type="button" class="avatar-link"
-               data-photo="board/erin-roe-large.jpg" data-photo-name="Erin Roe" data-photo-role="President"
-               aria-label="View a larger photo of Erin Roe">
-              <div class="avatar" aria-hidden="true">ER<img src="board/erin-roe.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
-            </button>
-            <div>
-              <p class="board-person-name">Erin Roe</p>
-              <p class="board-person-role">President</p>
-            </div>
-          </div>
-          <div class="board-person">
-            <button type="button" class="avatar-link"
-               data-photo="board/carolyn-hammonds-large.jpg" data-photo-name="Carolyn Hammonds" data-photo-role="Vice President"
-               aria-label="View a larger photo of Carolyn Hammonds">
-              <div class="avatar" aria-hidden="true">CH<img src="board/carolyn-hammonds.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
-            </button>
-            <div>
-              <p class="board-person-name">Carolyn Hammonds</p>
-              <p class="board-person-role">Vice President</p>
-            </div>
-          </div>
-          <div class="board-person">
-            <button type="button" class="avatar-link"
-               data-photo="board/liz-johnson-large.jpg" data-photo-name="Liz Johnson" data-photo-role="Secretary"
-               aria-label="View a larger photo of Liz Johnson">
-              <div class="avatar" aria-hidden="true">LJ<img src="board/liz-johnson.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
-            </button>
-            <div>
-              <p class="board-person-name">Liz Johnson</p>
-              <p class="board-person-role">Secretary</p>
-            </div>
-          </div>
-          <div class="board-person">
-            <button type="button" class="avatar-link"
-               data-photo="board/jessica-wright-large.jpg" data-photo-name="Jessica Wright" data-photo-role="Treasurer"
-               aria-label="View a larger photo of Jessica Wright">
-              <div class="avatar" aria-hidden="true">JW<img src="board/jessica-wright.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
-            </button>
-            <div>
-              <p class="board-person-name">Jessica Wright</p>
-              <p class="board-person-role">Treasurer</p>
-            </div>
-          </div>
-        </div>
-        <p class="photo-credit">
-          Huge shout out to <a href="https://www.facebook.com/cristyparsonsphotography" target="_blank" rel="noopener">Cristy Parsons</a>
-          for our board photos.
-        </p>
-        <div class="card-actions">
-          <a href="mailto:crowderscreekpto@gmail.com" class="btn btn-navy">
-            Email the PTO <span class="arrow" aria-hidden="true">→</span>
           </a>
         </div>
       </div>
