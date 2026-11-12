@@ -936,15 +936,13 @@
   }
 
   /* ---------- COMMITTEES ---------- */
-  /* Committees sit inside the "What we do" (#impact) section, below the pillars. */
-  .committees {
+  /* Committees open the #impact section; "What we do" (.impact-what) sits
+     below them, after a divider. */
+  .committees { scroll-margin-top: var(--nav-offset); }
+  .impact-what {
     margin-top: 64px;
     padding-top: 64px;
     border-top: 1px solid var(--gray-100);
-    /* Subtract the top padding (like the sections in the scroll-margin
-       rules above) so "Join a committee" lands as close under the nav as
-       the other section headings. The divider scrolls behind the nav. */
-    scroll-margin-top: calc(var(--nav-offset) - 64px);
   }
   .committees .card-eyebrow { text-align: left; }
   /* Heading on the left, slideshow button on the right (same layout as .ig-head). */
@@ -1003,7 +1001,7 @@
   .committee-email { font-size: 15px; font-weight: 600; color: var(--cyan-deep); }
   .committee-email:hover { text-decoration: underline; }
   @media (max-width: 720px) {
-    .committees { margin-top: 40px; padding-top: 40px; scroll-margin-top: calc(var(--nav-offset) - 40px); }
+    .impact-what { margin-top: 40px; padding-top: 40px; }
     .committee-grid { grid-template-columns: 1fr; }
   }
 
@@ -2166,42 +2164,7 @@
   </section>
 
   <!-- Impact / How PTO Supports CCE -->
-  <section class="impact" id="impact" aria-labelledby="impact-title">
-    <p class="impact-eyebrow">PTO impact</p>
-    <h2 class="impact-title" id="impact-title">What we do</h2>
-    <p class="impact-lead">Four areas where your support shows up for our Eagles every day.</p>
-
-    <div class="pillars">
-      <div class="pillar">
-        <div class="pillar-icon" aria-hidden="true">
-          <i class="ph ph-bus"></i>
-        </div>
-        <h3 class="pillar-title">Learning beyond the classroom</h3>
-        <p class="pillar-body">Field trips, the 5th Grade Celebration, and school-wide family events.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon" aria-hidden="true">
-          <i class="ph ph-palette"></i>
-        </div>
-        <h3 class="pillar-title">Classroom resources</h3>
-        <p class="pillar-body">Teacher grants, plus the art, music, and school supplies that keep classrooms running.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon" aria-hidden="true">
-          <i class="ph ph-books"></i>
-        </div>
-        <h3 class="pillar-title">Tools &amp; libraries</h3>
-        <p class="pillar-body">Up-to-date technology, library equipment, and the accelerated reading program.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon" aria-hidden="true">
-          <i class="ph ph-hand-heart"></i>
-        </div>
-        <h3 class="pillar-title">Caring for our community</h3>
-        <p class="pillar-body">Extra student assistance, teacher appreciation, field trip shirts, and school beautification.</p>
-      </div>
-    </div>
-
+  <section class="impact" id="impact" aria-labelledby="committees-title">
     <!-- Committees (DRAFT, Oct 2026). Sources: the 2026-27 PTO welcome deck
          (descriptions, time commitments) and the newsletter committee list
          (chairs, emails). Emails are assembled by the "Committee emails" script
@@ -2211,7 +2174,7 @@
       <div class="committees-head">
         <div>
           <p class="card-eyebrow">Join a committee</p>
-          <h3 class="card-title" id="committees-title">PTO committees</h3>
+          <h2 class="card-title" id="committees-title">PTO committees</h2>
         </div>
         <a href="https://docs.google.com/presentation/d/e/2PACX-1vTXhkWoO9yVaMWic8nAa0kYsVeLb9W41ow7sBFx40SiuS7wwN-MPI3yUQFjZcGXoCkDL3JxVJtag7d4/pub?start=false&amp;loop=false&amp;delayms=3000" target="_blank" rel="noopener" class="btn btn-outline">View the PTO slideshow <span class="arrow" aria-hidden="true">&rarr;</span></a>
       </div>
@@ -2409,6 +2372,44 @@
       </ul>
     </div>
     </div>
+
+    <!-- What we do: sits below the committees, in the same section. -->
+    <div class="impact-what">
+      <p class="impact-eyebrow">PTO impact</p>
+      <h2 class="impact-title" id="impact-title">What we do</h2>
+      <p class="impact-lead">Four areas where your support shows up for our Eagles every day.</p>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon" aria-hidden="true">
+            <i class="ph ph-bus"></i>
+          </div>
+          <h3 class="pillar-title">Learning beyond the classroom</h3>
+          <p class="pillar-body">Field trips, the 5th Grade Celebration, and school-wide family events.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" aria-hidden="true">
+            <i class="ph ph-palette"></i>
+          </div>
+          <h3 class="pillar-title">Classroom resources</h3>
+          <p class="pillar-body">Teacher grants, plus the art, music, and school supplies that keep classrooms running.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" aria-hidden="true">
+            <i class="ph ph-books"></i>
+          </div>
+          <h3 class="pillar-title">Tools &amp; libraries</h3>
+          <p class="pillar-body">Up-to-date technology, library equipment, and the accelerated reading program.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" aria-hidden="true">
+            <i class="ph ph-hand-heart"></i>
+          </div>
+          <h3 class="pillar-title">Caring for our community</h3>
+          <p class="pillar-body">Extra student assistance, teacher appreciation, field trip shirts, and school beautification.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -2589,8 +2590,8 @@
     });
     if (!targets.size) return;
 
-    // "What we do" (#impact) has no nav link of its own: the committees sit
-    // inside it, so the Committees link stays highlighted over that section.
+    // "What we do" (#impact) has no nav link of its own: it shares a section
+    // with the committees, so the Committees link stays highlighted over it.
     const impact = document.getElementById('impact');
     if (impact && targets.has('committees')) {
       targets.set('impact', { section: impact, elements: targets.get('committees').elements });
