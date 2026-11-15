@@ -1530,6 +1530,27 @@
     text-underline-offset: 2px;
   }
 
+  /* Event flyer lightbox. Sized so the whole portrait flyer fits the
+     screen height (flyer ratio is about 1009:1558). */
+  .modal--flyer {
+    width: min(560px, 100%, calc((100dvh - 40px) * 0.6476));
+    overflow: hidden;
+    position: relative;
+  }
+  .flyer-modal-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--gray-100);
+  }
+  .modal--flyer .modal-close {
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--cce-dark-blue-inverted);
+  }
+  .modal--flyer .modal-close:hover { background: rgba(255, 255, 255, 1); }
+  /* Event card actions can be <button>s (e.g. "View flyer"). */
+  button.btn { font-family: inherit; cursor: pointer; }
+
   /* Body lock while modal is open */
   body.modal-open { overflow: hidden; }
 
@@ -1768,6 +1789,33 @@
         <a href="https://allprodadchapters.com/chapters/16552" target="_blank" rel="noopener" class="btn btn-translucent">RSVP <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
+      <!-- 2026 Giving Tree and Unsung Heroes share one flyer
+           (flyers/giving-tree-unsung-heroes-2026.webp). All ornaments are
+           taken; gifts are due back Tue Nov 24, so the Giving Tree card hides
+           at the end of that day. "View flyer" opens the flyer modal (see the
+           "Flyer lightbox" script). -->
+      <div class="priority-item" data-hide-after="2026-11-25T00:00:00-05:00">
+        <div class="priority-text">
+          <p class="priority-tag">Giving Tree</p>
+          <p class="priority-title">Giving Tree &mdash; Return gifts by Tuesday, Nov 24th</p>
+          <p class="priority-meta">We&rsquo;ve given away all the ornaments &mdash; thank you for your generosity! Please return unwrapped gifts with the receipt and ornament by Tuesday, Nov 24th. The Giving Tree provides holiday gifts for students in our district, including socks and underwear for all Giving Tree students.</p>
+          <p class="priority-meta">Want to still help? Venmo @CCE-PTO and comment &ldquo;Giving Tree.&rdquo;</p>
+        </div>
+        <button type="button" class="btn btn-translucent" data-flyer="flyers/giving-tree-unsung-heroes-2026.webp" data-flyer-alt="CCE Giving Tree and Unsung Heroes 2026 flyer: all ornaments are given away; return unwrapped gifts with the receipt and ornament by Tuesday, November 24. Donate on Venmo at @CCE-PTO and comment Giving Tree or Unsung Heroes.">View flyer <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+
+      <!-- Unsung Heroes: Venmo donations, matched by PTO funds, for holiday
+           appreciation of staff. No end date on the flyer, so no
+           data-hide-after yet. -->
+      <div class="priority-item">
+        <div class="priority-text">
+          <p class="priority-tag">Unsung Heroes</p>
+          <p class="priority-title">Unsung Heroes &mdash; Holiday staff appreciation</p>
+          <p class="priority-meta">Donations are matched by PTO funds to give back to the staff that often go unrecognized with holiday appreciation. Venmo @CCE-PTO and comment &ldquo;Unsung Heroes&rdquo; so we know where it goes.</p>
+        </div>
+        <a href="https://venmo.com/u/CCE-PTO" target="_blank" rel="noopener" class="btn btn-translucent">Donate on Venmo <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+
       <!-- Q3 raffle winners are drawn Jan 4, 2027, so the card hides at the
            start of that day (-05:00: Eastern standard time). -->
       <div class="priority-item" data-hide-after="2027-01-04T00:00:00-05:00">
@@ -1808,18 +1856,6 @@
             <div class="vol-card-action">
               <!-- Basketball, dunk tank, bounce house, football toss, pumpkin bowling, and temporary tattoo stations, two shifts, Oct 27, 2026 -->
               <a href="https://www.signupgenius.com/go/10C0E4AACAC2EABF8C34-66794140-family#/" target="_blank" rel="noopener" class="vol-btn">Volunteer now <span class="arrow" aria-hidden="true">&rarr;</span></a>
-            </div>
-          </li>
-
-          <!-- Giving Tree: placeholder until ornaments are assigned to kids. Once
-               they are, swap the "Coming soon" span for a link to the
-               remaining ornaments and update the text. -->
-          <li class="vol-card">
-            <div class="vol-card-icon" aria-hidden="true"><i class="ph ph-tree-evergreen"></i></div>
-            <h3 class="vol-card-title">Giving Tree ornaments</h3>
-            <p class="vol-card-body">Coming soon! As soon as kids are assigned their ornaments, we will be posting all remaining ornaments here.</p>
-            <div class="vol-card-action">
-              <span class="vol-btn vol-btn--soon" aria-disabled="true">Coming soon</span>
             </div>
           </li>
 
@@ -2448,6 +2484,17 @@
   </div>
 </div>
 
+<!-- Event flyer lightbox; shows the image named by data-flyer on whichever
+     event button was clicked. -->
+<div class="modal-backdrop" id="flyer-modal" role="dialog" aria-modal="true" aria-label="Event flyer" hidden>
+  <div class="modal modal--flyer">
+    <button type="button" class="modal-close" aria-label="Close" data-modal-close>
+      <i class="ph ph-x" aria-hidden="true"></i>
+    </button>
+    <img class="flyer-modal-img" id="flyer-modal-img" src="" alt="">
+  </div>
+</div>
+
 <script>
   // Mobile menu toggle — hamburger opens/closes the slide-down link panel
   (function () {
@@ -2989,6 +3036,45 @@
     });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && !modal.hidden) closePhoto();
+    });
+  })();
+
+  // Flyer lightbox: any button with data-flyer="<image path>" opens it
+  (function () {
+    const modal = document.getElementById('flyer-modal');
+    if (!modal) return;
+    const img = modal.querySelector('#flyer-modal-img');
+    const closeBtn = modal.querySelector('.modal-close');
+    let lastFocused = null;
+
+    function openFlyer(btn) {
+      lastFocused = btn;
+      img.src = btn.dataset.flyer;
+      img.alt = btn.dataset.flyerAlt || 'Event flyer';
+      modal.hidden = false;
+      void modal.offsetWidth; // reflow so the transition runs
+      modal.classList.add('is-open');
+      document.body.classList.add('modal-open');
+      setTimeout(() => closeBtn.focus(), 100);
+    }
+
+    function closeFlyer() {
+      modal.classList.remove('is-open');
+      document.body.classList.remove('modal-open');
+      setTimeout(() => {
+        modal.hidden = true;
+        if (lastFocused) lastFocused.focus();
+      }, 200);
+    }
+
+    document.querySelectorAll('[data-flyer]').forEach(btn => {
+      btn.addEventListener('click', () => openFlyer(btn));
+    });
+    modal.addEventListener('click', e => {
+      if (e.target === modal || e.target.closest('[data-modal-close]')) closeFlyer();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modal.hidden) closeFlyer();
     });
   })();
 </script>
