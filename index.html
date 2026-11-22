@@ -868,6 +868,7 @@
     margin-top: 24px;
   }
   .quick-card[hidden] { display: none; }
+  [data-show-after][hidden] { display: none !important; }
   .quick-card {
     background: var(--cce-dark-blue);
     border-radius: var(--radius-md);
@@ -1758,10 +1759,10 @@
 
       <!-- 2026 Giving Tree and Unsung Heroes share one flyer
            (flyers/giving-tree-unsung-heroes-2026.webp). All ornaments are
-           taken; gifts are due back Tue Nov 24, so the Giving Tree card hides
-           at the end of that day. "View flyer" opens the flyer modal (see the
-           "Flyer lightbox" script). -->
-      <div class="priority-item" data-hide-after="2026-11-25T00:00:00-05:00">
+           taken; gifts were due back Tue Nov 24. On Nov 24 this card swaps
+           for the "Last call" card below. "View flyer" opens the flyer modal
+           (see the "Flyer lightbox" script). -->
+      <div class="priority-item" data-hide-after="2026-11-24T00:00:00-05:00">
         <div class="priority-text">
           <p class="priority-tag">Giving Tree</p>
           <p class="priority-title">Giving Tree &mdash; Return gifts by Tuesday, Nov 24th</p>
@@ -1769,6 +1770,20 @@
           <p class="priority-meta">Want to still help? Venmo @CCE-PTO and comment &ldquo;Giving Tree.&rdquo;</p>
         </div>
         <button type="button" class="btn btn-translucent" data-flyer="flyers/giving-tree-unsung-heroes-2026.webp" data-flyer-alt="CCE Giving Tree and Unsung Heroes 2026 flyer: all ornaments are given away; return unwrapped gifts with the receipt and ornament by Tuesday, November 24. Donate on Venmo at @CCE-PTO and comment Giving Tree or Unsung Heroes.">View flyer <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+
+      <!-- Giving Tree last call: takes over from the card above at 12:00 AM on
+           Tue Nov 24 (data-show-after; see the "Scheduled events" script) and
+           hides after Mon Nov 30, the new last day to return gifts. No flyer
+           button, since the flyer still shows the Nov 24 date. -->
+      <div class="priority-item" data-show-after="2026-11-24T00:00:00-05:00" data-hide-after="2026-12-01T00:00:00-05:00" hidden>
+        <div class="priority-text">
+          <p class="priority-tag">Giving Tree</p>
+          <p class="priority-title">Last call for Giving Tree gifts &mdash; Return by Monday, Nov 30th</p>
+          <p class="priority-meta">Still have a Giving Tree gift at home? Please return unwrapped gifts with the receipt and ornament by Monday, Nov 30th. The Giving Tree provides holiday gifts for students in our district, including socks and underwear for all Giving Tree students.</p>
+          <p class="priority-meta">Want to still help? Venmo @CCE-PTO and comment &ldquo;Giving Tree.&rdquo;</p>
+        </div>
+        <a href="https://venmo.com/u/CCE-PTO" target="_blank" rel="noopener" class="btn btn-translucent">Donate on Venmo <span class="arrow" aria-hidden="true">→</span></a>
       </div>
 
       <!-- Fri Dec 4, 2026: Trucks & Helping Hands, loading and delivering Giving
@@ -2936,6 +2951,14 @@
   document.querySelectorAll('[data-hide-after]').forEach(item => {
     const expires = Date.parse(item.dataset.hideAfter);
     if (!Number.isNaN(expires) && Date.now() >= expires) item.remove();
+  });
+
+  // Scheduled events: a card with data-show-after starts out hidden (give it
+  // the hidden attribute too) and appears once that time has passed. Same
+  // timestamp format as data-hide-after.
+  document.querySelectorAll('[data-show-after]').forEach(item => {
+    const starts = Date.parse(item.dataset.showAfter);
+    if (!Number.isNaN(starts) && Date.now() >= starts) item.hidden = false;
   });
 
   // Volunteer opportunities scroller. The arrow is always on screen, so with a
